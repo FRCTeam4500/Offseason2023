@@ -1,10 +1,19 @@
 package frc.robot.subsystem.swerve.command;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import frc.robot.subsystem.swerve.Swerve;
+import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
+import frc.robot.subsystem.swerve.pathfollowingswerve.PathFollowingSwerve;
 
 /**
  * A swerve command with support for two swerve control modes:
@@ -20,7 +29,7 @@ import frc.robot.subsystem.swerve.Swerve;
  * For our purposes, the front of the robot is the intake side.
  */
 public class BiModeSwerveCommand extends CommandBase {
-    private Swerve swerve;
+    private OdometricSwerve swerve;
     private CommandXboxController controller;
 
     public ControlMode controlMode;
@@ -28,14 +37,20 @@ public class BiModeSwerveCommand extends CommandBase {
     public SlewRateLimiter xLimiter = new SlewRateLimiter(1);
     public SlewRateLimiter yLimiter = new SlewRateLimiter(1);
     public SlewRateLimiter zLimiter = new SlewRateLimiter(1.4);
+
+    private PIDController xController = new PIDController(0, 0, 0);
+    private PIDController yController = new PIDController(0, 0, 0);
+    private ProfiledPIDController zController = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(4, 3));
+    private HolonomicDriveController driveController = new HolonomicDriveController(xController, yController, zController);
     private double xSens;
     private double ySens;
     private double zSens;
 
+    public boolean turnToAngle = false;
     public double targetAngle = 0;
 
 
-    public BiModeSwerveCommand(Swerve swerve, CommandXboxController controller){
+    public BiModeSwerveCommand(OdometricSwerve swerve, CommandXboxController controller){
         this.swerve = swerve;
         this.controller = controller;
         controlMode = ControlMode.FieldCentric; //default control mode is field-centric
@@ -45,16 +60,38 @@ public class BiModeSwerveCommand extends CommandBase {
 
     @Override
     public void execute(){
-        double xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
-        double ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-        double zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
-        switch (controlMode){
-            case FieldCentric:
-                moveFieldCentric(xSpeed, ySpeed, zSpeed);
-                break;
-            case RobotCentric:
-                moveRobotCentric(xSpeed,ySpeed,zSpeed);
-                break;
+        if (Math.abs(controller.getRightY()) > 0.5) {
+            turnToAngle = true;
+            if (controller.getRightY() > 0) {
+                targetAngle = 0;
+            } else {
+                targetAngle = 180;
+            }
+        }
+        if (Math.abs(controller.getRightX()) > 0.5){
+            turnToAngle = false;
+        }
+
+        double xSpeed;
+        double ySpeed;
+        double zSpeed;
+
+        if (turnToAngle) {
+            zSpeed = driveController.calculate(swerve.getCurrentPose(), new Pose2d(swerve.getCurrentPose().getTranslation(), new Rotation2d(Math.toRadians(targetAngle))), 0, new Rotation2d(Math.toRadians(targetAngle))).omegaRadiansPerSecond;
+            moveFieldCentric(0, 0, zSpeed);
+        } else {
+            xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
+            ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
+            zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+
+            switch (controlMode){
+                case FieldCentric:
+                    moveFieldCentric(xSpeed, ySpeed, zSpeed);
+                    break;
+                case RobotCentric:
+                    moveRobotCentric(xSpeed,ySpeed,zSpeed);
+                    break;
+            }
         }
     }
 

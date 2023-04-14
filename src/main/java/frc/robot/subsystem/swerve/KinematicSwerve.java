@@ -33,7 +33,7 @@ public class KinematicSwerve extends SubsystemBase implements Swerve, Sendable {
     public KinematicSwerve(GyroComponent gyro, KinematicWheelModule... wheelModules) {
         this.wheelModules = wheelModules;
         this.gyro = gyro;
-
+        
         kinematics = new SwerveDriveKinematics(getTranslations(wheelModules));
 
         lowestMaximumWheelSpeed = getLowestMaximumWheelModuleSpeeds(wheelModules);

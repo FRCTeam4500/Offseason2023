@@ -83,7 +83,7 @@ public class RobotContainer {
     public static boolean isCone = true; // Changes with coneButton/cubeButton
     public static boolean isBottomCone = true; // Changes with Orientation buttons
 
-    private final PathFollowingSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
+    private final OdometricSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
     private final Arm m_arm = makeArm();
     private final Intake m_intake = makeIntake();
     private final Vision m_vision = HardwareVisionFactory.makeVision();
