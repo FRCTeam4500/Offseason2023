@@ -161,7 +161,7 @@ public class KinematicSwerve extends SubsystemBase implements Swerve, Sendable {
         builder.addDoubleProperty("Current X", () -> currentSpeeds.vxMetersPerSecond, null);
         builder.addDoubleProperty("Current Y", () -> currentSpeeds.vyMetersPerSecond, null);
         builder.addDoubleProperty("Current Z", () -> currentSpeeds.omegaRadiansPerSecond, null);
-        builder.addDoubleProperty("Robot Angle: ", () -> (getRobotAngle()), null);
+        builder.addDoubleProperty("Robot Angle: ", () -> getRobotAngle(), null);
         builder.addDoubleProperty("Gyro Offset from Current Zero %2Pi", () -> Math.toDegrees((gyro.getAngle()-currentGyroZero)%(2*Math.PI)), null);
     }
 

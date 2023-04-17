@@ -120,6 +120,10 @@ public class BiModeSwerveCommand extends CommandBase {
         zSens = .5;
     }
 
+    public void setTargetAngle(double angle) {
+        targetAngle = angle;
+    }
+
     /**
      * Switches between RobotCentric and FieldCentric
      */
@@ -133,7 +137,7 @@ public class BiModeSwerveCommand extends CommandBase {
 
     public void initSendable(SendableBuilder builder){
         builder.addStringProperty("Drive Mode", () -> {return controlMode.name();}, null);
-        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, null);
+        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, this::setTargetAngle);
         
     }
 }
