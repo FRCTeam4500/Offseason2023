@@ -1,39 +1,21 @@
 package frc.robot;
 
-
-import frc.robot.utility.ControllerInfo;
-
 import static frc.robot.subsystem.Arm.makeArm;
 import static frc.robot.subsystem.Intake.makeIntake;
 import static frc.robot.Constants.RobotConstants.commandMap;
 
-import java.util.HashMap;
-
 import com.pathplanner.lib.auto.PIDConstants;
-import com.pathplanner.lib.auto.RamseteAutoBuilder;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.CANSparkMax.ControlType;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.dashboard.DashboardMessageDisplay;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import frc.robot.subsystem.Arm.Position;
 
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
@@ -42,27 +24,19 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
-import frc.robot.component.hardware.SparkMaxComponent;
 import frc.robot.subsystem.swerve.command.BalanceCommand;
 import frc.robot.subsystem.swerve.command.BiModeSwerveCommand;
-import frc.robot.subsystem.swerve.command.TriModeSwerveCommand;
 import frc.robot.subsystem.swerve.pathfollowingswerve.HardwareSwerveFactory;
 import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
-import frc.robot.subsystem.swerve.pathfollowingswerve.PathFollowingSwerve;
-import frc.robot.subsystem.vision.HardwareVisionFactory;
-import frc.robot.subsystem.vision.Vision;
-import frc.robot.subsystem.swerve.command.TriModeSwerveCommand.ControlMode;
 
 
 public class RobotContainer {
     /* Setting Joystick Buttons */
     private final CommandXboxController driveStick = new CommandXboxController(2);
     private final Joystick controlStick = new Joystick(1);
-    private final ControllerInfo info = new ControllerInfo();
 
-    private final Trigger switchDriveModeRobotCentricButton = driveStick.x();
+    private final Trigger switchDriveModeButton = driveStick.x();
     private final Trigger resetGyroButton = driveStick.a();
-    private final Trigger fastModeButton = driveStick.rightBumper();
     private final Trigger slowModeButton = driveStick.leftBumper();
     private final Trigger driverPlaceButton = driveStick.b();
 
@@ -77,7 +51,6 @@ public class RobotContainer {
 
     private final JoystickButton tiltUp = new JoystickButton(controlStick, 4);
     private final JoystickButton tiltDown = new JoystickButton(controlStick, 2);
-    private final DashboardMessageDisplay messages = new DashboardMessageDisplay(15, 50);
     private BiModeSwerveCommand swerveCommand;
     private BalanceCommand balanceCommand;
     public static boolean isCone = true; // Changes with coneButton/cubeButton
@@ -86,7 +59,6 @@ public class RobotContainer {
     private final OdometricSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
     private final Arm m_arm = makeArm();
     private final Intake m_intake = makeIntake();
-    private final Vision m_vision = HardwareVisionFactory.makeVision();
 
     /**Both PID constants need to be tested */
     private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, commandMap, m_swerve);    
@@ -105,12 +77,10 @@ public class RobotContainer {
         balanceCommand = new BalanceCommand(m_swerve, true);
         m_swerve.setDefaultCommand(swerveCommand);
 
-        switchDriveModeRobotCentricButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.switchControlMode();}));
+        switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.switchControlMode();}));
         resetGyroButton.toggleOnTrue(new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
-        fastModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
-        fastModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.midSpeed();}));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
-        slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.midSpeed();}));
+        slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
         driverPlaceButton.toggleOnTrue(
             new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
         );
