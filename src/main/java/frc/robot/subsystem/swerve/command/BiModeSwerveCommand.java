@@ -98,7 +98,7 @@ public class BiModeSwerveCommand extends CommandBase {
     }
 
     private void moveAngleCentric(double xSpeed, double ySpeed) {
-        double wSpeed = 4 * angleController.calculate(swerve.getRobotAngle(), targetAngle);
+        double wSpeed = 4 * angleController.calculate(swerve.getRobotAngle(), Math.toRadians(targetAngle));
         moveFieldCentric(xSpeed, ySpeed, wSpeed);
     }
 
@@ -133,6 +133,7 @@ public class BiModeSwerveCommand extends CommandBase {
 
     public void initSendable(SendableBuilder builder){
         builder.addStringProperty("Drive Mode", () -> {return controlMode.name();}, null);
+        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, null);
         
     }
 }
