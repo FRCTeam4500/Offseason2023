@@ -38,6 +38,7 @@ public class RobotContainer {
     private final Trigger switchDriveModeButton = driveStick.x();
     private final Trigger resetGyroButton = driveStick.a();
     private final Trigger slowModeButton = driveStick.leftBumper();
+    private final Trigger angleCentricButton = driveStick.x();
     private final Trigger driverPlaceButton = driveStick.b();
 
     private final JoystickButton cubeButton = new JoystickButton(controlStick, JoystickConstants.CUBE_INTAKE);
@@ -81,6 +82,7 @@ public class RobotContainer {
         resetGyroButton.toggleOnTrue(new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
+        angleCentricButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.setAngleCentric();}));
         driverPlaceButton.toggleOnTrue(
             new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
         );

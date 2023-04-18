@@ -26,7 +26,22 @@ public class AHRSAngleGetterComponent extends AHRS implements GyroComponent {
     public AHRSAngleGetterComponent(Port kmxp) {
         super(kmxp);
     }
-
+    /**
+     * Returns the total accumulated yaw angle (Z Axis, in radians)
+     * reported by the sensor.
+     *<p>
+     * NOTE: The angle is continuous, meaning it's range is beyond 2pi radians.
+     * This ensures that algorithms that wouldn't want to see a discontinuity 
+     * in the gyro output as it sweeps past 0 on the second time around.
+     *<p>
+     * Note that the returned yaw value will be offset by a user-specified
+     * offset value; this user-specified offset value is set by 
+     * invoking the zeroYaw() method.
+     *<p>
+     * @return The current total accumulated yaw angle (Z axis) of the robot 
+     * in radians. This heading is based on integration of the returned rate 
+     * from the Z-axis (yaw) gyro.
+     */
     @Override
     public double getAngle() {
         return -Math.toRadians(super.getAngle());

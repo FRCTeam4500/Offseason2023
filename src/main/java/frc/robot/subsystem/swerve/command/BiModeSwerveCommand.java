@@ -98,7 +98,7 @@ public class BiModeSwerveCommand extends CommandBase {
     }
 
     private void moveAngleCentric(double xSpeed, double ySpeed) {
-        double wSpeed = 4 * angleController.calculate(swerve.getRobotAngle(), Math.toRadians(targetAngle));
+        double wSpeed = 2 * angleController.calculate(swerve.getRobotAngle(), Math.toRadians(targetAngle));
         moveFieldCentric(xSpeed, ySpeed, wSpeed);
     }
 
@@ -124,6 +124,11 @@ public class BiModeSwerveCommand extends CommandBase {
         targetAngle = angle;
     }
 
+    public void setAngleCentric() {
+        previousControlMode = controlMode;
+        controlMode = ControlMode.AngleCentric;
+    }
+
     /**
      * Switches between RobotCentric and FieldCentric
      */
@@ -136,6 +141,7 @@ public class BiModeSwerveCommand extends CommandBase {
     }
 
     public void initSendable(SendableBuilder builder){
+        builder.setSmartDashboardType("RobotPreferences");
         builder.addStringProperty("Drive Mode", () -> {return controlMode.name();}, null);
         builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, this::setTargetAngle);
         
