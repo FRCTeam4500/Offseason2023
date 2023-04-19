@@ -1,4 +1,4 @@
-package frc.robot.subsystem.swerve.command;
+package frc.robot.commands.teleOpCommands;
 
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
@@ -25,7 +25,7 @@ import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
  * When pushing the joystick foward, the robot moves in whatever direction it is facing.
  * For our purposes, the front of the robot is the intake side.
  */
-public class BiModeSwerveCommand extends CommandBase {
+public class SwerveDriveCommand extends CommandBase {
     private OdometricSwerve swerve;
     private CommandXboxController controller;
 
@@ -45,7 +45,7 @@ public class BiModeSwerveCommand extends CommandBase {
     public double targetAngle = 0;
 
 
-    public BiModeSwerveCommand(OdometricSwerve swerve, CommandXboxController controller){
+    public SwerveDriveCommand(OdometricSwerve swerve, CommandXboxController controller){
         this.swerve = swerve;
         this.controller = controller;
         controlMode = ControlMode.FieldCentric; //default control mode is field-centric

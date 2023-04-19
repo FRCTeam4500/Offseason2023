@@ -80,6 +80,8 @@ public class Constants {
         public static final double ARM_GROUND_ANGLE = -43; 
         /** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double ARM_ZERO_ANGLE = -10; 
+        
+        public static final double ARM_ANGLE_THRESHOLD = 0.5;
 
         /** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
         public static final double ARM_PLACE_TOP = 10900.0; 
@@ -91,6 +93,8 @@ public class Constants {
         public static final double ARM_RETRACT = 0;
         /** Placing a bottom cone (as in we picked up a tilted cone) will require us to extend the arm this amount further <p> <Strong>This value needs to be updated</Strong> <p> Units are raw sensor units */
         public static final double ARM_BOT_CONE_ADDITION = 0; //TODO: Figure this out
+
+        public static final double ARM_WINCH_THRESHOLD = 250;
 
 
     }
@@ -122,6 +126,8 @@ public class Constants {
         public static final double INTAKE_ZERO_ANGLE = -5.5; 
         /** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
         public static final double INTAKE_LAUNCHING_ANGLE = -15.5;
+
+        public static final double INTAKE_ANGLE_THRESHOLD = 0.5;
     }
 
     public static class VisionConstants { 

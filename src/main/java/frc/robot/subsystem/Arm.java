@@ -68,14 +68,15 @@ public class Arm extends SubsystemBase {
     /**
      * Sets the position of the tilt motor.
      * 
-     * Depending on if we are going up or down, it will set the motor to go up or down,
-     * The "? :" is a ternary operator, it is the same as "if else".
-     * 
-     * @param position
+     * @param position 
      */
     public void setTilt(double position) {
         targetTiltAngle = position;
         tiltMotor.setAngle(position);
+    }
+
+    public double getTilt() {
+        return tiltMotor.getAngle();
     }
 
     /**
@@ -139,7 +140,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getWinchPosition() {
-        return winchMotor.getSelectedSensorPosition() / 4096;
+        return winchMotor.getSelectedSensorPosition();
     }
 
     /** 

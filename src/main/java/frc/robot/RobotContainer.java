@@ -24,8 +24,10 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
+import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
+import frc.robot.commands.teleOpCommands.SwerveDriveCommand;
 import frc.robot.subsystem.swerve.command.BalanceCommand;
-import frc.robot.subsystem.swerve.command.BiModeSwerveCommand;
 import frc.robot.subsystem.swerve.pathfollowingswerve.HardwareSwerveFactory;
 import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 
@@ -39,6 +41,7 @@ public class RobotContainer {
     private final Trigger resetGyroButton = driveStick.a();
     private final Trigger slowModeButton = driveStick.leftBumper();
     private final Trigger driverPlaceButton = driveStick.b();
+    private final Trigger testArmButton = driveStick.y();
 
     private final JoystickButton cubeButton = new JoystickButton(controlStick, JoystickConstants.CUBE_INTAKE);
     private final JoystickButton placeButton = new JoystickButton(controlStick, JoystickConstants.PLACE);
@@ -51,7 +54,7 @@ public class RobotContainer {
 
     private final JoystickButton tiltUp = new JoystickButton(controlStick, 4);
     private final JoystickButton tiltDown = new JoystickButton(controlStick, 2);
-    private BiModeSwerveCommand swerveCommand;
+    private SwerveDriveCommand swerveCommand;
     private BalanceCommand balanceCommand;
     public static boolean isCone = true; // Changes with coneButton/cubeButton
     public static boolean isBottomCone = true; // Changes with Orientation buttons
@@ -63,6 +66,8 @@ public class RobotContainer {
     /**Both PID constants need to be tested */
     private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, commandMap, m_swerve);    
     private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
+
+    private final SendableChooser<Command> commandChooser = new SendableChooser<Command>();
     
 
     public RobotContainer() {
@@ -73,7 +78,7 @@ public class RobotContainer {
     }
     
     void configureSwerve() {
-        swerveCommand = new BiModeSwerveCommand(m_swerve, driveStick);
+        swerveCommand = new SwerveDriveCommand(m_swerve, driveStick);
         balanceCommand = new BalanceCommand(m_swerve, true);
         m_swerve.setDefaultCommand(swerveCommand);
 
@@ -81,6 +86,8 @@ public class RobotContainer {
         resetGyroButton.toggleOnTrue(new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
+        testArmButton.toggleOnTrue(new SequentialCommandGroup(commandChooser.getSelected(), new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)));
+        testArmButton.toggleOnFalse(new Intake.IntakeSetOutputCommand(m_intake, 0));
         driverPlaceButton.toggleOnTrue(
             new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
         );
@@ -102,6 +109,12 @@ public class RobotContainer {
     }
 
     void configureCommands() {
+        commandChooser.setDefaultOption("Zero", new SetArmAndIntakeCommand(m_arm, m_intake, Position.Zero));
+        commandChooser.addOption("Substation", new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation));
+        commandChooser.addOption("High", new SetArmAndIntakeCommand(m_arm, m_intake, Position.High));
+        commandChooser.addOption("Middle", new SetArmAndIntakeCommand(m_arm, m_intake, Position.Middle));
+        commandChooser.addOption("Low", new SetArmAndIntakeCommand(m_arm, m_intake, Position.Low));
+
         commandMap.put(
             "readyBot", 
             new SequentialCommandGroup(
