@@ -97,9 +97,10 @@ public class SetArmAndIntakeCommand extends CommandBase{
     }
 
     public boolean isFinished() {
-        return (distanceToTargetWinchPosition < ArmConstants.ARM_WINCH_THRESHOLD 
-                && distanceToTargetArmAngle < ArmConstants.ARM_ANGLE_THRESHOLD 
-                && distanceToTargetIntakeAngle < IntakeConstants.INTAKE_ANGLE_THRESHOLD);
+        // return (distanceToTargetWinchPosition < ArmConstants.ARM_WINCH_THRESHOLD 
+        //         && distanceToTargetArmAngle < ArmConstants.ARM_ANGLE_THRESHOLD 
+        //         && distanceToTargetIntakeAngle < IntakeConstants.INTAKE_ANGLE_THRESHOLD);
+        return true;
     }
 
     public void end(boolean interrupted) {
