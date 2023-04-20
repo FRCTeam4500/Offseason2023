@@ -88,6 +88,9 @@ public class SetArmAndIntakeCommand extends CommandBase{
         arm.setWinch(targetWinchPosition);
         arm.setTilt(targetArmAngle);
         intake.setAngle(targetIntakeAngle);
+        if (position == Position.Zero || position == Position.Start) {
+            intake.setSpeed(0);
+        }
     }
 
     public void execute() {
