@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
 import frc.robot.commands.teleOpCommands.SetConsecutiveIntakeOutputs;
 import frc.robot.subsystem.Arm;
