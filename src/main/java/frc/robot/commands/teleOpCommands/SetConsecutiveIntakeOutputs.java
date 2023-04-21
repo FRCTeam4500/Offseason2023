@@ -22,13 +22,17 @@ public class SetConsecutiveIntakeOutputs extends CommandBase{
         isFinished = false;
     }
 
-    public void initialize() {
+    public void sendCommands() {
         new SequentialCommandGroup(
             new SetIntakeSpeedCommand(intake, firstOutput),
             new WaitCommand(wait),
             new SetIntakeSpeedCommand(intake, secondOutput),
             new InstantCommand(() -> isFinished = true)
-        );    
+        );
+    }
+
+    public void initialize() {
+        sendCommands();
     }
 
     public void execute(){}

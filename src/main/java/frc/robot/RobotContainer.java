@@ -83,7 +83,7 @@ public class RobotContainer {
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
         driverPlaceButton.toggleOnTrue(
-            commandMap.get("place")
+            commandMap.get("teleOpPlace")
         );
         driverPlaceButton.toggleOnFalse(
             commandMap.get("zero")
@@ -118,6 +118,17 @@ public class RobotContainer {
         commandMap.put(
             "place",
             new SetConsecutiveIntakeOutputs(m_intake, IntakeConstants.INTAKE_CONE_SPEED, 0.5, IntakeConstants.INTAKE_CUBE_SPEED)
+        );
+
+        commandMap.put(
+            "teleOpPlace",
+            new SequentialCommandGroup(
+                new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED),
+                new WaitCommand(0.5),
+                new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED),
+                new WaitCommand(0.5),
+                new SetIntakeSpeedCommand(m_intake, 0)
+            )
         );
 
         commandMap.put(
@@ -234,7 +245,7 @@ public class RobotContainer {
         );
        
         placeButton.toggleOnTrue(
-            commandMap.get("place")
+            commandMap.get("teleOpPlace")
         );
         placeButton.toggleOnFalse(
             commandMap.get("zero")

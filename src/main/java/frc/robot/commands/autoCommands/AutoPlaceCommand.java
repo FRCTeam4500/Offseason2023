@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
+import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
 import frc.robot.commands.teleOpCommands.SetConsecutiveIntakeOutputs;
 import frc.robot.subsystem.Arm;
@@ -29,8 +30,9 @@ public class AutoPlaceCommand extends CommandBase{
                 new SequentialCommandGroup(
                     new SetArmAndIntakeCommand(arm, intake, Position.High), 
                     new WaitCommand(0.5),
-                    new SetConsecutiveIntakeOutputs(intake, IntakeConstants.INTAKE_CUBE_SPEED, 0.5, 0),
+                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CUBE_SPEED),
                     new WaitCommand(0.5),
+                    new SetIntakeSpeedCommand(intake, 0),
                     new SetArmAndIntakeCommand(arm, intake, Position.Zero),
                     new InstantCommand(() -> isFinished = true)
                 );
@@ -39,8 +41,9 @@ public class AutoPlaceCommand extends CommandBase{
                 new SequentialCommandGroup(
                     new SetArmAndIntakeCommand(arm, intake, Position.High), 
                     new WaitCommand(0.5),
-                    new SetConsecutiveIntakeOutputs(intake, IntakeConstants.INTAKE_CONE_SPEED, 0.5, 0),
+                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CONE_SPEED),
                     new WaitCommand(0.5),
+                    new SetIntakeSpeedCommand(intake, 0),
                     new SetArmAndIntakeCommand(arm, intake, Position.Zero),
                     new InstantCommand(() -> isFinished = true)
                 );
@@ -49,8 +52,9 @@ public class AutoPlaceCommand extends CommandBase{
                 new SequentialCommandGroup(
                     new SetArmAndIntakeCommand(arm, intake, Position.Middle), 
                     new WaitCommand(0.5),
-                    new SetConsecutiveIntakeOutputs(intake, IntakeConstants.INTAKE_CUBE_SPEED, 0.5, 0),
+                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CUBE_SPEED),
                     new WaitCommand(0.5),
+                    new SetIntakeSpeedCommand(intake, 0),
                     new SetArmAndIntakeCommand(arm, intake, Position.Zero),
                     new InstantCommand(() -> isFinished = true)
                 );
@@ -59,8 +63,9 @@ public class AutoPlaceCommand extends CommandBase{
                 new SequentialCommandGroup(
                     new SetArmAndIntakeCommand(arm, intake, Position.Middle), 
                     new WaitCommand(0.5),
-                    new SetConsecutiveIntakeOutputs(intake, IntakeConstants.INTAKE_CONE_SPEED, 0.5, 0),
+                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CONE_SPEED),
                     new WaitCommand(0.5),
+                    new SetIntakeSpeedCommand(intake, 0),
                     new SetArmAndIntakeCommand(arm, intake, Position.Zero),
                     new InstantCommand(() -> isFinished = true)
                 );
