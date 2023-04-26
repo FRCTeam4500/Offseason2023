@@ -11,12 +11,11 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 
 
 public class Arm extends SubsystemBase {
-    SparkMaxComponent tiltMotor;
+    public SparkMaxComponent tiltMotor;
     private TalonSRXComponent winchMotor;
     private SparkMaxPIDController tiltPIDController;
     private double targetTiltAngle;
     private double targetWinchPosition;
-    Position position;
 
     /**
      * Creates a new Arm from Constants
@@ -86,49 +85,7 @@ public class Arm extends SubsystemBase {
     public void zero(){
         tiltMotor.getEncoder().setPosition(0);
     }
-    /**
-     * Command for setting the position of the tilt motor
-     */
-    public static class ArmSetTiltAngleCommand extends InstantCommand {
-        private Arm arm;
-        private double position;
-        private boolean isLaunching;
-
-        public ArmSetTiltAngleCommand(Arm arm, double position) {
-            this.arm = arm;
-            this.position = position;
-            addRequirements(arm);
-        }
-
-        public ArmSetTiltAngleCommand(Arm arm, boolean isLaunching) {
-            this.arm = arm;
-            this.isLaunching = isLaunching;
-        }
     
-        public void initialize() {
-            if (isLaunching) {
-                arm.setTilt(ArmConstants.ARM_LAUNCH_ANGLE);
-            } else {
-                arm.setTilt(position);
-            }
-        }
-    }
-    
-
-    public static class ArmSetWinchOutputCommand extends InstantCommand {
-        private Arm arm;
-        private double output;
-
-        public ArmSetWinchOutputCommand(Arm arm, double output) {
-            this.arm = arm;
-            this.output = output;
-            addRequirements(arm);
-        }
-
-        public void initialize() {
-                arm.setWinch(output);
-        }
-    }
 
     public double getWinchPosition() {
         return winchMotor.getSelectedSensorPosition();
@@ -137,12 +94,7 @@ public class Arm extends SubsystemBase {
     /** 
      * Positions for the Arm (Synchronize tilt and winch)
     */
-    public enum Position {
-        Bottom,
-        Middle,
-        Top,
-        Retracted
-    }
+    
 
     public static class ArmChangeTiltCommand extends InstantCommand {
         private Arm arm;
@@ -170,14 +122,6 @@ public class Arm extends SubsystemBase {
         public void initialize() {
             arm.setOutput(output);
         }
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
     }
 
     public static Arm makeArm() {

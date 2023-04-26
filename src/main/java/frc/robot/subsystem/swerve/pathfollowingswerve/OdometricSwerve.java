@@ -37,6 +37,12 @@ public class OdometricSwerve extends KinematicSwerve implements PathFollowingSwe
         lastTranslation = getCurrentPose().getTranslation();
         odometry.update(new Rotation2d(gyro.getAngle()), getSwerveModulePositions());
     }
+
+    public void playFrequency(double frequency) {
+        for(int i = 0; i < odometricWheelModules.length; i++) {
+            odometricWheelModules[i].playFrequency(frequency);
+        }
+    }
     private SwerveModuleState[] getSwerveModuleStates(){
         var states = new SwerveModuleState[wheelModules.length];
         for(int i = 0;i<states.length;i++){

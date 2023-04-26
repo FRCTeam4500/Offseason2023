@@ -17,10 +17,6 @@ public class SetArmAndIntakeCommand extends CommandBase{
     private double targetArmAngle;
     private double targetIntakeAngle;
 
-    private double distanceToTargetWinchPosition;
-    private double distanceToTargetArmAngle;
-    private double distanceToTargetIntakeAngle;
-
     /**
      * The constructor of SetArmAndIntakeCommand
      * @param arm the arm subsystem
@@ -93,16 +89,7 @@ public class SetArmAndIntakeCommand extends CommandBase{
         }
     }
 
-    public void execute() {
-        distanceToTargetWinchPosition = Math.abs(targetWinchPosition - arm.getWinchPosition());
-        distanceToTargetArmAngle = Math.abs(targetArmAngle - arm.getTilt());
-        distanceToTargetIntakeAngle = Math.abs(targetIntakeAngle - intake.getAngle());
-    }
-
     public boolean isFinished() {
-        // return (distanceToTargetWinchPosition < ArmConstants.ARM_WINCH_THRESHOLD 
-        //         && distanceToTargetArmAngle < ArmConstants.ARM_ANGLE_THRESHOLD 
-        //         && distanceToTargetIntakeAngle < IntakeConstants.INTAKE_ANGLE_THRESHOLD);
         return true;
     }
 

@@ -1,38 +1,27 @@
 package frc.robot;
 
-import static frc.robot.subsystem.Arm.makeArm;
-import static frc.robot.subsystem.Intake.makeIntake;
-
-import static frc.robot.Constants.RobotConstants.commandMap;
+import java.util.HashMap;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
-
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.JoystickConstants;
-import frc.robot.commands.autoCommands.AutoPickupCommand;
-import frc.robot.commands.autoCommands.AutoPlaceCommand;
-import frc.robot.commands.autoCommands.AutoPickupCommand.GamePiece;
-import frc.robot.commands.autoCommands.AutoPlaceCommand.PlacePosition;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
+import frc.robot.subsystem.*;
+import frc.robot.Constants.*;
+import frc.robot.commands.baseCommands.*;
+import frc.robot.commands.complexCommands.*;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
-import frc.robot.commands.teleOpCommands.SetConsecutiveIntakeOutputs;
-import frc.robot.commands.teleOpCommands.SwerveDriveCommand;
+import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
+import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
+import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
+import frc.robot.commands.debugCommands.TiltIntakeCommand;
 import frc.robot.subsystem.swerve.pathfollowingswerve.HardwareSwerveFactory;
 import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 
@@ -40,35 +29,39 @@ import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 public class RobotContainer {
     /* Setting Joystick Buttons */
     private final CommandXboxController driveStick = new CommandXboxController(2);
-    private final Joystick controlStick = new Joystick(1);
+    private final CommandJoystick controlJoystick = new CommandJoystick(1);
 
     private final Trigger switchDriveModeButton = driveStick.x();
     private final Trigger resetGyroButton = driveStick.a();
     private final Trigger slowModeButton = driveStick.leftBumper();
     private final Trigger driverPlaceButton = driveStick.b();
 
-    private final JoystickButton cubeButton = new JoystickButton(controlStick, JoystickConstants.CUBE_INTAKE);
-    private final JoystickButton placeButton = new JoystickButton(controlStick, JoystickConstants.PLACE);
-    private final JoystickButton readySubstationButton = new JoystickButton(controlStick, JoystickConstants.SUBSTATION_PICKUP);
-    private final JoystickButton readyTopButton = new JoystickButton(controlStick, JoystickConstants.READY_TOP);
-    private final JoystickButton readyMidButton = new JoystickButton(controlStick, JoystickConstants.READY_MIDDLE);
-    private final JoystickButton readyBotButton = new JoystickButton(controlStick, JoystickConstants.READY_BOTTOM);
-    private final JoystickButton uprightConeButton = new JoystickButton(controlStick, JoystickConstants.UPRIGHT_CONE);
-    
-    private final JoystickButton tiltUp = new JoystickButton(controlStick, 4);
-    private final JoystickButton tiltDown = new JoystickButton(controlStick, 2);
-    private SwerveDriveCommand swerveCommand;
+    private final Trigger cubeButton = controlJoystick.button(JoystickConstants.CUBE_INTAKE);
+    private final Trigger placeButton = controlJoystick.button(JoystickConstants.PLACE);
+    private final Trigger readySubstationButton = controlJoystick.button(JoystickConstants.SUBSTATION_PICKUP);
+    private final Trigger readyTopButton = controlJoystick.button(JoystickConstants.READY_TOP);
+    private final Trigger readyMidButton = controlJoystick.button(JoystickConstants.READY_MIDDLE);
+    private final Trigger readyBotButton = controlJoystick.button(JoystickConstants.READY_BOTTOM);
+    private final Trigger coneButton = controlJoystick.button(JoystickConstants.CONE_INTAKE);
+    private final Trigger tiltUpButton = controlJoystick.button(4);
+    private final Trigger tiltDownButton = controlJoystick.button(2);
 
     private final OdometricSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
-    private final Arm m_arm = makeArm();
-    private final Intake m_intake = makeIntake();
+    private final Arm m_arm = new Arm();
+    private final Intake m_intake = new Intake();
 
+    private SwerveDriveCommand swerveCommand;
+
+    /** A hash map containing the commands the robot will use in auto <p> These commands can be accessed by putting the cooresponding string key into the .get() method
+     * <p> Example: {@code autoCommandMap.get("zero");} 
+     */
+    public static final HashMap<String, Command> autoCommandMap = new HashMap<>();
+    
     /**Both PID constants need to be tested */
-    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, commandMap, m_swerve);    
+    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, autoCommandMap, m_swerve);    
     private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
     public RobotContainer() {
-        configureCommands();
         configureSwerve();
         configureAuto();
         configureArmAndIntake();
@@ -79,14 +72,14 @@ public class RobotContainer {
         m_swerve.setDefaultCommand(swerveCommand);
 
         switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.switchControlMode();}));
-        resetGyroButton.toggleOnTrue(new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
+        resetGyroButton.toggleOnTrue(new ResetGyroCommand(m_swerve));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
         driverPlaceButton.toggleOnTrue(
-            commandMap.get("teleOpPlace")
+            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
         );
         driverPlaceButton.toggleOnFalse(
-            commandMap.get("zero")
+            new ZeroCommand(m_arm, m_intake)
         );
         
         Shuffleboard.getTab("Swerve").add("Swerve", m_swerve);
@@ -94,161 +87,47 @@ public class RobotContainer {
     }
 
 
-    void configureCommands() {
-        commandMap.put(
-            "readyBot", 
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Low)
-        );
-
-        commandMap.put(
-            "readyMid",
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Middle)
-        );
-
-        commandMap.put(
-            "readyTop",
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.High)
-        );
-
-        commandMap.put(
-            "readySubstation",
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation)
-        );
-
-        commandMap.put(
-            "place",
-            new SetConsecutiveIntakeOutputs(m_intake, IntakeConstants.INTAKE_CONE_SPEED, 0.5, IntakeConstants.INTAKE_CUBE_SPEED)
-        );
-
-        commandMap.put(
-            "teleOpPlace",
-            new SequentialCommandGroup(
-                new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED),
-                new WaitCommand(0.5),
-                new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED),
-                new WaitCommand(0.5),
-                new SetIntakeSpeedCommand(m_intake, 0)
-            )
-        );
-
-        commandMap.put(
-            "intakeCube",
-            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
-        );
-
-        commandMap.put(
-            "intakeCone", 
-            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)  
-        );
-        
-        commandMap.put(
-            "zero",
-            new SequentialCommandGroup(
-                new SetArmAndIntakeCommand(m_arm, m_intake, Position.Zero),
-                new SetIntakeSpeedCommand(m_intake, 0)
-            )
-        );
-
-        commandMap.put(
-            "start",
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Start)
-        );
-
-        commandMap.put(
-            "waitQuarter", 
-            new WaitCommand(.25)
-        );
-
-        commandMap.put(
-            "waitHalf", 
-            new WaitCommand(.5)
-        );
-        
-        commandMap.put(
-            "waitOne", 
-            new WaitCommand(1)
-        );
-
-        commandMap.put(
-            "Reset Gyro", 
-            new InstantCommand(() -> {m_swerve.resetRobotAngle();})
-        );
-
-        commandMap.put(
-            "Reverse Gyro", 
-            new InstantCommand(() -> {m_swerve.resetRobotAngle(180);})
-        );
-
-        commandMap.put(
-            "autoPlaceConeTop",
-            new AutoPlaceCommand(m_arm, m_intake, PlacePosition.HighCone)
-        );
-
-        commandMap.put(
-            "autoPlaceConeMid",
-            new AutoPlaceCommand(m_arm, m_intake, PlacePosition.MiddleCone)
-        );
-
-        commandMap.put(
-            "autoPlaceCubeTop",
-            new AutoPlaceCommand(m_arm, m_intake, PlacePosition.HighCube)
-        );
-
-        commandMap.put(
-            "autoPlaceCubeMid",
-            new AutoPlaceCommand(m_arm, m_intake, PlacePosition.MiddleCube)
-        );
-
-        commandMap.put(
-            "autoPickupCube",
-            new AutoPickupCommand(m_arm, m_intake, GamePiece.Cube)
-        );
-
-        commandMap.put(
-            "autoPickupCone",
-            new AutoPickupCommand(m_arm, m_intake, GamePiece.Cone)
-        );
-    }
 
     void configureArmAndIntake() {
 
-        tiltUp.toggleOnTrue(new Intake.IntakeChangeTiltCommand(m_intake, 1));
-        tiltDown.toggleOnTrue(new Arm.ArmChangeTiltCommand(m_arm, -1));
+        tiltUpButton.toggleOnTrue(new TiltIntakeCommand(m_intake, 1));
+        tiltDownButton.toggleOnTrue(new TiltIntakeCommand(m_intake, -1));
+
         cubeButton.toggleOnTrue( 
-            commandMap.get("intakeCube")
+            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
         );
         cubeButton.toggleOnFalse(
-            commandMap.get("zero")
+            new ZeroCommand(m_arm, m_intake)
         );
 
-        uprightConeButton.toggleOnTrue(
-            commandMap.get("intakeCone")
+        coneButton.toggleOnTrue(
+            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
         );
-        uprightConeButton.toggleOnFalse(
-            commandMap.get("zero") 
+        coneButton.toggleOnFalse(
+            new ZeroCommand(m_arm, m_intake)
         );
 
         readyBotButton.toggleOnTrue(
-            commandMap.get("readyBot")
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Low)
         );
 
         readyMidButton.toggleOnTrue(
-            commandMap.get("readyMid")
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Middle)
         );
 
         readyTopButton.toggleOnTrue(
-            commandMap.get("readyTop")
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.High)
         );
 
         readySubstationButton.toggleOnTrue(
-            commandMap.get("readySubstation")
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation)
         );
        
         placeButton.toggleOnTrue(
-            commandMap.get("teleOpPlace")
+            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
         );
         placeButton.toggleOnFalse(
-            commandMap.get("zero")
+            new ZeroCommand(m_arm, m_intake)
         );
 
         Shuffleboard.getTab("Arm and Intake").add("Intake", m_intake);
@@ -256,6 +135,51 @@ public class RobotContainer {
     }
 
     void configureAuto() {
+        autoCommandMap.put(
+            "zero", 
+            new ZeroCommand(m_arm, m_intake)
+        );
+
+        autoCommandMap.put(
+            "placeCubeTop", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.HighCube)
+        );
+
+        autoCommandMap.put(
+            "placeConeTop", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.HighCone)
+        );
+
+        autoCommandMap.put(
+            "placeCubeMid", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.MidCube)
+        );
+
+        autoCommandMap.put(
+            "placeConeMid", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.MidCone)
+        );
+
+        autoCommandMap.put(
+            "resetGyro", 
+            new ResetGyroCommand(m_swerve)
+        );
+
+        autoCommandMap.put(
+            "reverseGyro", 
+            new ResetGyroCommand(m_swerve, 180)
+        );
+
+        autoCommandMap.put(
+            "pickupCone", 
+            new AutoPickupCommand(m_arm, m_intake, Piece.Cone)
+        );
+
+        autoCommandMap.put(
+            "pickupCube", 
+            new AutoPickupCommand(m_arm, m_intake, Piece.Cube)
+        );
+
         autonChooser.setDefaultOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Red Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Blue Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueTopRedBot2PieceTopAuto));

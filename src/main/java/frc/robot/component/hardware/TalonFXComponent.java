@@ -54,5 +54,9 @@ public class TalonFXComponent extends TalonFX implements SmartMotorComponent {
     public void setAngularVelocity(double velocity) {
         set(TalonFXControlMode.Velocity, velocity * TICKS_PER_RADIAN/10.0);
     }
+
+    public void playFrequency(double frequency) {
+        set(TalonFXControlMode.MusicTone, frequency);
+    }
 }
 

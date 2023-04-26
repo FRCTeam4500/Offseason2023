@@ -34,6 +34,11 @@ public class OdometricWheelModule extends KinematicWheelModule {
         this.angleMotor = angleMotor;
     }
 
+    public void playFrequency(double frequency) {
+        driveMotor.playFrequency(frequency);
+        angleMotor.playFrequency(frequency);
+    }
+
 
     public SwerveModuleState getState() {
         return new SwerveModuleState(driveMotor.getAngularVelocity() * driveRotsPerMotorRots / 2
