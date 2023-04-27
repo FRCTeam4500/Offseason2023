@@ -24,8 +24,7 @@ public class Constants {
         public final static int PLACE = 1;
 
         public final static int CUBE_INTAKE = 12;
-        public final static int SIDEWAYS_CONE = 5;
-        public final static int UPRIGHT_CONE = 6;
+        public final static int CONE_INTAKE = 6;
 
         public final static int READY_BOTTOM = 9;
         public final static int READY_MIDDLE = 7;
@@ -37,7 +36,7 @@ public class Constants {
     public static class SwerveConstants { 
         public final static double MAX_LINEAR_SPEED = ((1276*9.42)/60)/12; // 1276 is rpm, 9.42 is wheel circumference (in.), final units are ft/s 
         public final static double MAX_LINEAR_ACCELERATION = 4; //Test
-        public final static double MAX_ROTATIONAL_SPEED = MAX_LINEAR_SPEED / (4d/3); // 4/3 is (about) the radius from the center of the robot to the swerve drive wheels.
+        public final static double MAX_ROTATIONAL_SPEED = MAX_LINEAR_SPEED / (4/3); // 4/3 is (about) the radius from the center of the robot to the swerve drive wheels.
         public final static double MAX_ROTATIONAL_ACCELERATION = 4; // Linear Acceleration/radius
 
         public static final double DRIVE_RATIO = 1/5.; // drive rotations per motor rotation
@@ -80,6 +79,8 @@ public class Constants {
         public static final double ARM_GROUND_ANGLE = -43; 
         /** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double ARM_ZERO_ANGLE = -10; 
+        
+        public static final double ARM_ANGLE_THRESHOLD = 0.5;
 
         /** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
         public static final double ARM_PLACE_TOP = 10900.0; 
@@ -91,6 +92,8 @@ public class Constants {
         public static final double ARM_RETRACT = 0;
         /** Placing a bottom cone (as in we picked up a tilted cone) will require us to extend the arm this amount further <p> <Strong>This value needs to be updated</Strong> <p> Units are raw sensor units */
         public static final double ARM_BOT_CONE_ADDITION = 0; //TODO: Figure this out
+
+        public static final double ARM_WINCH_THRESHOLD = 250;
 
 
     }
@@ -122,24 +125,10 @@ public class Constants {
         public static final double INTAKE_ZERO_ANGLE = -5.5; 
         /** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
         public static final double INTAKE_LAUNCHING_ANGLE = -15.5;
+
+        public static final double INTAKE_ANGLE_THRESHOLD = 0.5;
     }
 
-    public static class VisionConstants { 
-        
-        public static final int width = 300;
-        public static final int height = 200;
-        /** IDK what this does, it the only variable in the old VisionConstants file, so I just moved it over <p> I think it says how close to the crosshair an object has to be to be counted as a target */
-        public static final double MAXIMUM_ALLOWABLE_OFFSET = 0;
-
-        public static final double VISION_HEIGHT = 0.0;
-        public static final double VISION_ANGLE = 0.0;
-        public static final double VISION_OFFSET = 0.0;
-
-        public static final double TARGET_HEIGHT = 0.0;
-
-        public static final double MAX_DEPTH_TO_TARGET = 0.1;
-        public static final double MAX_OFFSET_TO_TARGET = 0.1;
-    }
 
     public static class AutoConstants { //Everything in this class must be in meters
         
@@ -179,10 +168,5 @@ public class Constants {
         // Add Auto Paths here, like the above
     }
 
-    public static class RobotConstants {
-        /** A hash map containing the generic commands the robot will use <p> These commands can be accessed by putting the cooresponding string key into the .get() method
-         * <p> Example: {@code commandMap.get("zero");} 
-         */
-        public static final HashMap<String, Command> commandMap = new HashMap<>();
-    }
+    
 }

@@ -1,31 +1,27 @@
 package frc.robot;
 
-import static frc.robot.subsystem.Arm.makeArm;
-import static frc.robot.subsystem.Intake.makeIntake;
-import static frc.robot.Constants.RobotConstants.commandMap;
+import java.util.HashMap;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
+
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
-
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.Constants.JoystickConstants;
-import frc.robot.subsystem.swerve.command.BalanceCommand;
-import frc.robot.subsystem.swerve.command.BiModeSwerveCommand;
+import frc.robot.subsystem.*;
+import frc.robot.Constants.*;
+import frc.robot.commands.baseCommands.*;
+import frc.robot.commands.complexCommands.*;
+import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
+import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
+import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
+import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
+import frc.robot.commands.debugCommands.TiltIntakeCommand;
 import frc.robot.subsystem.swerve.pathfollowingswerve.HardwareSwerveFactory;
 import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 
@@ -33,382 +29,157 @@ import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 public class RobotContainer {
     /* Setting Joystick Buttons */
     private final CommandXboxController driveStick = new CommandXboxController(2);
-    private final Joystick controlStick = new Joystick(1);
+    private final CommandJoystick controlJoystick = new CommandJoystick(1);
 
     private final Trigger switchDriveModeButton = driveStick.x();
     private final Trigger resetGyroButton = driveStick.a();
     private final Trigger slowModeButton = driveStick.leftBumper();
     private final Trigger driverPlaceButton = driveStick.b();
 
-    private final JoystickButton cubeButton = new JoystickButton(controlStick, JoystickConstants.CUBE_INTAKE);
-    private final JoystickButton placeButton = new JoystickButton(controlStick, JoystickConstants.PLACE);
-    private final JoystickButton readyTopButton = new JoystickButton(controlStick, JoystickConstants.READY_TOP);
-    private final JoystickButton readyMidButton = new JoystickButton(controlStick, JoystickConstants.READY_MIDDLE);
-    private final JoystickButton readyBotButton = new JoystickButton(controlStick, JoystickConstants.READY_BOTTOM);
-    private final JoystickButton uprightConeButton = new JoystickButton(controlStick, JoystickConstants.UPRIGHT_CONE);
-    private final JoystickButton sidewaysConeButton = new JoystickButton(controlStick, JoystickConstants.SIDEWAYS_CONE);
-    private final JoystickButton readySubstationButton = new JoystickButton(controlStick, JoystickConstants.SUBSTATION_PICKUP);
-
-    private final JoystickButton tiltUp = new JoystickButton(controlStick, 4);
-    private final JoystickButton tiltDown = new JoystickButton(controlStick, 2);
-    private BiModeSwerveCommand swerveCommand;
-    private BalanceCommand balanceCommand;
-    public static boolean isCone = true; // Changes with coneButton/cubeButton
-    public static boolean isBottomCone = true; // Changes with Orientation buttons
+    private final Trigger cubeButton = controlJoystick.button(JoystickConstants.CUBE_INTAKE);
+    private final Trigger placeButton = controlJoystick.button(JoystickConstants.PLACE);
+    private final Trigger readySubstationButton = controlJoystick.button(JoystickConstants.SUBSTATION_PICKUP);
+    private final Trigger readyTopButton = controlJoystick.button(JoystickConstants.READY_TOP);
+    private final Trigger readyMidButton = controlJoystick.button(JoystickConstants.READY_MIDDLE);
+    private final Trigger readyBotButton = controlJoystick.button(JoystickConstants.READY_BOTTOM);
+    private final Trigger coneButton = controlJoystick.button(JoystickConstants.CONE_INTAKE);
+    private final Trigger tiltUpButton = controlJoystick.button(4);
+    private final Trigger tiltDownButton = controlJoystick.button(2);
 
     private final OdometricSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
-    private final Arm m_arm = makeArm();
-    private final Intake m_intake = makeIntake();
+    private final Arm m_arm = new Arm();
+    private final Intake m_intake = new Intake();
 
-    /**Both PID constants need to be tested */
-    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, commandMap, m_swerve);    
-    private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
+    private SwerveDriveCommand swerveCommand;
+
+    /** A hash map containing the commands the robot will use in auto <p> These commands can be accessed by putting the cooresponding string key into the .get() method
+     * <p> Example: {@code autoCommandMap.get("zero");} 
+     */
+    public static final HashMap<String, Command> autoCommandMap = new HashMap<>();
     
+    /**Both PID constants need to be tested */
+    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, autoCommandMap, m_swerve);    
+    private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
     public RobotContainer() {
-        configureCommands();
         configureSwerve();
         configureAuto();
         configureArmAndIntake();
     }
     
     void configureSwerve() {
-        swerveCommand = new BiModeSwerveCommand(m_swerve, driveStick);
-        balanceCommand = new BalanceCommand(m_swerve, true);
+        swerveCommand = new SwerveDriveCommand(m_swerve, driveStick);
         m_swerve.setDefaultCommand(swerveCommand);
 
         switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.switchControlMode();}));
-        resetGyroButton.toggleOnTrue(new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
+        resetGyroButton.toggleOnTrue(new ResetGyroCommand(m_swerve));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
         driverPlaceButton.toggleOnTrue(
-            new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
+            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
         );
         driverPlaceButton.toggleOnFalse(
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand((m_intake), IntakeConstants.INTAKE_CUBE_SPEED),
-                new WaitCommand(.5),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
+            new ZeroCommand(m_arm, m_intake)
         );
         
-
         Shuffleboard.getTab("Swerve").add("Swerve", m_swerve);
         Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
-        Shuffleboard.getTab("Swerve").add("Balance Command", balanceCommand);
     }
 
-    void configureCommands() {
-        commandMap.put(
-            "readyBot", 
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_GROUND_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PICKUP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_BOT_ANGLE)
-            )
-        );
 
-        commandMap.put(
-            "readyMid",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_PLACE_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_MID),
-                new Intake.IntakeSetAngleCommand(m_intake)
-            )
-        );
-
-        commandMap.put(
-            "readyTop",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_LAUNCH_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_LAUNCHING_ANGLE)
-            )
-        );
-
-        commandMap.put(
-            "readySubstation",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_HIGH_SUBSTATION_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_HIGH_SUBSTATION_ANGLE)
-            )
-        );
-
-        commandMap.put(
-            "place",
-            new Intake.IntakeSetOutputCommand(m_intake)
-        );
-
-        commandMap.put(
-            "intakeCube",
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isCone = false),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
-            )
-        );
-
-        commandMap.put(
-            "intakeTiltedCone",
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isBottomCone = true),
-                new InstantCommand(() -> isCone = true),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
-            )
-        );
-        
-        commandMap.put(
-            "intakeUprightCone",
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isBottomCone = false),
-                new InstantCommand(() -> isCone = true),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
-            )
-        );
-        
-        commandMap.put(
-            "zero",
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
-        );
-
-        commandMap.put(
-            "start",
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, 0)
-            )
-        );
-
-        commandMap.put("waitQuarter", new WaitCommand(.25));
-        commandMap.put("waitHalf", new WaitCommand(.5));
-        commandMap.put("waitOne", new WaitCommand(1));
-
-        commandMap.put("Reset Gyro", new InstantCommand(() -> {m_swerve.resetRobotAngle();}));
-        commandMap.put("Reverse Gyro", new InstantCommand(() -> {m_swerve.resetRobotAngle(180);}));
-        commandMap.put(
-            "autoPlaceConeTop",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_LAUNCH_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_LAUNCHING_ANGLE),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE),
-                new WaitCommand(.5)
-            )
-        );
-
-        commandMap.put(
-            "autoPlaceConeMid",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_PLACE_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_MID),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_TOP_CONE_PLACE_ANGLE),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE),
-                new WaitCommand(.5)
-            )
-        );
-
-        commandMap.put(
-            "autoPlaceCubeTop",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_LAUNCH_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_LAUNCHING_ANGLE),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE),
-                new WaitCommand(.5)
-            )
-        );
-
-        commandMap.put(
-            "autoPlaceCubeMid",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_PLACE_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_MID),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_TOP_CONE_PLACE_ANGLE),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED),
-                new WaitCommand(1),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE),
-                new WaitCommand(.5)
-            )
-        );
-
-        commandMap.put(
-            "autoPickupCube",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_GROUND_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PICKUP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_BOT_ANGLE),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
-            )
-        );
-
-        commandMap.put(
-            "autoPickupCone",
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_GROUND_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PICKUP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_BOT_ANGLE),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
-            )
-        );
-
-        commandMap.put(
-            "backwardsBalance",
-            new SequentialCommandGroup(
-                new BalanceCommand(m_swerve, false)
-            )
-        );
-    }
 
     void configureArmAndIntake() {
 
-        tiltUp.toggleOnTrue(new Intake.IntakeChangeTiltCommand(m_intake, 1));
-        tiltDown.toggleOnTrue(new Arm.ArmChangeTiltCommand(m_arm, -1));
+        tiltUpButton.toggleOnTrue(new TiltIntakeCommand(m_intake, 1));
+        tiltDownButton.toggleOnTrue(new TiltIntakeCommand(m_intake, -1));
+
         cubeButton.toggleOnTrue( 
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isCone = false),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
-            )
+            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
         );
         cubeButton.toggleOnFalse(
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
+            new ZeroCommand(m_arm, m_intake)
         );
 
-        sidewaysConeButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isBottomCone = true),
-                new InstantCommand(() -> isCone = true),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
-            )
+        coneButton.toggleOnTrue(
+            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
         );
-        sidewaysConeButton.toggleOnFalse(
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
-        );
-
-        uprightConeButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new InstantCommand(() -> isBottomCone = false),
-                new InstantCommand(() -> isCone = true),
-                new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
-            )
-        );
-        uprightConeButton.toggleOnFalse(
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
+        coneButton.toggleOnFalse(
+            new ZeroCommand(m_arm, m_intake)
         );
 
         readyBotButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_GROUND_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PICKUP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_BOT_ANGLE)
-            )
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Low)
         );
 
         readyMidButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_PLACE_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_MID),
-                new Intake.IntakeSetAngleCommand(m_intake)
-            )
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Middle)
         );
 
         readyTopButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_LAUNCH_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_LAUNCHING_ANGLE)
-            )
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.High)
         );
 
         readySubstationButton.toggleOnTrue(
-            new SequentialCommandGroup(
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_HIGH_SUBSTATION_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_PLACE_TOP),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_HIGH_SUBSTATION_ANGLE)
-            )
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation)
         );
        
         placeButton.toggleOnTrue(
-            new Intake.IntakeSetOutputCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
+            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
         );
         placeButton.toggleOnFalse(
-            new SequentialCommandGroup(
-                new Intake.IntakeSetOutputCommand((m_intake), IntakeConstants.INTAKE_CUBE_SPEED),
-                new WaitCommand(.5),
-                new Intake.IntakeSetOutputCommand(m_intake, 0),
-                new Intake.IntakeSetAngleCommand(m_intake, IntakeConstants.INTAKE_ZERO_ANGLE),
-                new Arm.ArmSetWinchOutputCommand(m_arm, ArmConstants.ARM_RETRACT),
-                new Arm.ArmSetTiltAngleCommand(m_arm, ArmConstants.ARM_ZERO_ANGLE)
-            )
+            new ZeroCommand(m_arm, m_intake)
         );
 
-        Shuffleboard.getTab("Arm and Intake").addBoolean("Is Cone", () -> isCone);
-        Shuffleboard.getTab("Arm and Intake").addBoolean("Is Bottom Cone", () -> isBottomCone);
         Shuffleboard.getTab("Arm and Intake").add("Intake", m_intake);
         Shuffleboard.getTab("Arm and Intake").add("Arm", m_arm);
     }
 
     void configureAuto() {
+        autoCommandMap.put(
+            "zero", 
+            new ZeroCommand(m_arm, m_intake)
+        );
+
+        autoCommandMap.put(
+            "placeCubeTop", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.HighCube)
+        );
+
+        autoCommandMap.put(
+            "placeConeTop", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.HighCone)
+        );
+
+        autoCommandMap.put(
+            "placeCubeMid", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.MidCube)
+        );
+
+        autoCommandMap.put(
+            "placeConeMid", 
+            new AutoPlaceCommand(m_arm, m_intake, Location.MidCone)
+        );
+
+        autoCommandMap.put(
+            "resetGyro", 
+            new ResetGyroCommand(m_swerve)
+        );
+
+        autoCommandMap.put(
+            "reverseGyro", 
+            new ResetGyroCommand(m_swerve, 180)
+        );
+
+        autoCommandMap.put(
+            "pickupCone", 
+            new AutoPickupCommand(m_arm, m_intake, Piece.Cone)
+        );
+
+        autoCommandMap.put(
+            "pickupCube", 
+            new AutoPickupCommand(m_arm, m_intake, Piece.Cube)
+        );
+
         autonChooser.setDefaultOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Red Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Blue Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueTopRedBot2PieceTopAuto));
@@ -436,4 +207,5 @@ public class RobotContainer {
         }
 
     }
+
 }

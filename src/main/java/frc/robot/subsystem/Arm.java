@@ -5,27 +5,17 @@ import frc.robot.Constants.ArmConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
-import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import static frc.robot.RobotContainer.isCone;
-import static frc.robot.RobotContainer.isBottomCone;
 
 public class Arm extends SubsystemBase {
-    SparkMaxComponent tiltMotor;
+    public SparkMaxComponent tiltMotor;
     private TalonSRXComponent winchMotor;
     private SparkMaxPIDController tiltPIDController;
     private double targetTiltAngle;
     private double targetWinchPosition;
-    Position position;
 
     /**
      * Creates a new Arm from Constants
@@ -68,14 +58,15 @@ public class Arm extends SubsystemBase {
     /**
      * Sets the position of the tilt motor.
      * 
-     * Depending on if we are going up or down, it will set the motor to go up or down,
-     * The "? :" is a ternary operator, it is the same as "if else".
-     * 
-     * @param position
+     * @param position 
      */
     public void setTilt(double position) {
         targetTiltAngle = position;
         tiltMotor.setAngle(position);
+    }
+
+    public double getTilt() {
+        return tiltMotor.getAngle();
     }
 
     /**
@@ -94,63 +85,16 @@ public class Arm extends SubsystemBase {
     public void zero(){
         tiltMotor.getEncoder().setPosition(0);
     }
-    /**
-     * Command for setting the position of the tilt motor
-     */
-    public static class ArmSetTiltAngleCommand extends InstantCommand {
-        private Arm arm;
-        private double position;
-        private boolean isLaunching;
-
-        public ArmSetTiltAngleCommand(Arm arm, double position) {
-            this.arm = arm;
-            this.position = position;
-            addRequirements(arm);
-        }
-
-        public ArmSetTiltAngleCommand(Arm arm, boolean isLaunching) {
-            this.arm = arm;
-            this.isLaunching = isLaunching;
-        }
     
-        public void initialize() {
-            if (isLaunching) {
-                arm.setTilt(ArmConstants.ARM_LAUNCH_ANGLE);
-            } else {
-                arm.setTilt(position);
-            }
-        }
-    }
-    
-
-    public static class ArmSetWinchOutputCommand extends InstantCommand {
-        private Arm arm;
-        private double output;
-
-        public ArmSetWinchOutputCommand(Arm arm, double output) {
-            this.arm = arm;
-            this.output = output;
-            addRequirements(arm);
-        }
-
-        public void initialize() {
-                arm.setWinch(output);
-        }
-    }
 
     public double getWinchPosition() {
-        return winchMotor.getSelectedSensorPosition() / 4096;
+        return winchMotor.getSelectedSensorPosition();
     }
 
     /** 
      * Positions for the Arm (Synchronize tilt and winch)
     */
-    public enum Position {
-        Bottom,
-        Middle,
-        Top,
-        Retracted
-    }
+    
 
     public static class ArmChangeTiltCommand extends InstantCommand {
         private Arm arm;
@@ -178,14 +122,6 @@ public class Arm extends SubsystemBase {
         public void initialize() {
             arm.setOutput(output);
         }
-    }
-
-    public Position getPosition() {
-        return position;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
     }
 
     public static Arm makeArm() {

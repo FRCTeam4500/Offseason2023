@@ -1,12 +1,7 @@
-package frc.robot.subsystem.swerve.command;
+package frc.robot.commands.complexCommands;
 
-import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -25,7 +20,7 @@ import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
  * When pushing the joystick foward, the robot moves in whatever direction it is facing.
  * For our purposes, the front of the robot is the intake side.
  */
-public class BiModeSwerveCommand extends CommandBase {
+public class SwerveDriveCommand extends CommandBase {
     private OdometricSwerve swerve;
     private CommandXboxController controller;
 
@@ -45,7 +40,7 @@ public class BiModeSwerveCommand extends CommandBase {
     public double targetAngle = 0;
 
 
-    public BiModeSwerveCommand(OdometricSwerve swerve, CommandXboxController controller){
+    public SwerveDriveCommand(OdometricSwerve swerve, CommandXboxController controller){
         this.swerve = swerve;
         this.controller = controller;
         controlMode = ControlMode.FieldCentric; //default control mode is field-centric
@@ -120,6 +115,10 @@ public class BiModeSwerveCommand extends CommandBase {
         zSens = .5;
     }
 
+    public void setTargetAngle(double angle) {
+        targetAngle = angle;
+    }
+
     /**
      * Switches between RobotCentric and FieldCentric
      */
@@ -133,7 +132,7 @@ public class BiModeSwerveCommand extends CommandBase {
 
     public void initSendable(SendableBuilder builder){
         builder.addStringProperty("Drive Mode", () -> {return controlMode.name();}, null);
-        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, null);
+        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, this::setTargetAngle);
         
     }
 }
