@@ -12,6 +12,7 @@ public class SwerveModule {
     private TalonFXComponent driveMotor;
     private TalonFXComponent angleMotor;
     private Translation2d translationFromCenter;
+
     public SwerveModule(int driveId, int angleId, Translation2d translationToCenter, 
     boolean invertDrive, boolean invertAngle, 
     double drivekP, double anglekP) {
@@ -35,11 +36,24 @@ public class SwerveModule {
     }
 
     public void drive(SwerveModuleState initialTargetState) {
-        SwerveModuleState targetState = initialTargetState.optimize(initialTargetState, getModuleState().angle);
-        
+        SwerveModuleState targetState = SwerveModuleState.optimize(initialTargetState, getModuleState().angle);
+        driveMotor.setAngularVelocity(targetState.speedMetersPerSecond / (SwerveConstants.DRIVE_RATIO * (SwerveConstants.WHEEL_DIAMETER / 2)));
+        angleMotor.setAngle(targetState.angle.getRadians() / SwerveConstants.ANGLE_RATIO);
     }
 
     public SwerveModuleState getModuleState() {
         return new SwerveModuleState(driveMotor.getAngularVelocity() * SwerveConstants.DRIVE_RATIO * SwerveConstants.WHEEL_DIAMETER / 2, new Rotation2d(angleMotor.getAngle() * SwerveConstants.ANGLE_RATIO));
+    }
+
+    public Translation2d getTranslationFromCenter() {
+        return translationFromCenter;
+    }
+
+    public void setModuleAngle(double targetAngle) {
+        angleMotor.setAngle(targetAngle / SwerveConstants.ANGLE_RATIO);
+    }
+
+    public void setModuleOutput(double targetOutput) {
+        driveMotor.setOutput(targetOutput);
     }
 }
