@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import frc.robot.subsystem.*;
+import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.Constants.*;
 import frc.robot.commands.baseCommands.*;
 import frc.robot.commands.complexCommands.*;
@@ -22,8 +23,6 @@ import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
 import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
 import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
-import frc.robot.subsystem.swerve.pathfollowingswerve.HardwareSwerveFactory;
-import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
 
 
 public class RobotContainer {
@@ -46,7 +45,7 @@ public class RobotContainer {
     private final Trigger tiltUpButton = controlJoystick.button(4);
     private final Trigger tiltDownButton = controlJoystick.button(2);
 
-    private final OdometricSwerve m_swerve = HardwareSwerveFactory.makeSwerve();
+    private final SwerveDrive m_swerve = new SwerveDrive();
     private final Arm m_arm = new Arm();
     private final Intake m_intake = new Intake();
 
@@ -58,7 +57,7 @@ public class RobotContainer {
     public static final HashMap<String, Command> autoCommandMap = new HashMap<>();
     
     /**Both PID constants need to be tested */
-    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getCurrentPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::moveRobotCentric, autoCommandMap, m_swerve);    
+    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(m_swerve::getRobotPose, m_swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), m_swerve::driveModules, autoCommandMap, m_swerve);    
     private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
     public RobotContainer() {

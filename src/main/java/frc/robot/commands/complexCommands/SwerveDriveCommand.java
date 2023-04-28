@@ -5,7 +5,8 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
+
+import frc.robot.subsystem.swerve.SwerveDrive;
 
 /**
  * A swerve command with support for two swerve control modes:
@@ -21,7 +22,7 @@ import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
  * For our purposes, the front of the robot is the intake side.
  */
 public class SwerveDriveCommand extends CommandBase {
-    private OdometricSwerve swerve;
+    private SwerveDrive swerve;
     private CommandXboxController controller;
 
     public ControlMode controlMode;
@@ -40,7 +41,7 @@ public class SwerveDriveCommand extends CommandBase {
     public double targetAngle = 0;
 
 
-    public SwerveDriveCommand(OdometricSwerve swerve, CommandXboxController controller){
+    public SwerveDriveCommand(SwerveDrive swerve, CommandXboxController controller){
         this.swerve = swerve;
         this.controller = controller;
         controlMode = ControlMode.FieldCentric; //default control mode is field-centric
@@ -86,10 +87,10 @@ public class SwerveDriveCommand extends CommandBase {
     }
 
     private void moveFieldCentric(double x, double y, double w){
-        swerve.moveFieldCentric(y,x,w);
+        swerve.driveFieldCentric(y,x,w);
     }
     private void moveRobotCentric(double x, double y, double w){
-        swerve.moveRobotCentric(y,x,w);
+        swerve.driveRobotCentric(y,x,w);
     }
 
     private void moveAngleCentric(double xSpeed, double ySpeed) {
@@ -131,8 +132,8 @@ public class SwerveDriveCommand extends CommandBase {
     }
 
     public void initSendable(SendableBuilder builder){
-        builder.addStringProperty("Drive Mode", () -> {return controlMode.name();}, null);
-        builder.addDoubleProperty("Target Angle: ", () -> {return targetAngle;}, this::setTargetAngle);
+        builder.addStringProperty("Drive Mode", () -> controlMode.name(), null);
+        builder.addDoubleProperty("Target Angle: ", () -> targetAngle, null);
         
     }
 }

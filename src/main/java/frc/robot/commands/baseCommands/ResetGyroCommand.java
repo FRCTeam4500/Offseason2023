@@ -1,17 +1,17 @@
 package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.pathfollowingswerve.OdometricSwerve;
+import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class ResetGyroCommand extends CommandBase{
-    private OdometricSwerve swerve;
+    private SwerveDrive swerve;
     private double offset;
-    public ResetGyroCommand(OdometricSwerve swerve, double degreeOffset) {
+    public ResetGyroCommand(SwerveDrive swerve, double degreeOffset) {
         this.swerve = swerve;
         this.offset = degreeOffset;
     }
 
-    public ResetGyroCommand(OdometricSwerve swerve) {
+    public ResetGyroCommand(SwerveDrive swerve) {
         this.swerve = swerve;
         offset = 0;
     }

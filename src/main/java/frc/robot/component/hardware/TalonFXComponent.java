@@ -25,6 +25,10 @@ public class TalonFXComponent extends TalonFX implements SmartMotorComponent {
         super(deviceNumber);
     }
 
+    public double getMotorRotations() {
+        return getSelectedSensorPosition() / TICKS_PER_REVOLUTION;
+    }
+
     @Override
     public double getAngle() {
         return getSelectedSensorPosition() / TICKS_PER_RADIAN;
