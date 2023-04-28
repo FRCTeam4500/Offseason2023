@@ -1,10 +1,9 @@
-package frc.robot.component.hardware;
+package frc.robot.component;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
-import frc.robot.component.OutputComponent;
 
-public class VictorSPXComponent extends VictorSPX implements OutputComponent {
+public class VictorSPXComponent extends VictorSPX{
 
     public VictorSPXComponent(int port){
         super(port);
@@ -14,7 +13,6 @@ public class VictorSPXComponent extends VictorSPX implements OutputComponent {
         set(ControlMode.PercentOutput, output);
     }
 
-    @Override
     public double getOutput() {
         //return getMotorOutputPercent();
         return 0;

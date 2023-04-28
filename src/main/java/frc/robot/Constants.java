@@ -1,12 +1,10 @@
 package frc.robot;
-import java.util.HashMap;
 import java.util.List;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj2.command.Command;
 
 public class Constants {
     public static class JoystickConstants {

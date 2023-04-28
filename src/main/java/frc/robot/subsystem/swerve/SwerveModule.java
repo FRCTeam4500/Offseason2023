@@ -9,7 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.component.hardware.TalonFXComponent;
+import frc.robot.component.TalonFXComponent;
 
 public class SwerveModule {
     private TalonFXComponent driveMotor;

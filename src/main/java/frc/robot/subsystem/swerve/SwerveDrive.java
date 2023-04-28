@@ -12,7 +12,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.component.hardware.AHRSAngleGetterComponent;
+import frc.robot.component.AHRSAngleGetterComponent;
 
 public class SwerveDrive extends SubsystemBase{
     private AHRSAngleGetterComponent gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);

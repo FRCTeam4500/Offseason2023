@@ -5,18 +5,16 @@
 /* the project. */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.component.hardware;
+package frc.robot.component;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.robot.component.TransformSupplier;
-import frc.robot.component.VisionComponent;
 import frc.robot.utility.Transform3D;
 
 /**
  * An {@link VisionComponent} wrapper for a Limelight vision processor.
  */
-public class LimelightVisionComponent implements VisionComponent, TransformSupplier {
+public class LimelightVisionComponent {
 
     private NetworkTable table;
 
@@ -28,7 +26,11 @@ public class LimelightVisionComponent implements VisionComponent, TransformSuppl
         table = NetworkTableInstance.getDefault().getTable("limelight");
     }
 
-    @Override
+    public enum CameraMode {
+        VisionProcessor,
+        DriverCamera
+    }
+
     public boolean hasValidTargets() {
         double value = getEntry("tv");
         if (value == 1) {
@@ -38,22 +40,18 @@ public class LimelightVisionComponent implements VisionComponent, TransformSuppl
         }
     }
 
-    @Override
     public double getHorizontalOffsetFromCrosshair() {
         return Math.toRadians(getEntry("tx"));
     }
 
-    @Override
     public double getVerticalOffsetFromCrosshair() {
         return Math.toRadians(getEntry("ty"));
     }
 
-    @Override
     public double getTargetArea() {
         return getEntry("ta");
     }
 
-    @Override
     public double getSkew() {
         double rawDegrees = getEntry("ts");
         double adjustedDegrees;
@@ -65,7 +63,6 @@ public class LimelightVisionComponent implements VisionComponent, TransformSuppl
         return Math.toRadians(adjustedDegrees);
     }
 
-    @Override
     public void setCameraMode(CameraMode mode) {
         if (mode == CameraMode.DriverCamera) {
             setEntry("camMode", 1);
@@ -74,7 +71,6 @@ public class LimelightVisionComponent implements VisionComponent, TransformSuppl
         } // Maybe add exception for bad entry
     }
 
-    @Override
     public void setPipeline(int index) {
         setEntry("pipeline", index);
     }
@@ -91,7 +87,6 @@ public class LimelightVisionComponent implements VisionComponent, TransformSuppl
         return table.getEntry("camtran").getDoubleArray(new double[6]);
     }
 
-    @Override
     public Transform3D getTransform() {
         double[] translation = getCameraTranslationEntry();
         return new Transform3D(translation[0], translation[1],

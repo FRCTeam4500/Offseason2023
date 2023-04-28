@@ -5,18 +5,16 @@
 /* the project. */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.component.hardware;
+package frc.robot.component;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import frc.robot.component.SmartMotorComponent;
 
 /**
  * An {@link OutputSetterComponent}, {@link AngleSetterComponent}, and
  * {@link AngleGetterComponent} wrapper for {@link TalonSRX}.
  */
-public class TalonSRXComponent extends TalonSRX
-        implements SmartMotorComponent {
+public class TalonSRXComponent extends TalonSRX{
 
     public static final double TICKS_PER_DEGREE = 4096 / 360.0;
     public static final double TICKS_PER_RADIAN = 4096 / Math.PI / 2.0;
@@ -29,32 +27,26 @@ public class TalonSRXComponent extends TalonSRX
         super(deviceNumber);
     }
 
-    @Override
     public void setOutput(double speed) {
         set(ControlMode.PercentOutput, speed);
     }
 
-    @Override
     public void setAngle(double angle) {
         set(ControlMode.Position, angle);
     }
 
-    @Override
     public double getAngle() {
         return getSelectedSensorPosition();
     }
 
-    @Override
     public double getAngularVelocity() {
         return getSelectedSensorVelocity() / TICKS_PER_RADIAN * 10;
     }
 
-    @Override
     public double getOutput() {
         return getMotorOutputPercent();
     }
 
-    @Override
     public void setAngularVelocity(double velocity) {
         set(ControlMode.Velocity, velocity * TICKS_PER_RADIAN / 10.0);
     }

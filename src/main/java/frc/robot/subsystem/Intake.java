@@ -2,9 +2,7 @@ package frc.robot.subsystem;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.component.hardware.SparkMaxComponent;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.component.SparkMaxComponent;
 
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -61,81 +59,6 @@ public class Intake extends SubsystemBase {
 
     public void setAngleOutput(double output) {
         intakeTiltMotor.setOutput(output);
-    }
-
-    public static class IntakeSetAngleCommand extends InstantCommand {
-        private Intake intake;
-        private double angle;
-
-        
-
-        public IntakeSetAngleCommand(Intake intake, double angle){
-            this.intake = intake;
-            this.angle = angle;
-        }
-
-        public IntakeSetAngleCommand(Intake intake){
-            this.intake = intake;
-            this.angle = IntakeConstants.INTAKE_TOP_CONE_PLACE_ANGLE;
-        }
-
-        
-        
-
-        @Override
-        public void initialize() {
-            intake.setAngle(angle);
-        }
-    }
-
-    public static class IntakeSetOutputCommand extends InstantCommand {
-        private Intake intake;
-        private double speed;
-
-
-        public IntakeSetOutputCommand(Intake intake, double speed){
-            this.intake = intake;
-            this.speed = speed;
-        }
-
-        @Override
-        public void initialize() {
-            intake.setSpeed(speed);
-        }
-    }
-
-    public static class IntakeSetAngleOutputCommand extends CommandBase {
-        Intake intake;
-        double output;
-        
-        public IntakeSetAngleOutputCommand(Intake intake, double output) {
-            this.intake = intake;
-            this.output = output;
-        }
-
-        @Override
-        public void initialize() {
-            intake.setAngleOutput(output);
-        }
-
-    }
-
-    public static class IntakeChangeTiltCommand extends InstantCommand {
-        private Intake intake;
-        private double addition;
-
-        public IntakeChangeTiltCommand(Intake intake, double addition){
-            this.intake = intake;
-            this.addition = addition;
-        }
-
-        public void initialize(){
-            intake.setAngle(intake.intakeTiltMotor.getEncoder().getPosition() + addition);
-        }
-    }
-
-    public static Intake makeIntake() {
-        return new Intake();
     }
 
     @Override

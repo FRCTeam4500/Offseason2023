@@ -1,9 +1,8 @@
 package frc.robot.subsystem;
-import frc.robot.component.hardware.SparkMaxComponent;
-import frc.robot.component.hardware.TalonSRXComponent;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.component.SparkMaxComponent;
+import frc.robot.component.TalonSRXComponent;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 import com.revrobotics.SparkMaxPIDController;
 
@@ -85,47 +84,9 @@ public class Arm extends SubsystemBase {
     public void zero(){
         tiltMotor.getEncoder().setPosition(0);
     }
-    
 
     public double getWinchPosition() {
         return winchMotor.getSelectedSensorPosition();
-    }
-
-    /** 
-     * Positions for the Arm (Synchronize tilt and winch)
-    */
-    
-
-    public static class ArmChangeTiltCommand extends InstantCommand {
-        private Arm arm;
-        private double addition;
-
-        public ArmChangeTiltCommand(Arm arm, double addition){
-            this.arm = arm;
-            this.addition = addition;
-        }
-
-        public void initialize(){
-            arm.setTilt(arm.tiltMotor.getEncoder().getPosition() + addition);
-        }
-    }
-
-    public static class ArmSetActualOutputCommand extends InstantCommand {
-        private Arm arm;
-        private double output;
-
-        public ArmSetActualOutputCommand(Arm arm, double output) {
-            this.arm = arm;
-            this.output = output;
-        }
-
-        public void initialize() {
-            arm.setOutput(output);
-        }
-    }
-
-    public static Arm makeArm() {
-        return new Arm();
     }
 
     @Override
@@ -135,19 +96,5 @@ public class Arm extends SubsystemBase {
     
         builder.addDoubleProperty("Current Encoder Tilt Position", () -> tiltMotor.getEncoder().getPosition(), null);
         builder.addDoubleProperty("Current Winch Encoder Position", () -> winchMotor.getSelectedSensorPosition(), null);
-        // builder.addStringProperty("Position", () -> {
-        //     switch (position) {
-        //         case Bottom:
-        //             return "Bottom";
-        //         case Middle:
-        //             return "Middle";
-        //         case Top:
-        //             return "Top";
-        //         case Retracted:
-        //             return "Retracted";
-        //         default:
-        //             return "Unknown";
-        //     }
-        // }, null);
     }
 }

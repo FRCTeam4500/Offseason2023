@@ -5,17 +5,16 @@
 /* the project. */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.component.hardware;
+package frc.robot.component;
 
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI.Port;
-import frc.robot.component.GyroComponent;
 
 /**
  * An {@link GyroComponent} wrapper for {@link AHRS}.
  * All getters return radians.
  */
-public class AHRSAngleGetterComponent extends AHRS implements GyroComponent {
+public class AHRSAngleGetterComponent extends AHRS {
 
     /**
      * @see AHRS#AHRS(Port)
@@ -27,17 +26,14 @@ public class AHRSAngleGetterComponent extends AHRS implements GyroComponent {
         super(kmxp);
     }
 
-    @Override
     public double getAngle() {
         return -Math.toRadians(super.getAngle());
     }
 
-    @Override
     public float getPitch() {
         return (float) Math.toRadians(super.getPitch());
     }
 
-    @Override
     public float getRoll() {
         return (float) Math.toRadians(super.getRoll());
     }
