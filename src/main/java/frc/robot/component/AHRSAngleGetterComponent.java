@@ -26,6 +26,10 @@ public class AHRSAngleGetterComponent extends AHRS {
         super(kmxp);
     }
 
+    /**
+     * Gets the absolute angle of the gyro from the angle where power was turned on
+     * @return the absolute angle of the robot in radians. Counter-Clockwise is positive
+     */
     public double getAngle() {
         return -Math.toRadians(super.getAngle());
     }

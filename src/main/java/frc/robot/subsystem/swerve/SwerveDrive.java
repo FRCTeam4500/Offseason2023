@@ -13,13 +13,37 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
-
+/**
+ * Subsystem class which represents the drivetrain of our robot
+ * <p> Used to move the robot chassis
+ */
 public class SwerveDrive extends SubsystemBase{
+    /**
+     * The gyroscope of the robot. Used to get the absolute angle of the robot relative to its angle on startup
+     */
     private AHRSAngleGetterComponent gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
+    /**
+     * An array containing the swerve drive modules of the robot. 
+     * The order of the modules in the array is dependent on the order they are made in the SwerveDrive constructor
+     */
     private SwerveModule[] modules;
+    /** 
+     * An object containing the kinematics of the swerve modules (where they are relative to the center of the robot). 
+     * <p>Used to calulate module states based on a target chassis speeds and vice versa
+     */
     private SwerveDriveKinematics kinematics;
+    /**
+     * An object which calculates the robot's position based on the positions of the swerve modules.
+     * <p> Used for autonomous driving to correct for errors
+     */
     private SwerveDriveOdometry odometry;
+    /**
+     * The angle of the current zero relative to the angle of the gyroscope. This is in radians
+     */
     private double currentGyroZero;
+    /**
+     * Creates a new Swerve Drive with 4 swerve modules, which uses 8 falcon motors. kP of the motors and whether to invert them is set here. Everything else is pulled from constants
+     */
     public SwerveDrive() {
         SwerveModule[] modules = {
             new SwerveModule(SwerveConstants.DFLPORT, SwerveConstants.AFLPORT, new Translation2d(SwerveConstants.DRIVE_Y_FRONT_TRANSLATION, SwerveConstants.DRIVE_X_LEFT_TRANSLATION), true, false, 0.1, 0.3),
@@ -33,19 +57,38 @@ public class SwerveDrive extends SubsystemBase{
         odometry = new SwerveDriveOdometry(kinematics, new Rotation2d(gyro.getAngle()), getModulePositions());
     }
 
+    /**
+     * A method from Subsystem Base. <p>Our code probably shouldn't call this. This is called every scheduler tick (20ms) by WPI. Code that needs to be run repeadly should be put here
+     */
     @Override
     public void periodic() {
         odometry.update(new Rotation2d(gyro.getAngle()), getModulePositions());
     }
 
+    /**
+     * Drives the robot relative to the field (forward is away from the alliance wall) based on target forward, sideways, and rotational velocities
+     * @param forwardVelocity the target forward velocity of the robot. Units are m/s and forward is positive
+     * @param sidewaysVelocity the target sideways velocity of the robot. Units are m/s and left is positive
+     * @param rotationalVelocity the target rotational velocity of the robot. Units are rad/s and counter-clockwise is positive
+     */
     public void driveFieldCentric(double forwardVelocity, double sidewaysVelocity, double rotationalVelocity) {
         driveModules(ChassisSpeeds.fromFieldRelativeSpeeds(forwardVelocity, sidewaysVelocity, rotationalVelocity, new Rotation2d(getRobotAngle())));
     }
 
+    /**
+     * Drives the robot relative to itself based on target forward, sideways, and rotational velocities
+     * @param forwardVelocity the target forward velocity of the robot. Units are m/s and forward is positive
+     * @param sidewaysVelocity the target sideways velocity of the robot. Units are m/s and left is positive
+     * @param rotationalVelocity the target rotational velocity of the robot. Units are rad/s and counter-clockwise is positive
+     */
     public void driveRobotCentric(double forwardVelocity, double sidewaysVelocity, double rotationalVelocity) {
         driveModules(new ChassisSpeeds(forwardVelocity, sidewaysVelocity, rotationalVelocity));
     }
 
+    /**
+     * Uses inverse kinematics to convert a robot-relative set of chassis speeds into states to send to the swerve modules
+     * @param targetChassisSpeeds The target robot-relative chassis speeds
+     */
     public void driveModules(ChassisSpeeds targetChassisSpeeds) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(targetChassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.MAX_LINEAR_SPEED);
@@ -54,6 +97,10 @@ public class SwerveDrive extends SubsystemBase{
         }
     }
 
+    /**
+     * Gets the translations of the swerve modules from the center of the robot. Used when initializing the kinematics object
+     * @return an array containing the translations of the swerve modules in the same order they were put into the SwerveDrive constructor
+     */
     public Translation2d[] getModuleTranslations() {
         Translation2d[] translations = new Translation2d[modules.length];
         for (int i = 0; i < modules.length; i++) {
@@ -62,6 +109,10 @@ public class SwerveDrive extends SubsystemBase{
         return translations;
     }
 
+    /**
+     * Gets the states of the swerve modules. Used primarily for kinematics
+     * @return an array containing the states of the swerve modules in the same order they were put into the SwerveDrive constructor
+     */
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[modules.length];
         for (int i = 0; i < modules.length; i++) {
@@ -70,6 +121,10 @@ public class SwerveDrive extends SubsystemBase{
         return states;
     }
 
+    /**
+     * Gets the positions of the swerve modules. Used primarily for odometry
+     * @return an array containing the positions of the swerve modules in the same order they were put into the SwerveDrive constructor
+     */
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[modules.length];
         for (int i = 0; i < modules.length; i++) {
@@ -78,30 +133,57 @@ public class SwerveDrive extends SubsystemBase{
         return positions;
     }
 
+    /**
+     * Uses forward kinematics to turn the swerve module's states into a chassis speeds for the robot
+     * @return The robot's current chassis speeds
+     */
     public ChassisSpeeds getChassisSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
     }
 
+    /**
+     * Gets the robot's current odometric position
+     * @return the robot's current pose
+     */
     public Pose2d getRobotPose() {
         return odometry.getPoseMeters();
     }
 
+    /**
+     * Sets the robot's odometric position to a given position
+     * @param pose the pose the robot should be
+     */
     public void resetPose(Pose2d pose) {
         odometry.resetPosition(new Rotation2d(gyro.getAngle()), getModulePositions(), pose);
     }
 
+    /**
+     * Gets the angle of the robot relative to the current field-centric zero
+     * @return the robot's field-centric angle in radians
+     */
     public double getRobotAngle() {
         return gyro.getAngle() - currentGyroZero;
     }
 
+    /**
+     * Sets the field-centric zero to some angle relative to the robot
+     * <p>CCW is positive
+     * @param offset the angle relative to the robot, in radians
+     */
     public void resetRobotAngle(double offset) {
         currentGyroZero = gyro.getAngle() - offset;
     }
 
+    /**
+     * Sets where the robot is currently facing to the field-centric zero
+     */
     public void resetRobotAngle() {
         resetRobotAngle(0);
     }
 
+    /**
+     * A method from SubsystemBase. <p>Adds properties of the subsystem to shuffleboard. Our code should never call this class, that is done by WPI
+     */
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("Gyro Angle: ", () -> gyro.getAngle(), null);
