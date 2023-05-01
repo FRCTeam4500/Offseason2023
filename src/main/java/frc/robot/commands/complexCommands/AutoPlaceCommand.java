@@ -2,10 +2,10 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
+import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
@@ -16,7 +16,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup{
                 addCommands(
                     new SetArmAndIntakeCommand(arm, intake, Position.High),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CUBE_SPEED),
+                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
@@ -25,7 +25,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup{
                 addCommands(
                     new SetArmAndIntakeCommand(arm, intake, Position.Middle),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CUBE_SPEED),
+                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
@@ -34,7 +34,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup{
                 addCommands(
                     new SetArmAndIntakeCommand(arm, intake, Position.High),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CONE_SPEED),
+                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
@@ -43,7 +43,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup{
                 addCommands(
                     new SetArmAndIntakeCommand(arm, intake, Position.Middle),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeConstants.INTAKE_CONE_SPEED),
+                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );

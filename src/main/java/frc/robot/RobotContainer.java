@@ -19,6 +19,7 @@ import frc.robot.Constants.*;
 import frc.robot.commands.baseCommands.*;
 import frc.robot.commands.complexCommands.*;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
+import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
 import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
 import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
 import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
@@ -93,14 +94,14 @@ public class RobotContainer {
         tiltDownButton.toggleOnTrue(new TiltIntakeCommand(m_intake, -1));
 
         cubeButton.toggleOnTrue( 
-            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CUBE_SPEED)
+            new SetIntakeSpeedCommand(m_intake, Output.PickupCube)
         );
         cubeButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
         );
 
         coneButton.toggleOnTrue(
-            new SetIntakeSpeedCommand(m_intake, IntakeConstants.INTAKE_CONE_SPEED)
+            new SetIntakeSpeedCommand(m_intake, Output.PickupCone)
         );
         coneButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
@@ -134,6 +135,10 @@ public class RobotContainer {
     }
 
     void configureAuto() {
+        autoCommandMap.put(
+            "start", 
+            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Start));
+
         autoCommandMap.put(
             "zero", 
             new ZeroCommand(m_arm, m_intake)

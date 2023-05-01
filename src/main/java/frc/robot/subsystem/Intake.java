@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.component.SparkMaxComponent;
 
+import java.util.function.DoubleSupplier;
+
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -12,59 +14,58 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 
 
 public class Intake extends SubsystemBase {
-    private SparkMaxComponent intakeMotor;
-    public SparkMaxComponent intakeTiltMotor;
-    private double targetTiltAngle;
-    private double targetIntakeOutput;
-    private SparkMaxPIDController tiltPIDController;
+    private SparkMaxComponent speedMotor;
+    public SparkMaxComponent angleMotor;
+    private SparkMaxPIDController anglePIDController;
+    private double targetAngle;
+    private double targetSpeed;
 
     public Intake() {
-        this.intakeMotor = new SparkMaxComponent(IntakeConstants.INTAKE_MOTOR_ID, IntakeConstants.INTAKE_MOTOR_TYPE);
-        this.intakeTiltMotor = new SparkMaxComponent(IntakeConstants.INTAKE_ANGLE_MOTOR_ID, IntakeConstants.ANGLE_MOTOR_TYPE);
+        speedMotor = new SparkMaxComponent(IntakeConstants.INTAKE_MOTOR_ID, IntakeConstants.INTAKE_MOTOR_TYPE);
+        angleMotor = new SparkMaxComponent(IntakeConstants.INTAKE_ANGLE_MOTOR_ID, IntakeConstants.ANGLE_MOTOR_TYPE);
 
-        this.intakeMotor.setIdleMode(IdleMode.kBrake);
+        speedMotor.setIdleMode(IdleMode.kBrake);
 
-        this.intakeTiltMotor.setIdleMode(IdleMode.kCoast);
+        angleMotor.setIdleMode(IdleMode.kCoast);
+        angleMotor.setSoftLimit(SoftLimitDirection.kReverse, -40);
 
-        this.tiltPIDController = this.intakeTiltMotor.getPIDController();
-        this.tiltPIDController.setP(1);
-        this.tiltPIDController.setI(0);
-        this.tiltPIDController.setD(0);
-
-        this.tiltPIDController.setOutputRange(-.3, .3);
-        this.intakeTiltMotor.setSoftLimit(SoftLimitDirection.kReverse, -40f);
-    }
-
-    public Intake(SparkMaxComponent intakeMotor, SparkMaxComponent intakeAngleMotor) {
-        this.intakeMotor = intakeMotor;
-        this.intakeTiltMotor = intakeAngleMotor;
+        anglePIDController = angleMotor.getPIDController();
+        anglePIDController.setP(1);
+        anglePIDController.setI(0);
+        anglePIDController.setD(0);
+        anglePIDController.setOutputRange(-.3, .3);
     }
 
     public void setSpeed(double speed) {
-        targetIntakeOutput = speed;
-        intakeMotor.set(speed);
+        targetSpeed = speed;
+        speedMotor.set(speed);
     }
 
-    public double getSpeed() {
-        return intakeMotor.get();
+    public DoubleSupplier getSpeed() {
+        return () -> speedMotor.getOutput();
     }
+
+    public DoubleSupplier getTargetSpeed() {
+        return () -> targetSpeed;
+    }
+
     public void setAngle(double angle) {
-        targetTiltAngle = angle;
-        intakeTiltMotor.setAngle(angle);
+        targetAngle = angle;
+        angleMotor.setAngle(angle);
     }
 
-    public double getAngle() {
-        return intakeTiltMotor.getEncoder().getPosition();
+    public DoubleSupplier getAngle() {
+        return () -> angleMotor.getAngle();
     }
 
-    public void setAngleOutput(double output) {
-        intakeTiltMotor.setOutput(output);
+    public DoubleSupplier getTargetAngle() {
+        return () -> targetAngle;
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Target Intake Tilt position", () -> targetTiltAngle, (value) -> {setAngle((double) value);});
-        builder.addDoubleProperty("Target Intake Wheel output", () -> targetIntakeOutput, (value) -> {setSpeed((double) value);});
-        builder.addDoubleProperty("Intake Angle", () -> intakeTiltMotor.getEncoder().getPosition(), null);
+        builder.addDoubleProperty("Target Intake Tilt position", getTargetAngle(), null);
+        builder.addDoubleProperty("Target Intake Wheel output", getTargetSpeed(), null);
+        builder.addDoubleProperty("Intake Angle", getAngle(), null);
     }
 }

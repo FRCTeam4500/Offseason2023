@@ -21,7 +21,7 @@ public class SwerveDrive extends SubsystemBase{
     /**
      * The gyroscope of the robot. Used to get the absolute angle of the robot relative to its angle on startup
      */
-    private AHRSAngleGetterComponent gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
+    private AHRSAngleGetterComponent gyro;
     /**
      * An array containing the swerve drive modules of the robot. 
      * The order of the modules in the array is dependent on the order they are made in the SwerveDrive constructor
@@ -53,6 +53,7 @@ public class SwerveDrive extends SubsystemBase{
         };
         this.modules = modules;
         currentGyroZero = 0;
+        gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
         odometry = new SwerveDriveOdometry(kinematics, new Rotation2d(gyro.getAngle()), getModulePositions());
     }
@@ -92,7 +93,7 @@ public class SwerveDrive extends SubsystemBase{
     public void driveModules(ChassisSpeeds targetChassisSpeeds) {
         SwerveModuleState[] states = kinematics.toSwerveModuleStates(targetChassisSpeeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(states, SwerveConstants.MAX_LINEAR_SPEED);
-        for (int i = 0; i < states.length; i++) {
+        for (int i = 0; i < modules.length; i++) {
             modules[i].drive(states[i]);
         }
     }
@@ -151,10 +152,10 @@ public class SwerveDrive extends SubsystemBase{
 
     /**
      * Sets the robot's odometric position to a given position
-     * @param pose the pose the robot should be
+     * @param newPose the pose the robot should be
      */
-    public void resetPose(Pose2d pose) {
-        odometry.resetPosition(new Rotation2d(gyro.getAngle()), getModulePositions(), pose);
+    public void resetPose(Pose2d newPose) {
+        odometry.resetPosition(new Rotation2d(gyro.getAngle()), getModulePositions(), newPose);
     }
 
     /**
