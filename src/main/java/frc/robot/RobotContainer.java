@@ -22,7 +22,6 @@ import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
 import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
 import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
-import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 
 
@@ -76,7 +75,7 @@ public class RobotContainer {
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
         driverPlaceButton.toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
+            new PlaceCommand(m_arm, m_intake, Intake.getGamePiece().get())
         );
         driverPlaceButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
@@ -124,7 +123,7 @@ public class RobotContainer {
         );
        
         placeButton.toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, GamePiece.Both)
+            new PlaceCommand(m_arm, m_intake, Intake.getGamePiece().get())
         );
         placeButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)

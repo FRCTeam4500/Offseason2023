@@ -12,7 +12,7 @@ public class TiltIntakeCommand extends CommandBase{
     }
 
     public void initialize() {
-        intake.setAngle(intake.angleMotor.getEncoder().getPosition() + tiltChange);
+        intake.changeAngle(tiltChange);
     }
 
     public boolean isFinished() {

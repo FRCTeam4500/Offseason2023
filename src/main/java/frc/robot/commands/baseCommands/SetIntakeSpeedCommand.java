@@ -2,6 +2,7 @@ package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.subsystem.Intake;
 
 public class SetIntakeSpeedCommand extends CommandBase{
@@ -14,10 +15,14 @@ public class SetIntakeSpeedCommand extends CommandBase{
 
     public void initialize() {
         switch (targetOutput) {
-            case PlaceCone: case PickupCube:
+            case PickupCube:
+                Intake.setGamePiece(GamePiece.Cube);
+            case PlaceCone: 
                 intake.setSpeed(IntakeConstants.INTAKE_CUBE_SPEED);
                 break;
-            case PlaceCube: case PickupCone:
+            case PickupCone:
+                Intake.setGamePiece(GamePiece.Cone);
+            case PlaceCube: 
                 intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
                 break;
             case Zero:
@@ -37,5 +42,4 @@ public class SetIntakeSpeedCommand extends CommandBase{
         PickupCube,
         Zero
     }
-
 }

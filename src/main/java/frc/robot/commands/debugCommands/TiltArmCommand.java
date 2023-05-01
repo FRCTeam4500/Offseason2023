@@ -12,7 +12,7 @@ public class TiltArmCommand extends CommandBase{
     }
 
     public void initialize() {
-        arm.setTilt(arm.tiltMotor.getEncoder().getPosition() + tiltChange);
+        arm.changeTilt(tiltChange);
     }
 
     public boolean isFinished() {

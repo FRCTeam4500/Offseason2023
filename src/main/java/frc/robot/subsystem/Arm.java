@@ -11,7 +11,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
-    public SparkMaxComponent tiltMotor;
+    private SparkMaxComponent tiltMotor;
     private TalonSRXComponent winchMotor;
     private SparkMaxPIDController tiltPIDController;
     private double targetTiltAngle;
@@ -48,6 +48,10 @@ public class Arm extends SubsystemBase {
         tiltMotor.setAngle(position);
     }
 
+    public void changeTilt(double addition) {
+        setTilt(getTilt().getAsDouble() + addition);;
+    }
+
     public DoubleSupplier getTilt() {
         return () -> tiltMotor.getAngle();
     }
@@ -59,6 +63,10 @@ public class Arm extends SubsystemBase {
     public void setWinchPosition(double position) {
         targetWinchPosition = position;
         winchMotor.setAngle(position);
+    }
+
+    public void changeWinchPosition(double addition) {
+        setWinchPosition(getWinchPosition().getAsDouble() + addition);
     }
 
     public DoubleSupplier getWinchPosition() {

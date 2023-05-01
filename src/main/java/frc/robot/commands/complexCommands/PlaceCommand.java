@@ -36,10 +36,6 @@ public class PlaceCommand extends SequentialCommandGroup{
         }
     }
 
-    public PlaceCommand(Arm arm, Intake intake, boolean isCone) {
-
-    }
-
     public enum GamePiece {
         Cone, 
         Cube,
