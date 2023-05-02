@@ -5,11 +5,12 @@ import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
+import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
 public class AutoPickupCommand extends SequentialCommandGroup{
-    public AutoPickupCommand(Arm arm, Intake intake, Piece piece) {
+    public AutoPickupCommand(Arm arm, Intake intake, GamePiece piece) {
         switch (piece) {
             case Cube:
                 addCommands(
@@ -24,9 +25,5 @@ public class AutoPickupCommand extends SequentialCommandGroup{
                 );
                 break;
         }
-    }
-    public enum Piece {
-        Cube,
-        Cone
     }
 }

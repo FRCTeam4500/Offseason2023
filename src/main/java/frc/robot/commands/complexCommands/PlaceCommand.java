@@ -24,21 +24,11 @@ public class PlaceCommand extends SequentialCommandGroup{
                     new SetIntakeSpeedCommand(intake, Output.Zero)
                 );
                 break;
-            case Both:
-                addCommands(
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.Zero)
-                );
-                break;
         }
     }
 
     public enum GamePiece {
         Cone, 
-        Cube,
-        Both
+        Cube
     }
 }

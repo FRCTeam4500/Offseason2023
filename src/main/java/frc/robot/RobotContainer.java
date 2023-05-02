@@ -20,8 +20,8 @@ import frc.robot.commands.baseCommands.*;
 import frc.robot.commands.complexCommands.*;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
-import frc.robot.commands.complexCommands.AutoPickupCommand.Piece;
 import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
+import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 
 
@@ -175,12 +175,12 @@ public class RobotContainer {
 
         autoCommandMap.put(
             "pickupCone", 
-            new AutoPickupCommand(m_arm, m_intake, Piece.Cone)
+            new AutoPickupCommand(m_arm, m_intake, GamePiece.Cone)
         );
 
         autoCommandMap.put(
             "pickupCube", 
-            new AutoPickupCommand(m_arm, m_intake, Piece.Cube)
+            new AutoPickupCommand(m_arm, m_intake, GamePiece.Cube)
         );
 
         autonChooser.setDefaultOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
