@@ -74,8 +74,12 @@ public class RobotContainer {
         resetGyroButton.toggleOnTrue(new ResetGyroCommand(m_swerve));
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
-        driverPlaceButton.toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, Intake.getGamePiece().get())
+        placeButton.and(() -> Intake.getGamePiece().get()== GamePiece.Cone).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.Cone)
+        );
+
+        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.Cube)
         );
         driverPlaceButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
@@ -122,15 +126,21 @@ public class RobotContainer {
             new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation)
         );
        
-        placeButton.toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, Intake.getGamePiece().get())
+        placeButton.and(() -> Intake.getGamePiece().get()== GamePiece.Cone).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.Cone)
         );
+
+        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.Cube)
+        );
+        
         placeButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
         );
 
         Shuffleboard.getTab("Arm and Intake").add("Intake", m_intake);
         Shuffleboard.getTab("Arm and Intake").add("Arm", m_arm);
+        Shuffleboard.getTab("Arm and Intake").addString("Current Game Piece", () -> Intake.getGamePiece().get().name());
     }
 
     void configureAuto() {

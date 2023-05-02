@@ -82,5 +82,6 @@ public class Intake extends SubsystemBase {
         builder.addDoubleProperty("Target Intake Tilt position", getTargetAngle(), null);
         builder.addDoubleProperty("Target Intake Wheel output", getTargetSpeed(), null);
         builder.addDoubleProperty("Intake Angle", getAngle(), null);
+        builder.addStringProperty("Current Game Piece", () -> gamePiece.name(), null);
     }
 }
