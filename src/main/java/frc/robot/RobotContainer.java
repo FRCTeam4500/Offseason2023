@@ -72,9 +72,11 @@ public class RobotContainer {
 
         switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.switchControlMode();}));
         resetGyroButton.toggleOnTrue(new ResetGyroCommand(m_swerve));
+        
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
-        placeButton.and(() -> Intake.getGamePiece().get()== GamePiece.Cone).toggleOnTrue(
+
+        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cone).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.Cone)
         );
 
