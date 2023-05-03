@@ -143,6 +143,10 @@ public class RobotContainer {
             new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.HighUprightCone)
         );
 
+        readyTopButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone).toggleOnTrue(
+            new RumbleCommand(driveStick, .5)
+        );
+
         readySubstationButton.toggleOnTrue(
             new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.SubstationPickup)
         );
