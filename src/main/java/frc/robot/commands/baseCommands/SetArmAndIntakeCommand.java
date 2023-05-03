@@ -3,15 +3,16 @@ package frc.robot.commands.baseCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 /**
- * A command that sets the Arm winch position, the Arm angle, and the Intake angle
+ * A command that sets the Arm winch state, the Arm angle, and the Intake angle
  */
 public class SetArmAndIntakeCommand extends CommandBase{
     private Arm arm;
     private Intake intake;
-    private Position position;
+    private PlacerState state;
 
     private double targetWinchPosition;
     private double targetArmAngle;
@@ -21,50 +22,38 @@ public class SetArmAndIntakeCommand extends CommandBase{
      * The constructor of SetArmAndIntakeCommand
      * @param arm the arm subsystem
      * @param intake the intake subsystem
-     * @param position the desired position
+     * @param state the desired state
      */
-    public SetArmAndIntakeCommand(Arm arm, Intake intake, Position position) {
+    public SetArmAndIntakeCommand(Arm arm, Intake intake, PlacerState state) {
         this.arm = arm;
         this.intake = intake;
-        this.position = position;
+        this.state = state;
     }
 
-    /**
-     * The set of position groups that might be used
-     */
-    public enum Position {
-        /** The position to pickup from the high substation */
-        Substation,
-        /** The position to place pieces on the high level */
-        High,
-        /** The position to place pieces on the middle level */
-        Middle,
-        /** The position to pickup from the ground */
-        Low,
-        /** The position to travel */
-        Zero,
-        /** The position to unlatch the arm when the match starts */
-        Start
-    }
 
     public void initialize() {
-        switch (position) {
-            case Substation:
+        switch (state) {
+            case SubstationPickup:
                 targetWinchPosition = ArmConstants.ARM_PLACE_TOP;
                 targetArmAngle = ArmConstants.ARM_HIGH_SUBSTATION_ANGLE;
                 targetIntakeAngle = IntakeConstants.INTAKE_HIGH_SUBSTATION_ANGLE;
                 break;
-            case High:
+            case HighUprightCone: case HighCube:
                 targetWinchPosition = ArmConstants.ARM_PLACE_TOP;
                 targetArmAngle = ArmConstants.ARM_LAUNCH_ANGLE;
                 targetIntakeAngle = IntakeConstants.INTAKE_LAUNCHING_ANGLE;
                 break;
-            case Middle:
+            case MidCube: case MidUprightCone:
                 targetWinchPosition = ArmConstants.ARM_PLACE_MID;
                 targetArmAngle = ArmConstants.ARM_PLACE_ANGLE;
                 targetIntakeAngle = IntakeConstants.INTAKE_TOP_CONE_PLACE_ANGLE;
                 break;
-            case Low:
+            case MidTiltedCone:
+                targetWinchPosition = ArmConstants.ARM_PLACE_TILTED_CONE_MID;
+                targetArmAngle = ArmConstants.ARM_PLACE_TILTED_CONE_ANGLE;
+                targetIntakeAngle = IntakeConstants.INTAKE_TILTED_CONE_ANGLE;
+                break;
+            case GroundPickup:
                 targetWinchPosition = ArmConstants.ARM_PICKUP;
                 targetArmAngle = ArmConstants.ARM_GROUND_ANGLE;
                 targetIntakeAngle = IntakeConstants.INTAKE_BOT_ANGLE;

@@ -1,35 +1,32 @@
 package frc.robot.commands.complexCommands;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
 public class PlaceCommand extends SequentialCommandGroup{
     public PlaceCommand(Arm arm, Intake intake, GamePiece piece) {
         switch (piece) {
-            case Cone:
+            case TiltedCone: case UprightCone:
                 addCommands(
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.Zero)
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.Off)
                 );
                 break;
             case Cube:
                 addCommands(
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.Zero)
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.Off)
                 );
                 break;
+            case Nothing:
         }
     }
 
-    public enum GamePiece {
-        Cone, 
-        Cube
-    }
 }

@@ -16,12 +16,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.Constants.*;
+import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.Constants.EnumConstants.IntakeSpeed;
+import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.commands.baseCommands.*;
 import frc.robot.commands.complexCommands.*;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
-import frc.robot.commands.complexCommands.AutoPlaceCommand.Location;
-import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 
 
@@ -41,7 +40,8 @@ public class RobotContainer {
     private final Trigger readyTopButton = controlJoystick.button(JoystickConstants.READY_TOP);
     private final Trigger readyMidButton = controlJoystick.button(JoystickConstants.READY_MIDDLE);
     private final Trigger readyBotButton = controlJoystick.button(JoystickConstants.READY_BOTTOM);
-    private final Trigger coneButton = controlJoystick.button(JoystickConstants.CONE_INTAKE);
+    private final Trigger uprightConeButton = controlJoystick.button(JoystickConstants.UPRIGHT_CONE_INTAKE);
+    private final Trigger tiltedConeButton = controlJoystick.button(JoystickConstants.TILTED_CONE_INTAKE);
     private final Trigger tiltUpButton = controlJoystick.button(4);
     private final Trigger tiltDownButton = controlJoystick.button(2);
 
@@ -76,11 +76,12 @@ public class RobotContainer {
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
 
-        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cone).toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, GamePiece.Cone)
+        driverPlaceButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
+        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
-        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
+        driverPlaceButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.Cube)
         );
         driverPlaceButton.toggleOnFalse(
@@ -94,42 +95,61 @@ public class RobotContainer {
 
 
     void configureArmAndIntake() {
-
         tiltUpButton.toggleOnTrue(new TiltIntakeCommand(m_intake, 1));
         tiltDownButton.toggleOnTrue(new TiltIntakeCommand(m_intake, -1));
 
         cubeButton.toggleOnTrue( 
-            new SetIntakeSpeedCommand(m_intake, Output.PickupCube)
+            new SetIntakeSpeedCommand(m_intake, IntakeSpeed.PickupCube)
         );
         cubeButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
         );
 
-        coneButton.toggleOnTrue(
-            new SetIntakeSpeedCommand(m_intake, Output.PickupCone)
+        uprightConeButton.toggleOnTrue(
+            new SetIntakeSpeedCommand(m_intake, IntakeSpeed.PickupUprightCone)
         );
-        coneButton.toggleOnFalse(
+        uprightConeButton.toggleOnFalse(
+            new ZeroCommand(m_arm, m_intake)
+        );
+
+        tiltedConeButton.toggleOnTrue(
+            new SetIntakeSpeedCommand(m_intake, IntakeSpeed.PickupTiltedCone)
+        );
+        tiltedConeButton.toggleOnFalse(
             new ZeroCommand(m_arm, m_intake)
         );
 
         readyBotButton.toggleOnTrue(
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Low)
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.GroundPickup)
         );
 
-        readyMidButton.toggleOnTrue(
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Middle)
+        readyMidButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.MidCube)
         );
 
-        readyTopButton.toggleOnTrue(
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.High)
+        readyMidButton.and(() -> Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+          new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.MidUprightCone)  
+        );
+
+        readyMidButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone).toggleOnTrue(
+          new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.MidTiltedCone)  
+        );
+
+        readyTopButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.HighCube)
+        );
+
+        readyTopButton.and(() -> Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.HighUprightCone)
         );
 
         readySubstationButton.toggleOnTrue(
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Substation)
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.SubstationPickup)
         );
        
-        placeButton.and(() -> Intake.getGamePiece().get()== GamePiece.Cone).toggleOnTrue(
-            new PlaceCommand(m_arm, m_intake, GamePiece.Cone)
+        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
+        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+            new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
         placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.Cube).toggleOnTrue(
@@ -148,7 +168,7 @@ public class RobotContainer {
     void configureAuto() {
         autoCommandMap.put(
             "start", 
-            new SetArmAndIntakeCommand(m_arm, m_intake, Position.Start));
+            new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.Start));
 
         autoCommandMap.put(
             "zero", 
@@ -157,22 +177,22 @@ public class RobotContainer {
 
         autoCommandMap.put(
             "placeCubeTop", 
-            new AutoPlaceCommand(m_arm, m_intake, Location.HighCube)
+            new AutoPlaceCommand(m_arm, m_intake, PlacerState.HighCube)
         );
 
         autoCommandMap.put(
             "placeConeTop", 
-            new AutoPlaceCommand(m_arm, m_intake, Location.HighCone)
+            new AutoPlaceCommand(m_arm, m_intake, PlacerState.HighUprightCone)
         );
 
         autoCommandMap.put(
             "placeCubeMid", 
-            new AutoPlaceCommand(m_arm, m_intake, Location.MidCube)
+            new AutoPlaceCommand(m_arm, m_intake, PlacerState.MidCube)
         );
 
         autoCommandMap.put(
             "placeConeMid", 
-            new AutoPlaceCommand(m_arm, m_intake, Location.MidCone)
+            new AutoPlaceCommand(m_arm, m_intake, PlacerState.MidUprightCone)
         );
 
         autoCommandMap.put(
@@ -187,7 +207,7 @@ public class RobotContainer {
 
         autoCommandMap.put(
             "pickupCone", 
-            new AutoPickupCommand(m_arm, m_intake, GamePiece.Cone)
+            new AutoPickupCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
         autoCommandMap.put(
@@ -210,7 +230,6 @@ public class RobotContainer {
         Shuffleboard.getTab("Auto").add("Auto Routes", autonChooser);
     }
 
-
     public Command getAutonomousCommand() {
         return autonChooser.getSelected();
     }
@@ -220,7 +239,5 @@ public class RobotContainer {
         if (auton != null){
             auton.cancel();
         }
-
     }
-
 }

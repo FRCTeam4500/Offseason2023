@@ -2,58 +2,62 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.EnumConstants.IntakeSpeed;
+import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
 public class AutoPlaceCommand extends SequentialCommandGroup{
-    public AutoPlaceCommand(Arm arm, Intake intake, Location position) {
-        switch (position) {
-            case HighCone:
+    public AutoPlaceCommand(Arm arm, Intake intake, PlacerState state) {
+        switch (state) {
+            case HighUprightCone:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.High),
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.HighUprightCone),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
                 break;
-            case MidCone:
+            case MidTiltedCone:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.Middle),
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidTiltedCone),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCone),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
+                    new WaitCommand(1),
+                    new ZeroCommand(arm, intake)
+                );
+                break;
+            case MidUprightCone:
+                addCommands(
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidUprightCone),
+                    new WaitCommand(1),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
                 break;
             case HighCube:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.High),
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.HighCube),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
                 break;
             case MidCube:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.Middle),
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidCube),
                     new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, Output.PlaceCube),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
                     new WaitCommand(1),
                     new ZeroCommand(arm, intake)
                 );
                 break;
+            default:
         }
-    }
-    public enum Location {
-        HighCone,
-        MidCone,
-        HighCube,
-        MidCube
     }
 }

@@ -3,9 +3,9 @@ package frc.robot.commands.complexCommands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand.Position;
-import frc.robot.commands.baseCommands.SetIntakeSpeedCommand.Output;
-import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
+import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.Constants.EnumConstants.IntakeSpeed;
+import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
@@ -14,16 +14,17 @@ public class AutoPickupCommand extends SequentialCommandGroup{
         switch (piece) {
             case Cube:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.Low),
-                    new SetIntakeSpeedCommand(intake, Output.PickupCube)
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.GroundPickup),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PickupCube)
                 );
                 break;
-            case Cone:
+            case TiltedCone: case UprightCone:
                 addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, Position.Low),
-                    new SetIntakeSpeedCommand(intake, Output.PickupCone)
+                    new SetArmAndIntakeCommand(arm, intake, PlacerState.GroundPickup),
+                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PickupUprightCone)
                 );
                 break;
+            case Nothing:
         }
     }
 }

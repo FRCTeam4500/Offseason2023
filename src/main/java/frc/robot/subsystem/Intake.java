@@ -2,7 +2,7 @@ package frc.robot.subsystem;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
+import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.component.SparkMaxComponent;
 
 import java.util.function.DoubleSupplier;
@@ -19,7 +19,7 @@ public class Intake extends SubsystemBase {
     private SparkMaxComponent speedMotor;
     private SparkMaxComponent angleMotor;
     private SparkMaxPIDController anglePIDController;
-    private static GamePiece gamePiece = GamePiece.Cone;
+    private static GamePiece gamePiece = GamePiece.UprightCone;
     private double targetAngle;
     private double targetSpeed;
 

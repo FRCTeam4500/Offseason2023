@@ -8,21 +8,12 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Constants {
     public static class JoystickConstants {
-        // Drive stick map
-        public final static int LOCK_SWERVE_ROTATION = 1;
-        public final static int SWITCH_DRIVE_MODE_ROBOT_CENTRIC = 4;
-        public final static int ALIGN_SWERVE_TO_ANGLE = 8;
-        public final static int ALIGN_SWERVE_REVERSE = 7;
-        public final static int RESET_GYRO = 10;
-        public final static int LIMIT_SWERVE_SPEED = 2;
-        public final static int NO_FORWARD = 9;
-        public final static int BALANCE = 5;
-        
         // Control stick map
         public final static int PLACE = 1;
 
         public final static int CUBE_INTAKE = 12;
-        public final static int CONE_INTAKE = 6;
+        public final static int UPRIGHT_CONE_INTAKE = 6;
+        public final static int TILTED_CONE_INTAKE = 5;
 
         public final static int READY_BOTTOM = 9;
         public final static int READY_MIDDLE = 7;
@@ -78,7 +69,7 @@ public class Constants {
         /** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double ARM_ZERO_ANGLE = -10; 
         
-        public static final double ARM_ANGLE_THRESHOLD = 0.5;
+        public static final double ARM_PLACE_TILTED_CONE_ANGLE = -6; //TODO: Figure this out
 
         /** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
         public static final double ARM_PLACE_TOP = 10900.0; 
@@ -88,8 +79,8 @@ public class Constants {
         public static final double ARM_PICKUP = 4324;
         /** The extension the arm will have while traveling <p> Units are raw sensor units */
         public static final double ARM_RETRACT = 0;
-        /** Placing a bottom cone (as in we picked up a tilted cone) will require us to extend the arm this amount further <p> <Strong>This value needs to be updated</Strong> <p> Units are raw sensor units */
-        public static final double ARM_BOT_CONE_ADDITION = 0; //TODO: Figure this out
+        
+        public static final double ARM_PLACE_TILTED_CONE_MID = 4000; //TODO: Figure this out
 
         public static final double ARM_WINCH_THRESHOLD = 250;
 
@@ -118,13 +109,42 @@ public class Constants {
         /** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
         public static final double INTAKE_TOP_CONE_PLACE_ANGLE = -18.4;
         /** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-        public static final double INTAKE_BOT_CONE_PLACE_ANGLE = -18.4; //TODO: Figure this out
+        public static final double INTAKE_TILTED_CONE_ANGLE = -18.4; //TODO: Figure this out
         /** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double INTAKE_ZERO_ANGLE = -5.5; 
         /** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
         public static final double INTAKE_LAUNCHING_ANGLE = -15.5;
 
-        public static final double INTAKE_ANGLE_THRESHOLD = 0.5;
+    }
+
+    public static class EnumConstants {
+        public static enum GamePiece {
+            Cube,
+            TiltedCone,
+            UprightCone,
+            Nothing
+        }
+
+        public static enum PlacerState {
+            HighUprightCone,
+            HighCube,
+            MidTiltedCone,
+            MidUprightCone,
+            MidCube,
+            GroundPickup,
+            SubstationPickup,
+            Zero,
+            Start
+        }
+
+        public static enum IntakeSpeed {
+            PlaceCone,
+            PlaceCube,
+            PickupUprightCone,
+            PickupTiltedCone,
+            PickupCube,
+            Off
+        }
     }
 
 

@@ -2,30 +2,37 @@ package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.complexCommands.PlaceCommand.GamePiece;
+import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.subsystem.Intake;
 
 public class SetIntakeSpeedCommand extends CommandBase{
     private Intake intake;
-    private Output targetOutput;
-    public SetIntakeSpeedCommand(Intake intake, Output output) {
+    private IntakeSpeed targetSpeed;
+    public SetIntakeSpeedCommand(Intake intake, IntakeSpeed speed) {
         this.intake = intake;
-        this.targetOutput = output;
+        this.targetSpeed = speed;
     }
 
     public void initialize() {
-        switch (targetOutput) {
+        switch (targetSpeed) {
             case PickupCube:
                 Intake.setGamePiece(GamePiece.Cube);
             case PlaceCone: 
                 intake.setSpeed(IntakeConstants.INTAKE_CUBE_SPEED);
                 break;
-            case PickupCone:
-                Intake.setGamePiece(GamePiece.Cone);
+            case PickupUprightCone:
+                Intake.setGamePiece(GamePiece.UprightCone);
+                intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
+                break;
+            case PickupTiltedCone:
+                Intake.setGamePiece(GamePiece.TiltedCone);
+                intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
+                break;
             case PlaceCube: 
                 intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
                 break;
-            case Zero:
+            case Off:
                 intake.setSpeed(0);
                 break;
         }
@@ -33,13 +40,5 @@ public class SetIntakeSpeedCommand extends CommandBase{
 
     public boolean isFinished() {
         return true;
-    }
-
-    public enum Output {
-        PlaceCone,
-        PlaceCube,
-        PickupCone,
-        PickupCube,
-        Zero
     }
 }
