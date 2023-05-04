@@ -19,7 +19,8 @@ public class SetIntakeSpeedCommand extends CommandBase{
             case PickupCube:
                 Intake.setGamePiece(GamePiece.Cube);
             case PlaceCone: 
-                intake.setSpeed(IntakeConstants.INTAKE_CUBE_SPEED);
+                Intake.setGamePiece(GamePiece.Nothing);
+                intake.setSpeed(IntakeConstants.OUTTAKE_CONE_SPEED);
                 break;
             case PickupUprightCone:
                 Intake.setGamePiece(GamePiece.UprightCone);
@@ -30,7 +31,8 @@ public class SetIntakeSpeedCommand extends CommandBase{
                 intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
                 break;
             case PlaceCube: 
-                intake.setSpeed(IntakeConstants.INTAKE_CONE_SPEED);
+                Intake.setGamePiece(GamePiece.Nothing);
+                intake.setSpeed(IntakeConstants.OUTTAKE_CUBE_SPEED);
                 break;
             case Off:
                 intake.setSpeed(0);

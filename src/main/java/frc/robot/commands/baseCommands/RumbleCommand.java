@@ -2,10 +2,10 @@ package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
 
 public class RumbleCommand extends CommandBase{
-    private CommandXboxController controller;
+    private CommandGenericHID controller;
     private double time;
     private double localTime;
     /**
@@ -13,13 +13,13 @@ public class RumbleCommand extends CommandBase{
      * @param controller the controller to make rumble
      * @param time the time it should rumble for, in seconds
      */
-    public RumbleCommand(CommandXboxController controller, double time) {
+    public RumbleCommand(CommandGenericHID controller, double time) {
         this.controller = controller;
         this.time = 50 * time; // 50 is how many times execute is called per second.
     }
 
     public void initialize() {
-        controller.getHID().setRumble(RumbleType.kBothRumble, .5);
+        controller.getHID().setRumble(RumbleType.kBothRumble, 1);
         localTime = 0;
     }
 

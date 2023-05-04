@@ -69,7 +69,7 @@ public class Constants {
         /** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double ARM_ZERO_ANGLE = -10; 
         
-        public static final double ARM_PLACE_TILTED_CONE_ANGLE = -6; //TODO: Figure this out
+        public static final double ARM_PLACE_TILTED_CONE_ANGLE = 0;
 
         /** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
         public static final double ARM_PLACE_TOP = 10900.0; 
@@ -80,7 +80,7 @@ public class Constants {
         /** The extension the arm will have while traveling <p> Units are raw sensor units */
         public static final double ARM_RETRACT = 0;
         
-        public static final double ARM_PLACE_TILTED_CONE_MID = 4000; //TODO: Figure this out
+        public static final double ARM_PLACE_TILTED_CONE_MID = 5000; 
 
         public static final double ARM_WINCH_THRESHOLD = 250;
 
@@ -92,6 +92,10 @@ public class Constants {
         public static final double INTAKE_CONE_SPEED = .8;
         /** The speed of the intake while it is intaking cubes and placing cones <p> Units are percentage of full power */
         public static final double INTAKE_CUBE_SPEED = -.9; 
+
+        public static final double OUTTAKE_CONE_SPEED = -1;
+
+        public static final double OUTTAKE_CUBE_SPEED = .8;
         
         /** The CAN ID of the intake run motor */
         public static final int INTAKE_MOTOR_ID = 13;
@@ -109,7 +113,7 @@ public class Constants {
         /** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
         public static final double INTAKE_TOP_CONE_PLACE_ANGLE = -18.4;
         /** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-        public static final double INTAKE_TILTED_CONE_ANGLE = -18.4; //TODO: Figure this out
+        public static final double INTAKE_TILTED_CONE_ANGLE = -23.5; 
         /** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
         public static final double INTAKE_ZERO_ANGLE = -5.5; 
         /** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
