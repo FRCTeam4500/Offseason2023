@@ -23,6 +23,7 @@ import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.commands.baseCommands.*;
 import frc.robot.commands.complexCommands.*;
+import frc.robot.commands.complexCommands.AutomatedDriveCommand.AutoDriveMode;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 
 
@@ -221,7 +222,7 @@ public class RobotContainer {
             new AutoPickupCommand(m_arm, m_intake, GamePiece.Cube)
         );
 
-        // autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, new Pose2d(), new Pose2d(1, 0, new Rotation2d(Math.PI)), 0.1, 0.1, 1));
+        autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, AutoDriveMode.kRelative, 0, 0, 0, new Pose2d(1, 0, new Rotation2d())));
         autonChooser.addOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Red Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Blue Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueTopRedBot2PieceTopAuto));
