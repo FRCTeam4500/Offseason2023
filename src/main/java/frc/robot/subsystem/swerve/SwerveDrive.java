@@ -1,7 +1,5 @@
 package frc.robot.subsystem.swerve;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -10,7 +8,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,9 +41,6 @@ public class SwerveDrive extends SubsystemBase{
      * The angle of the current zero relative to the angle of the gyroscope. This is in radians
      */
     private double currentGyroZero;
-    private PIDController forwardVelocityController;
-    private PIDController sidewaysVelocityController;
-    private ProfiledPIDController rotationalVelocityController;
     /**
      * Creates a new Swerve Drive with 4 swerve modules, which uses 8 falcon motors. kP of the motors and whether to invert them is set here. Everything else is pulled from constants
      */
@@ -59,9 +53,6 @@ public class SwerveDrive extends SubsystemBase{
         };
         this.modules = modules;
         currentGyroZero = 0;
-        forwardVelocityController = new PIDController(1, 0, 0);
-        sidewaysVelocityController = new PIDController(1,0, 0);
-        rotationalVelocityController = new ProfiledPIDController(1, 0, 0, new Constraints(SwerveConstants.MAX_LINEAR_SPEED, SwerveConstants.MAX_LINEAR_ACCELERATION));
         gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
         odometry = new SwerveDriveOdometry(kinematics, new Rotation2d(gyro.getAngle()), getModulePositions());
@@ -73,14 +64,6 @@ public class SwerveDrive extends SubsystemBase{
     @Override
     public void periodic() {
         odometry.update(new Rotation2d(gyro.getAngle()), getModulePositions());
-    }
-
-    public ChassisSpeeds goToTargetPosition(Pose2d targetPose) {
-        Pose2d currentPose = getRobotPose();
-        double forwardVelocity = forwardVelocityController.calculate(currentPose.getX(), targetPose.getX());
-        double sidewaysVelocity = sidewaysVelocityController.calculate(currentPose.getX(), targetPose.getY());
-        double rotationalVelocity = rotationalVelocityController.calculate(getRobotAngle(), targetPose.getRotation().getRadians());
-        return new ChassisSpeeds(forwardVelocity, sidewaysVelocity, rotationalVelocity);
     }
 
     /**
