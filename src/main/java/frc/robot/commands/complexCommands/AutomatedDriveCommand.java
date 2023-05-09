@@ -3,6 +3,9 @@ package frc.robot.commands.complexCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.utility.ExtendedMath;
@@ -13,10 +16,12 @@ public class AutomatedDriveCommand extends CommandBase {
     private Pose2d currentTargetPose;
     private Transform2d relativeRobotPose;
     private Pose2d relativeOrigin;
+    private ChassisSpeeds currentRobotSpeeds = new ChassisSpeeds();
     private double translationalThreshold;
     private double rotationalThreshold;
     private double timeThreshold;
     private double timeCorrect;
+    private boolean isClose;
     private int poseCounter;
     private AutoDriveMode mode;
     private PIDController forwardVelocityController = new PIDController(5, 0, 0);
@@ -51,8 +56,10 @@ public class AutomatedDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
+        Shuffleboard.getTab("Auto").add(this);
         timeCorrect = 0;
         poseCounter = 0;
+        isClose = false;
         forwardVelocityController.reset();
         sidewaysVelocityController.reset();
         rotationalVelocityController.reset();
@@ -72,12 +79,16 @@ public class AutomatedDriveCommand extends CommandBase {
         double forwardVelocity = forwardVelocityController.calculate(relativeRobotPose.getX(), currentTargetPose.getX());
         double sidewaysVelocity = sidewaysVelocityController.calculate(relativeRobotPose.getY(), currentTargetPose.getY());
         double rotationalVelocity = rotationalVelocityController.calculate(relativeRobotPose.getRotation().getRadians() % (2 * Math.PI), currentTargetPose.getRotation().getRadians());
+        currentRobotSpeeds = new ChassisSpeeds(forwardVelocity, sidewaysVelocity, rotationalVelocity);
         swerve.driveFieldCentric(forwardVelocity, sidewaysVelocity, rotationalVelocity);
 
-        if (ExtendedMath.isClose(currentTargetPose, swerve.getRobotPose(), translationalThreshold, rotationalThreshold)) {
+        Pose2d robotPoseRel = new Pose2d(relativeRobotPose.getTranslation(), relativeRobotPose.getRotation());
+        if (ExtendedMath.isClose(currentTargetPose, robotPoseRel, translationalThreshold, rotationalThreshold)) {
             timeCorrect++;
+            isClose = true;
         } else {
             timeCorrect = 0;
+            isClose = false;
         }
 
         if (timeCorrect / 50 >= timeThreshold) { // the / 50 part is because there are 50 scheduler ticks a second
@@ -97,5 +108,18 @@ public class AutomatedDriveCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         swerve.driveFieldCentric(0, 0, 0);
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("Times Correct: ", () -> timeCorrect, null);
+        builder.addIntegerProperty("Position Number: ", () -> poseCounter, null);
+        builder.addDoubleProperty("Robot Relative X: ", () -> relativeRobotPose.getX(), null);
+        builder.addDoubleProperty("Robot Relative Y: ", () -> relativeRobotPose.getY(), null);
+        builder.addDoubleProperty("Robot Relative Rotation: ", () -> relativeRobotPose.getRotation().getRadians(), null);
+        builder.addDoubleProperty("Robot Forward Speed", () -> currentRobotSpeeds.vxMetersPerSecond, null);
+        builder.addDoubleProperty("Robot Sideways Speed", () -> currentRobotSpeeds.vyMetersPerSecond, null);
+        builder.addDoubleProperty("Robot Rotational Speed", () -> currentRobotSpeeds.omegaRadiansPerSecond, null);
+        builder.addBooleanProperty("Is Close? ", () -> isClose, null);
     }
 }

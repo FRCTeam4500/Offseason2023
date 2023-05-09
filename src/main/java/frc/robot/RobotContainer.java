@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.Constants.*;
@@ -222,7 +222,7 @@ public class RobotContainer {
             new AutoPickupCommand(m_arm, m_intake, GamePiece.Cube)
         );
 
-        autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, AutoDriveMode.kRelative, 0.1, 0.1, 1, new Pose2d(2, 0, new Rotation2d()), new Pose2d(0, 0, new Rotation2d())));
+        autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, AutoDriveMode.kRelative, 0.1, 0.1, 1, new Pose2d(2, 0, new Rotation2d()), new Pose2d(0, 0, new Rotation2d())).andThen(new SetIntakeSpeedCommand(m_intake, IntakeSpeed.PickupCube).andThen(new WaitCommand(1)).andThen(new SetIntakeSpeedCommand(m_intake, IntakeSpeed.Off))));
         autonChooser.addOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Red Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Blue Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueTopRedBot2PieceTopAuto));
