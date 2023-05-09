@@ -2,22 +2,26 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.utility.ExtendedMath;
 
-public class AutomatedDriveCommand extends CommandBase{
+public class AutomatedDriveCommand extends CommandBase {
     private SwerveDrive swerve;
     private Pose2d[] targetPoses;
     private Pose2d currentTargetPose;
+    private Transform2d relativeRobotPose;
+    private Pose2d relativeOrigin;
     private double translationalThreshold;
     private double rotationalThreshold;
     private double timeThreshold;
     private double timeCorrect;
     private int poseCounter;
     private AutoDriveMode mode;
-    private PIDController forwardVelocityController = new PIDController(1, 0, 0);
-    private PIDController sidewaysVelocityController = new PIDController(1, 0, 0);
-    private PIDController rotationalVelocityController = new PIDController(1, 0, 0);
+    private PIDController forwardVelocityController = new PIDController(5, 0, 0);
+    private PIDController sidewaysVelocityController = new PIDController(5, 0, 0);
+    private PIDController rotationalVelocityController = new PIDController(2, 0, 0);
 
     /**
      * Drives the robot to a target field-centric position
@@ -52,52 +56,46 @@ public class AutomatedDriveCommand extends CommandBase{
         forwardVelocityController.reset();
         sidewaysVelocityController.reset();
         rotationalVelocityController.reset();
+        relativeOrigin = swerve.getRobotPose();
         // This next line just converts all the target positions to be relative to the robot, if they aren't already
         if (mode == AutoDriveMode.kAbsolute) {
             for (int i = 0; i < targetPoses.length; i++) {
-                targetPoses[i] = targetPoses[i].relativeTo(swerve.getRobotPose());
+                targetPoses[i] = targetPoses[i].relativeTo(relativeOrigin);
             }
         }
     }
 
     @Override
     public void execute() {
+        relativeRobotPose = swerve.getRobotPose().minus(relativeOrigin);
         currentTargetPose = targetPoses[poseCounter];
-        double forwardVelocity = forwardVelocityController.calculate(swerve.getRobotPose().getX(), currentTargetPose.getX());
-        double sidewaysVelocity = sidewaysVelocityController.calculate(swerve.getRobotPose().getY(), currentTargetPose.getY());
-        double rotationalVelocity = rotationalVelocityController.calculate(swerve.getRobotPose().getRotation().getRadians() % (2 * Math.PI), currentTargetPose.getRotation().getRadians());
+        double forwardVelocity = forwardVelocityController.calculate(relativeRobotPose.getX(), currentTargetPose.getX());
+        double sidewaysVelocity = sidewaysVelocityController.calculate(relativeRobotPose.getY(), currentTargetPose.getY());
+        double rotationalVelocity = rotationalVelocityController.calculate(relativeRobotPose.getRotation().getRadians() % (2 * Math.PI), currentTargetPose.getRotation().getRadians());
         swerve.driveFieldCentric(forwardVelocity, sidewaysVelocity, rotationalVelocity);
 
-        Pose2d differencePose = currentTargetPose.relativeTo(swerve.getRobotPose()); 
-        if (checkThreshold(differencePose)) {
+        if (ExtendedMath.isClose(currentTargetPose, swerve.getRobotPose(), translationalThreshold, rotationalThreshold)) {
             timeCorrect++;
         } else {
             timeCorrect = 0;
         }
 
-        if (timeCorrect / 50 > timeThreshold) { // the / 50 part is because there are 50 scheduler ticks a second
+        if (timeCorrect / 50 >= timeThreshold) { // the / 50 part is because there are 50 scheduler ticks a second
             poseCounter++;
             timeCorrect = 0;
             forwardVelocityController.reset();
             sidewaysVelocityController.reset();
             rotationalVelocityController.reset();
         }
-        
     }
 
     @Override
     public boolean isFinished() {
-        return poseCounter >= targetPoses.length;
+        return poseCounter > targetPoses.length - 1;
     }
 
     @Override
     public void end(boolean interrupted) {
         swerve.driveFieldCentric(0, 0, 0);
-    }
-
-    private boolean checkThreshold(Pose2d differencePose) {
-        return differencePose.getX() < translationalThreshold
-            && differencePose.getY() < translationalThreshold
-            && differencePose.getRotation().getRadians() < rotationalThreshold;
     }
 }

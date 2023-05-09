@@ -7,6 +7,7 @@
 
 package frc.robot.utility;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 /**
@@ -149,5 +150,25 @@ public class ExtendedMath {
         return Math.acos(dotProduct);
 
     }
+
+    /**
+     * Checks to see if two positions are close enough to each other, given a certain threshold
+     * <p> This is useful since in most cases, the robot's pose will not exactly match a target pose, 
+     * but rather get very close to it.
+     * @param pose1 one of the positions
+     * @param pose2 the other position
+     * @param translationalThreshold how close the x and y components of the positions must be
+     * @param rotationalThreshold how close the angles of the positions must be
+     * @return whether the two positions are close enough to each other
+     */
+    public static boolean isClose(Pose2d pose1, Pose2d pose2, double translationalThreshold, double rotationalThreshold) {
+        Pose2d differenceInPose = pose1.relativeTo(pose2);
+        return 
+        Math.abs(differenceInPose.getX()) <= translationalThreshold &&
+        Math.abs(differenceInPose.getY()) <= translationalThreshold &&
+        Math.abs(differenceInPose.getRotation().getRadians()) <= rotationalThreshold;
+    } 
+
+    
 }
 
