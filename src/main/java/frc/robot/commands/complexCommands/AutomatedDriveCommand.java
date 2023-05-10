@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.utility.ExtendedMath;
@@ -21,7 +22,6 @@ public class AutomatedDriveCommand extends CommandBase {
     private double rotationalThreshold;
     private double timeThreshold;
     private double timeCorrect;
-    private boolean isClose;
     private int poseCounter;
     private AutoDriveMode mode;
     private PIDController forwardVelocityController = new PIDController(5, 0, 0);
@@ -32,14 +32,14 @@ public class AutomatedDriveCommand extends CommandBase {
      * Drives the robot to a target field-centric position
      * @param swerve the drivetrain subsystem
      * @param mode the reference frame of the target positions.
-     * @param pose2d the positions the robot should go to, in the order the robot should go to them 
      * @param translationalThreshold the tolerance, in meters, for if the robot considers itself to be in the same spot as the target pose
      * @param rotationalThreshold the tolerance, in meters, for if the robot considers itself to be facing the same direction as the target pose
      * @param timeThreshold the time, in seconds, that the robot must be at the target pose before it is considered finished
+     * @param targetPose2ds the positions the robot should go to, in the order the robot should go to them 
      */
-    public AutomatedDriveCommand(SwerveDrive swerve, AutoDriveMode mode, double translationalThreshold, double rotationalThreshold, double timeThreshold, Pose2d... pose2d) {
+    public AutomatedDriveCommand(SwerveDrive swerve, AutoDriveMode mode, double translationalThreshold, double rotationalThreshold, double timeThreshold, Pose2d... targetPose2ds) {
         this.swerve = swerve;
-        this.targetPoses = pose2d;
+        this.targetPoses = targetPose2ds;
         this.translationalThreshold = translationalThreshold;
         this.rotationalThreshold = rotationalThreshold;
         this.timeThreshold = timeThreshold;
@@ -59,7 +59,6 @@ public class AutomatedDriveCommand extends CommandBase {
         Shuffleboard.getTab("Auto").add(this);
         timeCorrect = 0;
         poseCounter = 0;
-        isClose = false;
         forwardVelocityController.reset();
         sidewaysVelocityController.reset();
         rotationalVelocityController.reset();
@@ -85,10 +84,8 @@ public class AutomatedDriveCommand extends CommandBase {
         Pose2d robotPoseRel = new Pose2d(relativeRobotPose.getTranslation(), relativeRobotPose.getRotation());
         if (ExtendedMath.isClose(currentTargetPose, robotPoseRel, translationalThreshold, rotationalThreshold)) {
             timeCorrect++;
-            isClose = true;
         } else {
             timeCorrect = 0;
-            isClose = false;
         }
 
         if (timeCorrect / 50 >= timeThreshold) { // the / 50 part is because there are 50 scheduler ticks a second
@@ -108,18 +105,26 @@ public class AutomatedDriveCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         swerve.driveFieldCentric(0, 0, 0);
+
+        // This is me trying to hide the now useless AutomatedDriveCommand widget... doubt it'll work
+        ShuffleboardComponent<?>[] components = (ShuffleboardComponent[]) Shuffleboard.getTab("Auto").getComponents().toArray();
+        ShuffleboardComponent<?> thisComponent = null;
+        for (int i = 0; i < components.length; i++) {
+            if (components[i].hashCode() == this.hashCode()) {
+                thisComponent = components[i];
+            }
+        }
+        thisComponent.withSize(0, 0);
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Times Correct: ", () -> timeCorrect, null);
-        builder.addIntegerProperty("Position Number: ", () -> poseCounter, null);
+        builder.addIntegerProperty("Position Number: ", () -> poseCounter + 1, null);
         builder.addDoubleProperty("Robot Relative X: ", () -> relativeRobotPose.getX(), null);
         builder.addDoubleProperty("Robot Relative Y: ", () -> relativeRobotPose.getY(), null);
         builder.addDoubleProperty("Robot Relative Rotation: ", () -> relativeRobotPose.getRotation().getRadians(), null);
-        builder.addDoubleProperty("Robot Forward Speed", () -> currentRobotSpeeds.vxMetersPerSecond, null);
-        builder.addDoubleProperty("Robot Sideways Speed", () -> currentRobotSpeeds.vyMetersPerSecond, null);
-        builder.addDoubleProperty("Robot Rotational Speed", () -> currentRobotSpeeds.omegaRadiansPerSecond, null);
-        builder.addBooleanProperty("Is Close? ", () -> isClose, null);
+        builder.addDoubleProperty("Robot Forward Speed: ", () -> currentRobotSpeeds.vxMetersPerSecond, null);
+        builder.addDoubleProperty("Robot Sideways Speed: ", () -> currentRobotSpeeds.vyMetersPerSecond, null);
+        builder.addDoubleProperty("Robot Rotational Speed: ", () -> currentRobotSpeeds.omegaRadiansPerSecond, null);
     }
 }

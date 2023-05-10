@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.Constants.*;
@@ -79,8 +78,7 @@ public class RobotContainer {
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
 
-        driverPlaceButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
-        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+        driverPlaceButton.and(() -> Intake.getGamePiece().get() != GamePiece.Cube).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
@@ -154,8 +152,7 @@ public class RobotContainer {
             new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.SubstationPickup)
         );
        
-        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
-        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
+        placeButton.and(() -> Intake.getGamePiece().get() != GamePiece.Cube).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
@@ -222,7 +219,7 @@ public class RobotContainer {
             new AutoPickupCommand(m_arm, m_intake, GamePiece.Cube)
         );
 
-        autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, AutoDriveMode.kRelative, 0.1, 0.1, 1, new Pose2d(2, 0, new Rotation2d()), new Pose2d(0, 0, new Rotation2d())).andThen(new SetIntakeSpeedCommand(m_intake, IntakeSpeed.PickupCube).andThen(new WaitCommand(1)).andThen(new SetIntakeSpeedCommand(m_intake, IntakeSpeed.Off))));
+        autonChooser.setDefaultOption("Auto Driving Test", new AutomatedDriveCommand(m_swerve, AutoDriveMode.kRelative, 0.1, 0.1, 1, new Pose2d(2, 0, new Rotation2d()), new Pose2d(0, 0, new Rotation2d())));
         autonChooser.addOption("Blue Bottom: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Red Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto));
         autonChooser.addOption("Blue Top: 2 Piece Top", autoBuilder.fullAuto(AutoConstants.BlueTopRedBot2PieceTopAuto));
@@ -247,5 +244,9 @@ public class RobotContainer {
         if (auton != null){
             auton.cancel();
         }
+    }
+
+    public void disabledInit() {
+        m_swerve.zeroModules();
     }
 }

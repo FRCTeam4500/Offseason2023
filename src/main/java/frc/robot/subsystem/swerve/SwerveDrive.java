@@ -98,6 +98,13 @@ public class SwerveDrive extends SubsystemBase{
         }
     }
 
+    public void zeroModules() {
+        for (SwerveModule module : modules) {
+            module.setModuleVelocity(0);
+            module.setModuleAngle(0);
+        }
+    }
+
     /**
      * Gets the translations of the swerve modules from the center of the robot. Used when initializing the kinematics object
      * @return an array containing the translations of the swerve modules in the same order they were put into the SwerveDrive constructor

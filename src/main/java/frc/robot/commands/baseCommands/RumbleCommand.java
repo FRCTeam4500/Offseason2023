@@ -19,7 +19,7 @@ public class RumbleCommand extends CommandBase{
     }
 
     public void initialize() {
-        controller.getHID().setRumble(RumbleType.kBothRumble, 1);
+        controller.getHID().setRumble(RumbleType.kBothRumble, 0.5);
         localTime = 0;
     }
 
