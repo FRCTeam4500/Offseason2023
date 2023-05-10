@@ -56,7 +56,7 @@ public class AutomatedDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        Shuffleboard.getTab("Auto").add(this);
+        Shuffleboard.getTab("Auto").add("Auto Driving Command", this);
         timeCorrect = 0;
         poseCounter = 0;
         forwardVelocityController.reset();
@@ -108,13 +108,11 @@ public class AutomatedDriveCommand extends CommandBase {
 
         // This is me trying to hide the now useless AutomatedDriveCommand widget... doubt it'll work
         ShuffleboardComponent<?>[] components = (ShuffleboardComponent[]) Shuffleboard.getTab("Auto").getComponents().toArray();
-        ShuffleboardComponent<?> thisComponent = null;
-        for (int i = 0; i < components.length; i++) {
-            if (components[i].hashCode() == this.hashCode()) {
-                thisComponent = components[i];
-            }
+        int i = 0;
+        while(components[i].getTitle() != "Auto Driving Command" || i <= components.length - 1) {
+            i++;
         }
-        thisComponent.withSize(0, 0);
+        components[i].withSize(0, 0);
     }
 
     @Override
