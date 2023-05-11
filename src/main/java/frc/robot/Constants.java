@@ -96,6 +96,8 @@ public class Constants {
         public static final double OUTTAKE_CONE_SPEED = -1;
 
         public static final double OUTTAKE_CUBE_SPEED = .8;
+
+        public static final double INTAKE_SPEED_THRESHOLD = 0.05;
         
         /** The CAN ID of the intake run motor */
         public static final int INTAKE_MOTOR_ID = 13;

@@ -1,12 +1,15 @@
 package frc.robot.commands.complexCommands;
 
+import java.util.Map;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.utility.ExtendedMath;
@@ -23,6 +26,8 @@ public class AutomatedDriveCommand extends CommandBase {
     private double timeThreshold;
     private double timeCorrect;
     private int poseCounter;
+    private static int timesRun = 0;
+    private ComplexWidget thisWidget;
     private AutoDriveMode mode;
     private PIDController forwardVelocityController = new PIDController(5, 0, 0);
     private PIDController sidewaysVelocityController = new PIDController(5, 0, 0);
@@ -56,7 +61,8 @@ public class AutomatedDriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        Shuffleboard.getTab("Auto").add("Auto Driving Command", this);
+        timesRun++;
+        thisWidget = Shuffleboard.getTab("Commands").getLayout("Command Grid", BuiltInLayouts.kList).add("Auto Drive Command #" + timesRun, this);
         timeCorrect = 0;
         poseCounter = 0;
         forwardVelocityController.reset();
@@ -105,14 +111,7 @@ public class AutomatedDriveCommand extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         swerve.driveFieldCentric(0, 0, 0);
-
-        // This is me trying to hide the now useless AutomatedDriveCommand widget... doubt it'll work
-        ShuffleboardComponent<?>[] components = (ShuffleboardComponent[]) Shuffleboard.getTab("Auto").getComponents().toArray();
-        int i = 0;
-        while(components[i].getTitle() != "Auto Driving Command" || i <= components.length - 1) {
-            i++;
-        }
-        components[i].withSize(0, 0);
+        thisWidget.withProperties(Map.of("Label position", "HIDDEN"));
     }
 
     @Override
