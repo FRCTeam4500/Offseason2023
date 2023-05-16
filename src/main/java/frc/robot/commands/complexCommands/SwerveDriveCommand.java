@@ -89,12 +89,13 @@ public class SwerveDriveCommand extends CommandBase {
     private void moveFieldCentric(double x, double y, double w){
         swerve.driveFieldCentric(y,x,w);
     }
+
     private void moveRobotCentric(double x, double y, double w){
         swerve.driveRobotCentric(y,x,w);
     }
 
     private void moveAngleCentric(double xSpeed, double ySpeed) {
-        double wSpeed = 4 * angleController.calculate(swerve.getRobotAngle(), Math.toRadians(targetAngle));
+        double wSpeed = 2 * angleController.calculate(swerve.getRobotAngle(), Math.toRadians(targetAngle));
         moveFieldCentric(xSpeed, ySpeed, wSpeed);
     }
 
@@ -108,6 +109,12 @@ public class SwerveDriveCommand extends CommandBase {
         xSens = 4;
         ySens = 4;
         zSens = 3.5;
+    }
+
+    public void midSpeed() {
+        xSens = 2;
+        ySens = 2;
+        zSens = 1.75;
     }
 
     public void slowSpeed() {

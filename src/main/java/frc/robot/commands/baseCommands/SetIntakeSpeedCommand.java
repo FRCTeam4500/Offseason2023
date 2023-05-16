@@ -1,12 +1,8 @@
 package frc.robot.commands.baseCommands;
 
-import java.util.Map;
-
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeSpeed;
@@ -16,8 +12,6 @@ public class SetIntakeSpeedCommand extends CommandBase{
     private Intake intake;
     private IntakeSpeed targetSpeed;
     private double rawTargetSpeed;
-    private ComplexWidget thisWidget;
-    private static int timesRun = 0;
     public SetIntakeSpeedCommand(Intake intake, IntakeSpeed speed) {
         this.intake = intake;
         this.targetSpeed = speed;
@@ -25,11 +19,11 @@ public class SetIntakeSpeedCommand extends CommandBase{
 
     @Override
     public void initialize() {
-        timesRun++;
-        thisWidget = Shuffleboard.getTab("Commands").getLayout("Command Grid", BuiltInLayouts.kList).add("Intake Speed Command #" + timesRun, this);
         switch (targetSpeed) {
             case PickupCube:
                 Intake.setGamePiece(GamePiece.Cube);
+                rawTargetSpeed = IntakeConstants.INTAKE_CUBE_SPEED;
+                break;
             case PlaceCone: 
                 Intake.setGamePiece(GamePiece.Nothing);
                 rawTargetSpeed = IntakeConstants.OUTTAKE_CONE_SPEED;
@@ -56,11 +50,6 @@ public class SetIntakeSpeedCommand extends CommandBase{
     @Override
     public boolean isFinished() {
         return Math.abs(rawTargetSpeed - intake.getSpeed().getAsDouble()) < IntakeConstants.INTAKE_SPEED_THRESHOLD;
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        thisWidget.withProperties(Map.of("Label position", "HIDDEN"));
     }
 
     @Override

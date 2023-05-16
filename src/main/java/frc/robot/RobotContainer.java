@@ -78,7 +78,8 @@ public class RobotContainer {
         slowModeButton.toggleOnTrue(new InstantCommand(() -> {swerveCommand.slowSpeed();}));
         slowModeButton.toggleOnFalse(new InstantCommand(() -> {swerveCommand.fastSpeed();}));
 
-        driverPlaceButton.and(() -> Intake.getGamePiece().get() != GamePiece.Cube).toggleOnTrue(
+        driverPlaceButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
+        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
@@ -152,7 +153,8 @@ public class RobotContainer {
             new SetArmAndIntakeCommand(m_arm, m_intake, PlacerState.SubstationPickup)
         );
        
-        placeButton.and(() -> Intake.getGamePiece().get() != GamePiece.Cube).toggleOnTrue(
+        placeButton.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone || 
+        Intake.getGamePiece().get() == GamePiece.UprightCone).toggleOnTrue(
             new PlaceCommand(m_arm, m_intake, GamePiece.UprightCone)
         );
 
