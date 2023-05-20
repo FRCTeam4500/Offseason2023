@@ -48,7 +48,7 @@ public class DriveController extends CommandXboxController {
      * @param swerveCommand
      * @return controller type "DriveController"
      */
-    public static DriveController getInstance(int Connectedport, Intake intake, Arm arm, SwerveDrive drive, SwerveDriveCommand swerveCommand) {
+    public static synchronized DriveController getInstance(int Connectedport, Intake intake, Arm arm, SwerveDrive drive, SwerveDriveCommand swerveCommand) {
         if (controller == null) {
             controller = new DriveController(Connectedport, intake, arm, drive, swerveCommand);
         }
@@ -59,7 +59,7 @@ public class DriveController extends CommandXboxController {
      * Gets the instance of the controller. If the controller is null, it will return null.
      * @return
      */
-    public static DriveController getInstance() {
+    public static synchronized DriveController getInstance() {
         return controller;
     }
 

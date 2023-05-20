@@ -51,7 +51,7 @@ public class OperatorController extends CommandJoystick {
      * @param arm
      * @return
      */
-    public static OperatorController getInstance(int port, Intake intake, Arm arm) {
+    public static synchronized OperatorController getInstance(int port, Intake intake, Arm arm) {
         if (controller == null) {
             controller = new OperatorController(port, intake, arm);
         }
@@ -62,7 +62,7 @@ public class OperatorController extends CommandJoystick {
      * Returns the instance of the OperatorController. If the instance is null, it will return null.
      * @return
      */
-    public static OperatorController getInstance() {
+    public static synchronized OperatorController getInstance() {
         return controller;
     }
 
