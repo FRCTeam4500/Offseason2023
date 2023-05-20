@@ -28,12 +28,12 @@ public class DriveController extends CommandXboxController {
     private final Trigger slowModeButton = this.leftBumper();
     private final Trigger driverPlaceButton = this.b();
     
-    private DriveController(int Connectedport, Intake intake, Arm arm, SwerveDrive drive, SwerveDriveCommand swerveCommand) {
+    private DriveController(int Connectedport, Intake intake, Arm arm, SwerveDrive drive) {
         super(Connectedport);
         this.intake = intake;
         this.arm = arm;
         this.swerve = drive;
-        this.swerveCommand = swerveCommand;
+        this.swerveCommand = new SwerveDriveCommand(drive, this);
 
         setSwerveButtons();
     }
@@ -48,9 +48,9 @@ public class DriveController extends CommandXboxController {
      * @param swerveCommand
      * @return controller type "DriveController"
      */
-    public static synchronized DriveController getInstance(int Connectedport, Intake intake, Arm arm, SwerveDrive drive, SwerveDriveCommand swerveCommand) {
+    public static synchronized DriveController getInstance(int Connectedport, Intake intake, Arm arm, SwerveDrive drive) {
         if (instanceDriveController == null) {
-            instanceDriveController = new DriveController(Connectedport, intake, arm, drive, swerveCommand);
+            instanceDriveController = new DriveController(Connectedport, intake, arm, drive);
         }
         return instanceDriveController;
     }

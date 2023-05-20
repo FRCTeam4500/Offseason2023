@@ -32,29 +32,13 @@ public class RobotContainer {
     private final Arm arm = Arm.getInstance();
     private final Intake intake = Intake.getInstance();
 
-    private SwerveDriveCommand swerveCommand;
-
     /* Setting controller Buttons */
-    private final DriveController driveStick = DriveController.getInstance(JoystickConstants.DRIVER_PORT, intake, arm, swerve, swerveCommand);
+    private final DriveController driveStick = DriveController.getInstance(JoystickConstants.DRIVER_PORT, intake, arm, swerve);
     private final OperatorController controlJoystick = OperatorController.getInstance(JoystickConstants.OPERATOR_PORT, intake, arm);
 
     private final Autonomous autonomous = Autonomous.getInstance(swerve, arm, intake);
 
-    public RobotContainer() {
-        configureSwerve();
-        configureArmAndIntake();
-    }
-    
-    void configureSwerve() {
-        Shuffleboard.getTab("Swerve").add("Swerve", swerve);
-        Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
-    }
-
-    void configureArmAndIntake() {
-        Shuffleboard.getTab("Arm and Intake").add("Intake", intake);
-        Shuffleboard.getTab("Arm and Intake").add("Arm", arm);
-        Shuffleboard.getTab("Arm and Intake").addString("Current Game Piece", () -> Intake.getGamePiece().get().name());
-    }
+    public RobotContainer() { }
 
     public Command getAutonomousCommand() {
         return autonomous.getAutonCommand();

@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
@@ -135,6 +136,10 @@ public class OperatorController extends CommandJoystick {
         placeButton.toggleOnFalse(
             new ZeroCommand(arm, intake)
         );
+
+        Shuffleboard.getTab("Arm and Intake").add("Intake", intake);
+        Shuffleboard.getTab("Arm and Intake").add("Arm", arm);
+        Shuffleboard.getTab("Arm and Intake").addString("Current Game Piece", () -> Intake.getGamePiece().get().name());
     }
 
 }
