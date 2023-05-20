@@ -22,7 +22,7 @@ public class OperatorController extends CommandJoystick {
 
     private DriveController driveController = DriveController.getInstance();
 
-    private static OperatorController controller = null;
+    private static OperatorController instanceOperatorController = null;
 
     private final Trigger cubeButton = this.button(JoystickConstants.CUBE_INTAKE);
     private final Trigger placeButton = this.button(JoystickConstants.PLACE);
@@ -52,10 +52,10 @@ public class OperatorController extends CommandJoystick {
      * @return
      */
     public static synchronized OperatorController getInstance(int port, Intake intake, Arm arm) {
-        if (controller == null) {
-            controller = new OperatorController(port, intake, arm);
+        if (instanceOperatorController == null) {
+            instanceOperatorController = new OperatorController(port, intake, arm);
         }
-        return controller;
+        return instanceOperatorController;
     }
 
     /**
@@ -63,7 +63,7 @@ public class OperatorController extends CommandJoystick {
      * @return
      */
     public static synchronized OperatorController getInstance() {
-        return controller;
+        return instanceOperatorController;
     }
 
     public void setPlacerButtons() {

@@ -28,9 +28,9 @@ import frc.robot.commands.debugCommands.TiltIntakeCommand;
 
 public class RobotContainer {
 
-    private final SwerveDrive swerve = new SwerveDrive();
-    private final Arm arm = new Arm();
-    private final Intake intake = new Intake();
+    private final SwerveDrive swerve = SwerveDrive.getInstance();
+    private final Arm arm = Arm.getInstance();
+    private final Intake intake = Intake.getInstance();
 
     private SwerveDriveCommand swerveCommand;
 

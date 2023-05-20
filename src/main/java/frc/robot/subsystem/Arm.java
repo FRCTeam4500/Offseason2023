@@ -17,10 +17,12 @@ public class Arm extends SubsystemBase {
     private double targetTiltAngle;
     private double targetWinchPosition;
 
+    private static Arm instanceArm = null;
+
     /**
      * Creates a new Arm from Constants
      */
-    public Arm() {
+    private Arm() {
         tiltMotor = new SparkMaxComponent(ArmConstants.TILT_MOTOR_ID, ArmConstants.TILT_MOTOR_TYPE);
         winchMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
 
@@ -40,7 +42,17 @@ public class Arm extends SubsystemBase {
         winchMotor.configForwardSoftLimitThreshold(10000);
         winchMotor.configPeakOutputForward(.6);
         winchMotor.configPeakOutputReverse(-0.3);
+    }
 
+    /**
+     * Gets instance of Arm. If the Arm is null, it will create a new one.
+     * @return Arm type "Arm"
+     */
+    public static synchronized Arm getInstance() {
+        if (instanceArm == null) {
+            instanceArm = new Arm();
+        }
+        return instanceArm;
     }
     
     public void setTilt(double position) {

@@ -21,7 +21,7 @@ public class DriveController extends CommandXboxController {
     SwerveDrive swerve;
     SwerveDriveCommand swerveCommand;
 
-    private static DriveController controller = null;
+    private static DriveController instanceDriveController = null;
 
     private final Trigger switchDriveModeButton = this.x();
     private final Trigger resetGyroButton = this.a();
@@ -49,10 +49,10 @@ public class DriveController extends CommandXboxController {
      * @return controller type "DriveController"
      */
     public static synchronized DriveController getInstance(int Connectedport, Intake intake, Arm arm, SwerveDrive drive, SwerveDriveCommand swerveCommand) {
-        if (controller == null) {
-            controller = new DriveController(Connectedport, intake, arm, drive, swerveCommand);
+        if (instanceDriveController == null) {
+            instanceDriveController = new DriveController(Connectedport, intake, arm, drive, swerveCommand);
         }
-        return controller;
+        return instanceDriveController;
     }
 
     /**
@@ -60,7 +60,7 @@ public class DriveController extends CommandXboxController {
      * @return
      */
     public static synchronized DriveController getInstance() {
-        return controller;
+        return instanceDriveController;
     }
 
     public void setSwerveButtons() {

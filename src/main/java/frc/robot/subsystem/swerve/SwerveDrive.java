@@ -41,10 +41,18 @@ public class SwerveDrive extends SubsystemBase{
      * The angle of the current zero relative to the angle of the gyroscope. This is in radians
      */
     private double currentGyroZero;
+
+
+    /**
+     * The instance of the swerve drive. Used to make sure only one swerve drive is created
+     */
+    private static SwerveDrive instanceSwerve;
+
+
     /**
      * Creates a new Swerve Drive with 4 swerve modules, which uses 8 falcon motors. kP of the motors and whether to invert them is set here. Everything else is pulled from constants
      */
-    public SwerveDrive() {
+    private SwerveDrive() {
         SwerveModule[] modules = {
             new SwerveModule(SwerveConstants.DFLPORT, SwerveConstants.AFLPORT, new Translation2d(SwerveConstants.DRIVE_Y_FRONT_TRANSLATION, SwerveConstants.DRIVE_X_LEFT_TRANSLATION), true, false, 0.1, 0.3),
             new SwerveModule(SwerveConstants.DFRPORT, SwerveConstants.AFRPORT, new Translation2d(SwerveConstants.DRIVE_Y_FRONT_TRANSLATION, SwerveConstants.DRIVE_X_RIGHT_TRANSLATION), false, false, 0.1, 0.3),
@@ -56,6 +64,17 @@ public class SwerveDrive extends SubsystemBase{
         gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
         kinematics = new SwerveDriveKinematics(getModuleTranslations());
         odometry = new SwerveDriveOdometry(kinematics, new Rotation2d(gyro.getAngle()), getModulePositions());
+    }
+
+    /**
+     * Gets the instance of the swerve drive. If the instance doesn't exist, it creates it
+     * @return the instance of the swerve drive
+     */
+    public static synchronized SwerveDrive getInstance() {
+        if (instanceSwerve == null) {
+            instanceSwerve = new SwerveDrive();
+        }
+        return instanceSwerve;
     }
 
     /**

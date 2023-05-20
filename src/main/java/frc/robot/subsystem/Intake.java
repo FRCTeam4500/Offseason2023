@@ -23,7 +23,9 @@ public class Intake extends SubsystemBase {
     private double targetAngle;
     private double targetSpeed;
 
-    public Intake() {
+    private static Intake instanceIntake = null;
+
+    private Intake() {
         speedMotor = new SparkMaxComponent(IntakeConstants.INTAKE_MOTOR_ID, IntakeConstants.INTAKE_MOTOR_TYPE);
         angleMotor = new SparkMaxComponent(IntakeConstants.INTAKE_ANGLE_MOTOR_ID, IntakeConstants.ANGLE_MOTOR_TYPE);
 
@@ -37,6 +39,17 @@ public class Intake extends SubsystemBase {
         anglePIDController.setI(0);
         anglePIDController.setD(0);
         anglePIDController.setOutputRange(-.3, .3);
+    }
+
+    /**
+     * Gets instance of Intake. If the Intake is null, it will create a new one.
+     * @return
+     */
+    public static synchronized Intake getInstance() {
+        if (instanceIntake == null) {
+            instanceIntake = new Intake();
+        }
+        return instanceIntake;
     }
 
     public void setSpeed(double speed) {
