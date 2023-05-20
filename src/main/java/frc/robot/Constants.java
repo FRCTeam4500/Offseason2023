@@ -8,6 +8,10 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class Constants {
     public static class JoystickConstants {
+        // Joystick ports
+        public final static int DRIVER_PORT = 2;
+        public final static int OPERATOR_PORT = 1;
+
         // Control stick map
         public final static int PLACE = 1;
 
