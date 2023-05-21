@@ -37,24 +37,40 @@ public class Robot extends LoggedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		// START
-		Logger.getInstance().recordMetadata("ProjectName", "Offseason2023");
+		// Record metadata
+		Logger.getInstance().recordMetadata("ProjectName", BuildInfo.MAVEN_NAME);
+		Logger.getInstance().recordMetadata("BuildDate", BuildInfo.BUILD_DATE);
+		Logger.getInstance().recordMetadata("GitSHA", BuildInfo.GIT_SHA);
+		Logger.getInstance().recordMetadata("GitDate", BuildInfo.GIT_DATE);
+		Logger.getInstance().recordMetadata("GitBranch", BuildInfo.GIT_BRANCH);
+		switch (BuildInfo.DIRTY) {
+		  	case 0:
+				Logger.getInstance().recordMetadata("GitDirty", "All changes committed");
+				break;
+		  	case 1:
+		  		Logger.getInstance().recordMetadata("GitDirty", "Uncomitted changes");
+				break;
+		  	default:
+		  		Logger.getInstance().recordMetadata("GitDirty", "Unknown");
+				break;
+		}
+	
 
 		switch (TelemetryConstants.getMode()) {
 			case REAL:
 				Logger.getInstance().addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
 				Logger.getInstance().addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
 				new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging TODO: Check PDH Port and ModuleType 
-
 				break;
 			case SIM:
+				Logger.getInstance().addDataReceiver(new WPILOGWriter(""));
+				Logger.getInstance().addDataReceiver(new NT4Publisher());
 				break;
 			case REPLAY:
 				setUseTiming(false); // Run as fast as possible
 				String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
 				Logger.getInstance().setReplaySource(new WPILOGReader(logPath)); // Read replay log
 				Logger.getInstance().addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
-
 				break;
 		}
 

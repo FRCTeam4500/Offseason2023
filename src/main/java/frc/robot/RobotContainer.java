@@ -1,14 +1,5 @@
 package frc.robot;
 
-import org.littletonrobotics.junction.LogFileUtil;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.NT4Publisher;
-import org.littletonrobotics.junction.wpilog.WPILOGReader;
-import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystem.*;
 import frc.robot.subsystem.swerve.SwerveDrive;
@@ -26,7 +17,7 @@ public class RobotContainer {
 
     private final Autonomous autonomous = Autonomous.getInstance(swerve, arm, intake);
 
-    public RobotContainer() { }
+    public RobotContainer() {}
 
     public Command getAutonomousCommand() {
         return autonomous.getAutonCommand();
@@ -34,7 +25,7 @@ public class RobotContainer {
 
     public void teleopInit() {
         Command auton = autonomous.getAutonCommand();
-        if (auton != null){
+        if (auton != null) {
             auton.cancel();
         }
     }
