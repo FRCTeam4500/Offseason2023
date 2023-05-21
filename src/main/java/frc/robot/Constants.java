@@ -5,6 +5,8 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.RobotBase;
+
 
 public class Constants {
     public static class JoystickConstants {
@@ -196,5 +198,19 @@ public class Constants {
         // Add Auto Paths here, like the above
     }
 
+    public static class TelemetryConstants {
+        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM; // Might need to change to getter
+
+        public static enum Mode {
+            /** Running on a real robot. */
+            REAL,
+
+            /** Running a physics simulator. */
+            SIM,
+
+            /** Replaying from a log file. */
+            REPLAY
+        }
+    }
     
 }
