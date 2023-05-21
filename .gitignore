@@ -160,3 +160,6 @@ bin/
 
 # Simulation GUI and other tools window save file
 *-window.json
+
+# version file for logger
+src/main/java/frc/robot/BuildInfo.java

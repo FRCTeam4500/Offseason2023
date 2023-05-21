@@ -199,7 +199,10 @@ public class Constants {
     }
 
     public static class TelemetryConstants {
-        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : Mode.SIM; // Might need to change to getter
+
+        public static Mode getMode() {
+            return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY; // Just change in init if you really want replay
+        }
 
         public static enum Mode {
             /** Running on a real robot. */

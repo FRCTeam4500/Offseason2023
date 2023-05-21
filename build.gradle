@@ -1,6 +1,7 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2023.4.1"
+    id "edu.wpi.first.GradleRIO" version "2023.4.3"
+    id "com.peterabeles.gversion" version "1.10"
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -25,6 +26,8 @@ deploy {
                 // getTargetTypeClass is a shortcut to get the class type using a string
 
                 frcJava(getArtifactTypeClass('FRCJavaArtifact')) {
+                    gcType = edu.wpi.first.gradlerio.deploy.roborio.GarbageCollectorType.Other
+                    jvmArgs << '-XX:+UseG1GC'
                 }
 
                 // Static files artifact
@@ -36,6 +39,14 @@ deploy {
         }
     }
 }
+
+def deployArtifact = deploy.targets.roborio.artifacts.frcJava
+
+// Set to true to use debug for JNI.
+wpi.java.debugJni = false
+
+// Set this to true to enable desktop support.
+def includeDesktopSupport = true
 
 // Configuration for AdvantageKit
 repositories {
@@ -52,14 +63,6 @@ repositories {
 configurations.all {
     exclude group: "edu.wpi.first.wpilibj"
 }
-
-def deployArtifact = deploy.targets.roborio.artifacts.frcJava
-
-// Set to true to use debug for JNI.
-wpi.java.debugJni = false
-
-// Set this to true to enable desktop support.
-def includeDesktopSupport = true
 
 // Defining my dependencies. In this case, WPILib (+ friends), and vendor libraries.
 // Also defines JUnit 5.
@@ -117,13 +120,12 @@ tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
 }
 
-// Create version file
 project.compileJava.dependsOn(createVersionFile)
 gversion {
     srcDir       = "src/main/java/"
     classPackage = "frc.robot"
-    className    = "BuildConstants"
+    className    = "BuildInfo"
     dateFormat   = "yyyy-MM-dd HH:mm:ss z"
-    timeZone     = "America/New_York"
-    indent       = "  "
+    timeZone     = "US/Central" // Use preferred time zone
+    indent       = "    "
 }
