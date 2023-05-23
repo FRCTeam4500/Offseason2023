@@ -16,41 +16,42 @@ import edu.wpi.first.wpilibj.SPI.Port;
  */
 public class AHRSAngleGetterComponent extends AHRS {
 
-    /**
-     * @see AHRS#AHRS(Port)
-     */
-    public AHRSAngleGetterComponent(edu.wpi.first.wpilibj.I2C.Port kmxp) {
-        super(kmxp);
-    }
-    public AHRSAngleGetterComponent(Port kmxp) {
-        super(kmxp);
-    }
+	/**
+	 * @see AHRS#AHRS(Port)
+	 */
+	public AHRSAngleGetterComponent(edu.wpi.first.wpilibj.I2C.Port kmxp) {
+		super(kmxp);
+	}
 
-    /**
-     * Gets the absolute angle of the gyro from the angle where power was turned on
-     * @return the absolute angle of the robot in radians. Counter-Clockwise is positive
-     */
-    public double getAngle() {
-        return -Math.toRadians(super.getAngle());
-    }
+	public AHRSAngleGetterComponent(Port kmxp) {
+		super(kmxp);
+	}
 
-    /**
-     * Returns the pitch of the robot in radians
-     * @return the pitch of the robot in radians
-     */
-    @Override
-    public float getPitch() {
-        return (float) Math.toRadians(super.getPitch());
-    }
+	/**
+	 * Gets the absolute angle of the gyro from the angle where power was turned on
+	 * @return the absolute angle of the robot in radians. Counter-Clockwise is positive
+	 */
+	public double getAngle() {
+		return -Math.toRadians(super.getAngle());
+	}
 
-    /**
-     * Returns the roll of the robot in radians
-     * @return the roll of the robot in radians
-     */
-    @Override
-    public float getRoll() {
-        return (float) Math.toRadians(super.getRoll());
-    }
+	/**
+	 * Returns the pitch of the robot in radians
+	 * @return the pitch of the robot in radians
+	 */
+	@Override
+	public float getPitch() {
+		return (float) Math.toRadians(super.getPitch());
+	}
 
-    public void reset() {}
+	/**
+	 * Returns the roll of the robot in radians
+	 * @return the roll of the robot in radians
+	 */
+	@Override
+	public float getRoll() {
+		return (float) Math.toRadians(super.getRoll());
+	}
+
+	public void reset() {}
 }

@@ -8,11 +8,12 @@ import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
-public class ZeroCommand extends SequentialCommandGroup{
-    public ZeroCommand(Arm arm, Intake intake) {
-        addCommands(
-            new SetIntakeSpeedCommand(intake, IntakeSpeed.Off),
-            new SetArmAndIntakeCommand(arm, intake, PlacerState.Zero)
-        );
-    }
+public class ZeroCommand extends SequentialCommandGroup {
+
+	public ZeroCommand(Arm arm, Intake intake) {
+		addCommands(
+			new SetIntakeSpeedCommand(intake, IntakeSpeed.Off),
+			new SetArmAndIntakeCommand(arm, intake, PlacerState.Zero)
+		);
+	}
 }

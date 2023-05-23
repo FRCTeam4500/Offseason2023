@@ -1,100 +1,119 @@
 package frc.robot.subsystem;
+
+import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.component.SparkMaxComponent;
 import frc.robot.component.TalonSRXComponent;
-
 import java.util.function.DoubleSupplier;
 
-import com.revrobotics.SparkMaxPIDController;
-
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 public class Arm extends SubsystemBase {
-    private SparkMaxComponent tiltMotor;
-    private TalonSRXComponent winchMotor;
-    private SparkMaxPIDController tiltPIDController;
-    private double targetTiltAngle;
-    private double targetWinchPosition;
 
-    private static Arm instanceArm = null;
+	private SparkMaxComponent tiltMotor;
+	private TalonSRXComponent winchMotor;
+	private SparkMaxPIDController tiltPIDController;
+	private double targetTiltAngle;
+	private double targetWinchPosition;
 
-    /**
-     * Creates a new Arm from Constants
-     */
-    private Arm() {
-        tiltMotor = new SparkMaxComponent(ArmConstants.TILT_MOTOR_ID, ArmConstants.TILT_MOTOR_TYPE);
-        winchMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
+	private static Arm instanceArm = null;
 
-        tiltMotor.setInverted(true);
-        
-        tiltPIDController = tiltMotor.getPIDController();
-        tiltPIDController.setP(0.04);
-        tiltPIDController.setI(0);
-        tiltPIDController.setD(0);
-        tiltPIDController.setOutputRange(-.5, .5);
+	/**
+	 * Creates a new Arm from Constants
+	 */
+	private Arm() {
+		tiltMotor =
+			new SparkMaxComponent(
+				ArmConstants.TILT_MOTOR_ID,
+				ArmConstants.TILT_MOTOR_TYPE
+			);
+		winchMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
 
-        winchMotor.config_kP(0, .4);
-        winchMotor.config_kI(0, 0);
-        winchMotor.config_kD(0, 0);
-        winchMotor.configAllowableClosedloopError(0, 400);
-        winchMotor.configForwardSoftLimitEnable(true);
-        winchMotor.configForwardSoftLimitThreshold(10000);
-        winchMotor.configPeakOutputForward(.6);
-        winchMotor.configPeakOutputReverse(-0.3);
-    }
+		tiltMotor.setInverted(true);
 
-    /**
-     * Gets instance of Arm. If the Arm is null, it will create a new one.
-     * @return Arm type "Arm"
-     */
-    public static synchronized Arm getInstance() {
-        if (instanceArm == null) {
-            instanceArm = new Arm();
-        }
-        return instanceArm;
-    }
-    
-    public void setTilt(double position) {
-        targetTiltAngle = position;
-        tiltMotor.setAngle(position);
-    }
+		tiltPIDController = tiltMotor.getPIDController();
+		tiltPIDController.setP(0.04);
+		tiltPIDController.setI(0);
+		tiltPIDController.setD(0);
+		tiltPIDController.setOutputRange(-.5, .5);
 
-    public void changeTilt(double addition) {
-        setTilt(getTilt().getAsDouble() + addition);;
-    }
+		winchMotor.config_kP(0, .4);
+		winchMotor.config_kI(0, 0);
+		winchMotor.config_kD(0, 0);
+		winchMotor.configAllowableClosedloopError(0, 400);
+		winchMotor.configForwardSoftLimitEnable(true);
+		winchMotor.configForwardSoftLimitThreshold(10000);
+		winchMotor.configPeakOutputForward(.6);
+		winchMotor.configPeakOutputReverse(-0.3);
+	}
 
-    public DoubleSupplier getTilt() {
-        return () -> tiltMotor.getAngle();
-    }
+	/**
+	 * Gets instance of Arm. If the Arm is null, it will create a new one.
+	 * @return Arm type "Arm"
+	 */
+	public static synchronized Arm getInstance() {
+		if (instanceArm == null) {
+			instanceArm = new Arm();
+		}
+		return instanceArm;
+	}
 
-    public DoubleSupplier getTargetTilt() {
-        return () -> targetTiltAngle;
-    }
+	public void setTilt(double position) {
+		targetTiltAngle = position;
+		tiltMotor.setAngle(position);
+	}
 
-    public void setWinchPosition(double position) {
-        targetWinchPosition = position;
-        winchMotor.setAngle(position);
-    }
+	public void changeTilt(double addition) {
+		setTilt(getTilt().getAsDouble() + addition);
+	}
 
-    public void changeWinchPosition(double addition) {
-        setWinchPosition(getWinchPosition().getAsDouble() + addition);
-    }
+	public DoubleSupplier getTilt() {
+		return () -> tiltMotor.getAngle();
+	}
 
-    public DoubleSupplier getWinchPosition() {
-        return () -> winchMotor.getSelectedSensorPosition();
-    }
+	public DoubleSupplier getTargetTilt() {
+		return () -> targetTiltAngle;
+	}
 
-    public DoubleSupplier getTargetWinchPosition() {
-        return () -> targetWinchPosition;
-    }
+	public void setWinchPosition(double position) {
+		targetWinchPosition = position;
+		winchMotor.setAngle(position);
+	}
 
-    @Override
-    public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("Target tilt position", getTargetTilt(), null);
-        builder.addDoubleProperty("Target winch output", getTargetWinchPosition(), null);
-    
-        builder.addDoubleProperty("Current Encoder Tilt Position", getTilt(), null);
-        builder.addDoubleProperty("Current Winch Encoder Position", getWinchPosition(), null);
-    }
+	public void changeWinchPosition(double addition) {
+		setWinchPosition(getWinchPosition().getAsDouble() + addition);
+	}
+
+	public DoubleSupplier getWinchPosition() {
+		return () -> winchMotor.getSelectedSensorPosition();
+	}
+
+	public DoubleSupplier getTargetWinchPosition() {
+		return () -> targetWinchPosition;
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		builder.addDoubleProperty(
+			"Target tilt position",
+			getTargetTilt(),
+			null
+		);
+		builder.addDoubleProperty(
+			"Target winch output",
+			getTargetWinchPosition(),
+			null
+		);
+
+		builder.addDoubleProperty(
+			"Current Encoder Tilt Position",
+			getTilt(),
+			null
+		);
+		builder.addDoubleProperty(
+			"Current Winch Encoder Position",
+			getWinchPosition(),
+			null
+		);
+	}
 }

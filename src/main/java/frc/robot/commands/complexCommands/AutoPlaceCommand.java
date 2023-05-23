@@ -9,55 +9,76 @@ import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.subsystem.Arm;
 import frc.robot.subsystem.Intake;
 
-public class AutoPlaceCommand extends SequentialCommandGroup{
-    public AutoPlaceCommand(Arm arm, Intake intake, PlacerState state) {
-        switch (state) {
-            case HighUprightCone:
-                addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, PlacerState.HighUprightCone),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
-                    new WaitCommand(1),
-                    new ZeroCommand(arm, intake)
-                );
-                break;
-            case MidTiltedCone:
-                addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidTiltedCone),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
-                    new WaitCommand(1),
-                    new ZeroCommand(arm, intake)
-                );
-                break;
-            case MidUprightCone:
-                addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidUprightCone),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
-                    new WaitCommand(1),
-                    new ZeroCommand(arm, intake)
-                );
-                break;
-            case HighCube:
-                addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, PlacerState.HighCube),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
-                    new WaitCommand(1),
-                    new ZeroCommand(arm, intake)
-                );
-                break;
-            case MidCube:
-                addCommands(
-                    new SetArmAndIntakeCommand(arm, intake, PlacerState.MidCube),
-                    new WaitCommand(1),
-                    new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
-                    new WaitCommand(1),
-                    new ZeroCommand(arm, intake)
-                );
-                break;
-            default:
-        }
-    }
+public class AutoPlaceCommand extends SequentialCommandGroup {
+
+	public AutoPlaceCommand(Arm arm, Intake intake, PlacerState state) {
+		switch (state) {
+			case HighUprightCone:
+				addCommands(
+					new SetArmAndIntakeCommand(
+						arm,
+						intake,
+						PlacerState.HighUprightCone
+					),
+					new WaitCommand(1),
+					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
+					new WaitCommand(1),
+					new ZeroCommand(arm, intake)
+				);
+				break;
+			case MidTiltedCone:
+				addCommands(
+					new SetArmAndIntakeCommand(
+						arm,
+						intake,
+						PlacerState.MidTiltedCone
+					),
+					new WaitCommand(1),
+					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
+					new WaitCommand(1),
+					new ZeroCommand(arm, intake)
+				);
+				break;
+			case MidUprightCone:
+				addCommands(
+					new SetArmAndIntakeCommand(
+						arm,
+						intake,
+						PlacerState.MidUprightCone
+					),
+					new WaitCommand(1),
+					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
+					new WaitCommand(1),
+					new ZeroCommand(arm, intake)
+				);
+				break;
+			case HighCube:
+				addCommands(
+					new SetArmAndIntakeCommand(
+						arm,
+						intake,
+						PlacerState.HighCube
+					),
+					new WaitCommand(1),
+					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
+					new WaitCommand(1),
+					new ZeroCommand(arm, intake)
+				);
+				break;
+			case MidCube:
+				addCommands(
+					new SetArmAndIntakeCommand(
+						arm,
+						intake,
+						PlacerState.MidCube
+					),
+					new WaitCommand(1),
+					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
+					new WaitCommand(1),
+					new ZeroCommand(arm, intake)
+				);
+				break;
+			default:
+		}
+	}
 }

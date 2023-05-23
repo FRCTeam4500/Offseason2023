@@ -4,18 +4,17 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.TelemetryConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
-
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.TelemetryConstants;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +26,7 @@ import frc.robot.Constants.TelemetryConstants;
  * project.
  */
 public class Robot extends LoggedRobot {
+
 	private RobotContainer robotContainer;
 	private Command autonomousCommand;
 
@@ -46,21 +46,21 @@ public class Robot extends LoggedRobot {
 		logger.recordMetadata("GitDate", BuildInfo.GIT_DATE);
 		logger.recordMetadata("GitBranch", BuildInfo.GIT_BRANCH);
 		switch (BuildInfo.DIRTY) {
-		  	case 0:
+			case 0:
 				logger.recordMetadata("GitDirty", "All changes committed");
 				break;
-		  	case 1:
-		  		logger.recordMetadata("GitDirty", "Uncomitted changes");
+			case 1:
+				logger.recordMetadata("GitDirty", "Uncomitted changes");
 				break;
-		  	default:
-		  		logger.recordMetadata("GitDirty", "Unknown");
+			default:
+				logger.recordMetadata("GitDirty", "Unknown");
 				break;
 		}
 		switch (TelemetryConstants.getMode()) {
 			case REAL:
 				logger.addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
 				logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-				new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging TODO: Check PDH Port and ModuleType 
+				new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging TODO: Check PDH Port and ModuleType
 				break;
 			case SIM:
 				logger.addDataReceiver(new WPILOGWriter(""));
@@ -70,7 +70,9 @@ public class Robot extends LoggedRobot {
 				setUseTiming(false); // Run as fast as possible
 				String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
 				logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-				logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+				logger.addDataReceiver(
+					new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))
+				); // Save outputs to a new log
 				break;
 		}
 
@@ -112,9 +114,7 @@ public class Robot extends LoggedRobot {
 
 	/** This function is called periodically during autonomous. */
 	@Override
-	public void autonomousPeriodic() {
-
-	}
+	public void autonomousPeriodic() {}
 
 	/** This function is called once when teleop is enabled. */
 	@Override
@@ -124,8 +124,7 @@ public class Robot extends LoggedRobot {
 
 	/** This function is called periodically during operator control. */
 	@Override
-	public void teleopPeriodic() {
-	}
+	public void teleopPeriodic() {}
 
 	/** This function is called once when the robot is disabled. */
 	@Override
@@ -135,16 +134,13 @@ public class Robot extends LoggedRobot {
 
 	/** This function is called periodically when disabled. */
 	@Override
-	public void disabledPeriodic() {
-	}
+	public void disabledPeriodic() {}
 
 	/** This function is called once when test mode is enabled. */
 	@Override
-	public void testInit() {
-	}
+	public void testInit() {}
 
 	/** This function is called periodically during test mode. */
 	@Override
-	public void testPeriodic() {
-	}
+	public void testPeriodic() {}
 }
