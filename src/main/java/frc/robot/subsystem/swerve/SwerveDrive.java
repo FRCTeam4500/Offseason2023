@@ -1,5 +1,7 @@
 package frc.robot.subsystem.swerve;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -12,12 +14,14 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.TelemetryConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
 /**
  * Subsystem class which represents the drivetrain of our robot
  * <p> Used to move the robot chassis
+ * <p> Since we are logging,
  */
-public class SwerveDrive extends SubsystemBase{
+public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
     /**
      * The gyroscope of the robot. Used to get the absolute angle of the robot relative to its angle on startup
      */
@@ -41,6 +45,11 @@ public class SwerveDrive extends SubsystemBase{
      * The angle of the current zero relative to the angle of the gyroscope. This is in radians
      */
     private double currentGyroZero;
+
+    /**
+     * The Inputs
+     */
+    private DriveInputsAutoLogged inputs = new DriveInputsAutoLogged();
 
 
     /**
@@ -83,6 +92,9 @@ public class SwerveDrive extends SubsystemBase{
     @Override
     public void periodic() {
         odometry.update(new Rotation2d(gyro.getAngle()), getModulePositions());
+        updateInputs(inputs);
+        Logger.getInstance().processInputs("Drive", inputs);
+        Logger.getInstance().recordOutput("Odometry", getRobotPose());
     }
 
     /**
@@ -206,6 +218,38 @@ public class SwerveDrive extends SubsystemBase{
      */
     public void resetRobotAngle() {
         resetRobotAngle(0);
+    }
+
+    /**
+     * Update with real values
+     * <p>Order:
+     * <p>Front Left, Front Right, Back Left, Back Right
+     */
+    @Override
+    public void updateInputs(DriveInputs inputs) {
+        inputs.frontLeftModuleDriveMeters = modules[0].getModulePosition().distanceMeters;
+        inputs.frontLeftModuleDriveVelocity = modules[0].getModuleState().speedMetersPerSecond;
+        inputs.frontLeftModuleAngleRad = modules[0].getModuleState().angle.getRadians();
+        inputs.frontLeftModuleAngleVelocity = modules[0].getAngularVelocity();
+
+        inputs.frontRightModuleDriveMeters = modules[1].getModulePosition().distanceMeters;
+        inputs.frontRightModuleDriveVelocity = modules[1].getModuleState().speedMetersPerSecond;
+        inputs.frontRightModuleAngleRad = modules[1].getModuleState().angle.getRadians();
+        inputs.frontRightModuleAngleVelocity = modules[1].getAngularVelocity();
+
+        inputs.backLeftModuleDriveMeters = modules[2].getModulePosition().distanceMeters;
+        inputs.backLeftModuleDriveVelocity = modules[2].getModuleState().speedMetersPerSecond;
+        inputs.backLeftModuleAngleRad = modules[2].getModuleState().angle.getRadians();
+        inputs.backLeftModuleAngleVelocity = modules[2].getAngularVelocity();
+
+        inputs.backRightModuleDriveMeters = modules[3].getModulePosition().distanceMeters;
+        inputs.backRightModuleDriveVelocity = modules[3].getModuleState().speedMetersPerSecond;
+        inputs.backRightModuleAngleRad = modules[3].getModuleState().angle.getRadians();
+        inputs.backRightModuleAngleVelocity = modules[3].getAngularVelocity();
+
+        inputs.gyroYawRad = gyro.getAngle();
+        inputs.gyroPitchRad = gyro.getPitch();
+        inputs.gyroRollRad = gyro.getRoll();
     }
 
     /**

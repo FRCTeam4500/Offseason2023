@@ -34,10 +34,20 @@ public class AHRSAngleGetterComponent extends AHRS {
         return -Math.toRadians(super.getAngle());
     }
 
+    /**
+     * Returns the pitch of the robot in radians
+     * @return the pitch of the robot in radians
+     */
+    @Override
     public float getPitch() {
         return (float) Math.toRadians(super.getPitch());
     }
 
+    /**
+     * Returns the roll of the robot in radians
+     * @return the roll of the robot in radians
+     */
+    @Override
     public float getRoll() {
         return (float) Math.toRadians(super.getRoll());
     }

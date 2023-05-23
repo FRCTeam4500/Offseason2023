@@ -72,6 +72,15 @@ public class SwerveModule {
         return new SwerveModuleState(driveMotor.getAngularVelocity() * SwerveConstants.DRIVE_RATIO * SwerveConstants.WHEEL_DIAMETER / 2, new Rotation2d(angleMotor.getAngle() * SwerveConstants.ANGLE_RATIO));
     }
 
+
+    /**
+     * Gets the current velocity of the angle motor or the specific module
+     * @return the current velocity of the angle motor in m/s
+     */
+    public double getAngularVelocity() {
+        return angleMotor.getAngularVelocity() * SwerveConstants.ANGLE_RATIO;
+    }
+
     /**
      * Gets the current position of the module
      * @return a SwerveModulePosition containing the drive wheel's distance in meters and the angle of the module in radians
