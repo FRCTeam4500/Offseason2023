@@ -12,6 +12,8 @@ import frc.robot.Constants.TelemetryConstants;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.inputs.LoggedDriverStation;
+import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -60,7 +62,7 @@ public class Robot extends LoggedRobot {
 			case REAL:
 				logger.addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
 				logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-				new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging TODO: Check PDH Port and ModuleType
+				LoggedPowerDistribution.getInstance(1, ModuleType.kRev); // Enables power distribution logging
 				break;
 			case SIM:
 				logger.addDataReceiver(new WPILOGWriter(""));
@@ -76,6 +78,7 @@ public class Robot extends LoggedRobot {
 				break;
 		}
 
+		logger.start(); // Start logging
 		robotContainer = new RobotContainer();
 	}
 
