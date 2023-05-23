@@ -38,13 +38,14 @@ public class Autonomous {
     public static final HashMap<String, Command> autoCommandMap = new HashMap<>();
 
     /**Both PID constants need to be tested */
-    private final SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(swerve::getRobotPose, swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), swerve::driveModules, autoCommandMap, swerve);    
+    private final SwerveAutoBuilder autoBuilder;     
     private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
     private Autonomous(SwerveDrive swerve, Arm arm, Intake intake) {
         this.swerve = swerve;
         this.arm = arm;
         this.intake = intake;
+        this.autoBuilder = new SwerveAutoBuilder(swerve::getRobotPose, swerve::resetPose, new PIDConstants(5, 0, 0), new PIDConstants(4, 0, 0), swerve::driveModules, autoCommandMap, swerve);
 
         configureAuto();
     }
