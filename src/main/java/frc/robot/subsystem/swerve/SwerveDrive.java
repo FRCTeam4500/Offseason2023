@@ -51,10 +51,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	private DriveInputsAutoLogged inputs = new DriveInputsAutoLogged();
 
-	/**
-	 * The THRED
-	 */
-	private Thread log;
+	public DriveInputsAutoLogged getInputs() {
+		return inputs;
+	}
 
 	/**
 	 * The instance of the swerve drive. Used to make sure only one swerve drive is created
@@ -125,12 +124,6 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				new Rotation2d(gyro.getAngle()),
 				getModulePositions()
 			);
-		log =
-			new Thread(() -> {
-				updateInputs(inputs);
-				Logger.getInstance().processInputs("Drive", inputs);
-				Logger.getInstance().recordOutput("Odometry", getRobotPose());
-			});
 	}
 
 	/**
@@ -150,7 +143,6 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	@Override
 	public void periodic() {
 		odometry.update(new Rotation2d(gyro.getAngle()), getModulePositions());
-		log.run();
 	}
 
 	/**

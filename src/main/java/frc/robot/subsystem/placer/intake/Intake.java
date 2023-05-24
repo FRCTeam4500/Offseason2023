@@ -23,6 +23,10 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	private IntakeInputsAutoLogged inputs = new IntakeInputsAutoLogged();
 
+	public IntakeInputsAutoLogged getInputs() {
+		return inputs;
+	}
+
 	private static Intake instanceIntake = null;
 
 	private Intake() {
@@ -47,12 +51,6 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		anglePIDController.setI(0);
 		anglePIDController.setD(0);
 		anglePIDController.setOutputRange(-.3, .3);
-	}
-
-	@Override
-	public void periodic() {
-		updateInputs(inputs);
-		Logger.getInstance().processInputs("Intake", inputs);
 	}
 
 	/**

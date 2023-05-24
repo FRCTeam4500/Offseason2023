@@ -8,7 +8,8 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.TelemetryConstants;
-import frc.robot.subsystem.placer.Placer;
+import frc.robot.utility.LogSubsystemInputsTask;
+import java.util.Timer;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -30,6 +31,7 @@ public class Robot extends LoggedRobot {
 
 	private RobotContainer robotContainer;
 	private Command autonomousCommand;
+	private Timer timer;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -39,6 +41,7 @@ public class Robot extends LoggedRobot {
 	@Override
 	public void robotInit() {
 		Logger logger = Logger.getInstance();
+		timer = new Timer();
 
 		// Record metadata
 		logger.recordMetadata("ProjectName", BuildInfo.MAVEN_NAME);
@@ -78,8 +81,8 @@ public class Robot extends LoggedRobot {
 		}
 
 		logger.start(); // Start logging
-		Placer placer = new Placer();
 		robotContainer = new RobotContainer();
+		timer.schedule(new LogSubsystemInputsTask(), 10, 20);
 	}
 
 	/**

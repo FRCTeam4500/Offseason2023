@@ -19,6 +19,10 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	private ArmInputsAutoLogged inputs = new ArmInputsAutoLogged();
 
+	public ArmInputsAutoLogged getInputs() {
+		return inputs;
+	}
+
 	private static Arm instanceArm = null;
 
 	/**
@@ -48,12 +52,6 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		winchMotor.configForwardSoftLimitThreshold(10000);
 		winchMotor.configPeakOutputForward(.6);
 		winchMotor.configPeakOutputReverse(-0.3);
-	}
-
-	@Override
-	public void periodic() {
-		updateInputs(inputs);
-		Logger.getInstance().processInputs("Arm", inputs);
 	}
 
 	/**
