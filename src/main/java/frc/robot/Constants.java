@@ -3,6 +3,8 @@ package frc.robot;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.util.List;
 
@@ -66,30 +68,30 @@ public class Constants {
 		public static final int WINCH_MOTOR_ID = 15;
 
 		/** The angle the arm must be at to pickup game pieces from the high substation <p> Units are whatever shuffleboard says*/
-		public static final double ARM_HIGH_SUBSTATION_ANGLE = -3;
+		public static final double ARM_HIGH_SUBSTATION_ANGLE = Units.rotationsToRadians(-3);
 		/** The angle the arm must be at to place at the middle level <p> Units are whatever shuffleboard says*/
-		public static final double ARM_PLACE_ANGLE = -6;
+		public static final double ARM_PLACE_ANGLE = Units.rotationsToRadians(-6);
 		/** The angle the arm must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double ARM_LAUNCH_ANGLE = 1;
+		public static final double ARM_LAUNCH_ANGLE = Units.rotationsToRadians(1);
 		/** The angle the arm must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double ARM_GROUND_ANGLE = -43;
+		public static final double ARM_GROUND_ANGLE = Units.rotationsToRadians(-43);
 		/** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double ARM_ZERO_ANGLE = -10;
+		public static final double ARM_ZERO_ANGLE = Units.rotationsToRadians(-10);
 
 		public static final double ARM_PLACE_TILTED_CONE_ANGLE = 0;
 
 		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
-		public static final double ARM_PLACE_TOP = 10900.0;
+		public static final double ARM_PLACE_TOP = 10900.0 / (4096 / Math.PI / 2.0);
 		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are raw sensor units */
-		public static final double ARM_PLACE_MID = 3229;
+		public static final double ARM_PLACE_MID = 3229 / (4096 / Math.PI / 2.0);
 		/** The extension the arm must have to pickup a game piece from the ground <p> Units are raw sensor units*/
-		public static final double ARM_PICKUP = 4324;
+		public static final double ARM_PICKUP = 4324 / (4096 / Math.PI / 2.0);
 		/** The extension the arm will have while traveling <p> Units are raw sensor units */
-		public static final double ARM_RETRACT = 0;
+		public static final double ARM_RETRACT = 0 / (4096 / Math.PI / 2.0);
 
-		public static final double ARM_PLACE_TILTED_CONE_MID = 5000;
+		public static final double ARM_PLACE_TILTED_CONE_MID = 5000 / (4096 / Math.PI / 2.0);
 
-		public static final double ARM_WINCH_THRESHOLD = 250;
+		public static final double ARM_WINCH_THRESHOLD = 250 / (4096 / Math.PI / 2.0);
 	}
 
 	public static class IntakeConstants {
@@ -115,17 +117,17 @@ public class Constants {
 		public static final MotorType ANGLE_MOTOR_TYPE = MotorType.kBrushless;
 
 		/** The angle the intake must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_BOT_ANGLE = -7;
+		public static final double INTAKE_BOT_ANGLE = Units.rotationsToRadians(-7);
 		/** The angle the intake must be at to pickup games pieces from the high substation <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_HIGH_SUBSTATION_ANGLE = -25;
+		public static final double INTAKE_HIGH_SUBSTATION_ANGLE = Units.rotationsToRadians(-25);
 		/** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TOP_CONE_PLACE_ANGLE = -18.4;
+		public static final double INTAKE_TOP_CONE_PLACE_ANGLE = Units.rotationsToRadians(-18.4);
 		/** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TILTED_CONE_ANGLE = -23.5;
+		public static final double INTAKE_TILTED_CONE_ANGLE = Units.rotationsToRadians(-23.5);
 		/** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_ZERO_ANGLE = -5.5;
+		public static final double INTAKE_ZERO_ANGLE = Units.rotationsToRadians(-5.5);
 		/** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_LAUNCHING_ANGLE = -15.5;
+		public static final double INTAKE_LAUNCHING_ANGLE = Units.rotationsToRadians(-15.5);
 	}
 
 	public static class EnumConstants {

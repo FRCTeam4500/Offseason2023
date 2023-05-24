@@ -1,23 +1,25 @@
 package frc.robot.component;
 
+
+
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.util.Units;
 
 /**
  * Wrapper for CANSparkMax motor controller which implements SmartMotorComponent
  */
-public class SparkMaxComponent extends CANSparkMax {
+public class SparkMaxComponent extends CANSparkMax implements GenericMotorInterface{
 
 	public SparkMaxComponent(int deviceID, MotorType type) {
 		super(deviceID, type);
 	}
-
+	
 	public double getAngle() {
-		return getEncoder().getPosition();
+		return getEncoder().getPosition() * 2 * Math.PI;
 	}
 
 	public void setAngle(double position) {
-		getPIDController().setReference(position, ControlType.kPosition);
+		getPIDController().setReference(position / (2 * Math.PI), ControlType.kPosition);
 	}
 
 	public void setOutput(double output) {

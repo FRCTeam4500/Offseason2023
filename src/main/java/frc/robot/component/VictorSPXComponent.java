@@ -17,4 +17,5 @@ public class VictorSPXComponent extends VictorSPX {
 		//return getMotorOutputPercent();
 		return 0;
 	}
+	
 }

@@ -13,7 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 /**
  * Add your docs here.
  */
-public class TalonFXComponent extends TalonFX {
+public class TalonFXComponent extends TalonFX implements GenericMotorInterface{
 
 	public static final int TICKS_PER_REVOLUTION = 2048;
 	public static final double TICKS_PER_DEGREE = TICKS_PER_REVOLUTION / 360.0;
