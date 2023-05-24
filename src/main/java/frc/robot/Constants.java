@@ -230,7 +230,7 @@ public class Constants {
 	public static class TelemetryConstants {
 
 		public static Mode getMode() {
-			return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY; // Just change in init if you really want replay
+			return RobotBase.isReal() ? Mode.REAL : Mode.SIM; // Just change in init if you really want replay
 		}
 
 		public static enum Mode {
