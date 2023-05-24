@@ -5,8 +5,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 
 public class PlaceCommand extends SequentialCommandGroup {
 

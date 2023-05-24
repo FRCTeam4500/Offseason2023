@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.subsystem.placer.intake;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
@@ -10,8 +10,9 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.component.SparkMaxComponent;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+import org.littletonrobotics.junction.Logger;
 
-public class Intake extends SubsystemBase {
+public class Intake extends SubsystemBase implements IntakeInterface {
 
 	private SparkMaxComponent speedMotor;
 	private SparkMaxComponent angleMotor;
@@ -19,6 +20,8 @@ public class Intake extends SubsystemBase {
 	private static GamePiece gamePiece = GamePiece.UprightCone;
 	private double targetAngle;
 	private double targetSpeed;
+
+	private IntakeInputsAutoLogged inputs = new IntakeInputsAutoLogged();
 
 	private static Intake instanceIntake = null;
 
@@ -44,6 +47,12 @@ public class Intake extends SubsystemBase {
 		anglePIDController.setI(0);
 		anglePIDController.setD(0);
 		anglePIDController.setOutputRange(-.3, .3);
+	}
+
+	@Override
+	public void periodic() {
+		updateInputs(inputs);
+		Logger.getInstance().processInputs("Intake", inputs);
 	}
 
 	/**
@@ -93,6 +102,12 @@ public class Intake extends SubsystemBase {
 
 	public static Supplier<GamePiece> getGamePiece() {
 		return () -> Intake.gamePiece;
+	}
+
+	@Override
+	public void updateInputs(IntakeInputs inputs) {
+		inputs.intakeAngleMotorRot = angleMotor.getAngle();
+		inputs.intakeOutput = speedMotor.getOutput();
 	}
 
 	@Override

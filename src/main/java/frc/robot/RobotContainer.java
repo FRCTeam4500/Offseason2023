@@ -2,7 +2,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.*;
-import frc.robot.subsystem.*;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class RobotContainer {

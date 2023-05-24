@@ -13,8 +13,8 @@ import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 
 public class OperatorController extends CommandJoystick {
 

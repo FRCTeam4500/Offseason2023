@@ -5,8 +5,8 @@ import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 
 public class ZeroCommand extends SequentialCommandGroup {
 

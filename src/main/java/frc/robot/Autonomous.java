@@ -17,8 +17,8 @@ import frc.robot.commands.complexCommands.AutoPlaceCommand;
 import frc.robot.commands.complexCommands.AutomatedDriveCommand;
 import frc.robot.commands.complexCommands.AutomatedDriveCommand.AutoDriveMode;
 import frc.robot.commands.complexCommands.ZeroCommand;
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import java.util.HashMap;
 

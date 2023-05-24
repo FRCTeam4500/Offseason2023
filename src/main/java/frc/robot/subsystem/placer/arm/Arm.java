@@ -1,4 +1,4 @@
-package frc.robot.subsystem;
+package frc.robot.subsystem.placer.arm;
 
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -7,14 +7,17 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.component.SparkMaxComponent;
 import frc.robot.component.TalonSRXComponent;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
-public class Arm extends SubsystemBase {
+public class Arm extends SubsystemBase implements ArmInterface {
 
 	private SparkMaxComponent tiltMotor;
 	private TalonSRXComponent winchMotor;
 	private SparkMaxPIDController tiltPIDController;
 	private double targetTiltAngle;
 	private double targetWinchPosition;
+
+	private ArmInputsAutoLogged inputs = new ArmInputsAutoLogged();
 
 	private static Arm instanceArm = null;
 
@@ -45,6 +48,12 @@ public class Arm extends SubsystemBase {
 		winchMotor.configForwardSoftLimitThreshold(10000);
 		winchMotor.configPeakOutputForward(.6);
 		winchMotor.configPeakOutputReverse(-0.3);
+	}
+
+	@Override
+	public void periodic() {
+		updateInputs(inputs);
+		Logger.getInstance().processInputs("Arm", inputs);
 	}
 
 	/**
@@ -90,6 +99,11 @@ public class Arm extends SubsystemBase {
 
 	public DoubleSupplier getTargetWinchPosition() {
 		return () -> targetWinchPosition;
+	}
+
+	public void updateInputs(ArmInputs inputs) {
+		inputs.extentionMotorRot = getWinchPosition().getAsDouble();
+		inputs.tiltMotorRot = getTilt().getAsDouble();
 	}
 
 	@Override

@@ -9,8 +9,8 @@ import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
-import frc.robot.subsystem.Arm;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class DriveController extends CommandXboxController {

@@ -1,7 +1,7 @@
 package frc.robot.commands.debugCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.Intake;
+import frc.robot.subsystem.placer.intake.Intake;
 
 public class TiltIntakeCommand extends CommandBase {
 
