@@ -28,5 +28,8 @@ public class LogSubsystemInputsTask extends TimerTask {
 		Logger.getInstance().processInputs("Intake", intake.getInputs());
 		Logger.getInstance().processInputs("Swerve", swerve.getInputs());
 		Logger.getInstance().recordOutput("Odometry", swerve.getRobotPose());
+		Logger
+			.getInstance()
+			.recordOutput("Swerve Modules", swerve.getModuleStates());
 	}
 }

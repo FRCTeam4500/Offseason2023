@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
-import org.littletonrobotics.junction.Logger;
 
 /**
  * Subsystem class which represents the drivetrain of our robot

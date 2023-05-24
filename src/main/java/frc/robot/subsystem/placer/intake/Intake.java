@@ -10,7 +10,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.component.SparkMaxComponent;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
-import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
 

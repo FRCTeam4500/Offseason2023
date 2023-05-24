@@ -7,7 +7,6 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.component.SparkMaxComponent;
 import frc.robot.component.TalonSRXComponent;
 import java.util.function.DoubleSupplier;
-import org.littletonrobotics.junction.Logger;
 
 public class Arm extends SubsystemBase implements ArmInterface {
 
