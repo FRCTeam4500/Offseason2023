@@ -7,6 +7,9 @@
 
 package frc.robot.component;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import frc.robot.utility.Transform3D;
@@ -160,5 +163,15 @@ public class LimelightVisionComponent {
 	 */
 	public int getTargetId() {
 		return (int) table.getEntry("tid").getInteger(0);
+	}
+
+	/**
+	 * Transform3D to Pose2d
+	 */
+	public Pose2d getPoseFromTransform3D(Transform3D transform) {
+		return new Pose2d(
+			new Translation2d(transform.getX(), transform.getY()),
+			new Rotation2d(transform.getYaw())
+		);
 	}
 }
