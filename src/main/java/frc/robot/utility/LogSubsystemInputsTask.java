@@ -1,12 +1,11 @@
 package frc.robot.utility;
 
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import java.util.TimerTask;
 import org.littletonrobotics.junction.Logger;
-
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class LogSubsystemInputsTask extends TimerTask {
 
@@ -33,6 +32,12 @@ public class LogSubsystemInputsTask extends TimerTask {
 		SwerveModuleState[] states = swerve.getModuleStates();
 		Logger
 			.getInstance()
-			.recordOutput("ModuleStates", states[0], states[1], states[2], states[3]);
+			.recordOutput(
+				"ModuleStates",
+				states[0],
+				states[1],
+				states[2],
+				states[3]
+			);
 	}
 }

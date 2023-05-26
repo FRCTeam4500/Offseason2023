@@ -66,7 +66,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	public void setTilt(double position) {
 		targetTiltAngle = position;
-		tiltMotor.setAngle(position);
+		tiltMotor.setAngle(position / ArmConstants.ARM_ANGLE_RATIO);
 	}
 
 	public void changeTilt(double addition) {
@@ -74,7 +74,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	}
 
 	public DoubleSupplier getTilt() {
-		return () -> tiltMotor.getAngle();
+		return () -> tiltMotor.getAngle() * ArmConstants.ARM_ANGLE_RATIO;
 	}
 
 	public DoubleSupplier getTargetTilt() {
@@ -91,7 +91,10 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	}
 
 	public DoubleSupplier getWinchPosition() {
-		return () -> winchMotor.getSelectedSensorPosition();
+		return () ->
+			winchMotor.getAngle() *
+			ArmConstants.ARM_EXTENSION_RATIO /
+			ArmConstants.ARM_ROTATION_TO_LINEAR_RATIO;
 	}
 
 	public DoubleSupplier getTargetWinchPosition() {

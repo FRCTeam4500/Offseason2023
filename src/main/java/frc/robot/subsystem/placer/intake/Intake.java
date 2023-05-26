@@ -78,7 +78,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	public void setAngle(double angle) {
 		targetAngle = angle;
-		angleMotor.setAngle(angle);
+		angleMotor.setAngle(angle / IntakeConstants.INTAKE_ANGLE_RATIO);
 	}
 
 	public void changeAngle(double addition) {
@@ -86,7 +86,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	}
 
 	public DoubleSupplier getAngle() {
-		return () -> angleMotor.getAngle();
+		return () -> angleMotor.getAngle() * IntakeConstants.INTAKE_ANGLE_RATIO;
 	}
 
 	public DoubleSupplier getTargetAngle() {
@@ -103,8 +103,8 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	@Override
 	public void updateInputs(IntakeInputs inputs) {
-		inputs.intakeAngleMotorRot = angleMotor.getAngle();
-		inputs.intakeOutput = speedMotor.getOutput();
+		inputs.intakeAngleMotorRot = getAngle().getAsDouble();
+		inputs.intakeOutput = getSpeed().getAsDouble();
 	}
 
 	@Override
