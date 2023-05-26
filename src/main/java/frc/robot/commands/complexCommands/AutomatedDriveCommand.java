@@ -4,14 +4,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.utility.ExtendedMath;
-import java.util.Map;
 
 public class AutomatedDriveCommand extends CommandBase {
 
@@ -26,8 +21,6 @@ public class AutomatedDriveCommand extends CommandBase {
 	private double timeThreshold;
 	private double timeCorrect;
 	private int poseCounter;
-	private static int timesRun = 0;
-	private ComplexWidget thisWidget;
 	private AutoDriveMode mode;
 	private PIDController forwardVelocityController = new PIDController(
 		5,
@@ -80,12 +73,6 @@ public class AutomatedDriveCommand extends CommandBase {
 
 	@Override
 	public void initialize() {
-		timesRun++;
-		thisWidget =
-			Shuffleboard
-				.getTab("Commands")
-				.getLayout("Command Grid", BuiltInLayouts.kList)
-				.add("Auto Drive Command #" + timesRun, this);
 		timeCorrect = 0;
 		poseCounter = 0;
 		forwardVelocityController.reset();
@@ -162,45 +149,5 @@ public class AutomatedDriveCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		swerve.driveFieldCentric(0, 0, 0);
-		thisWidget.withProperties(Map.of("Label position", "HIDDEN"));
-	}
-
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addIntegerProperty(
-			"Position Number: ",
-			() -> poseCounter + 1,
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Relative X: ",
-			() -> relativeRobotPose.getX(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Relative Y: ",
-			() -> relativeRobotPose.getY(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Relative Rotation: ",
-			() -> relativeRobotPose.getRotation().getRadians(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Forward Speed: ",
-			() -> currentRobotSpeeds.vxMetersPerSecond,
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Sideways Speed: ",
-			() -> currentRobotSpeeds.vyMetersPerSecond,
-			null
-		);
-		builder.addDoubleProperty(
-			"Robot Rotational Speed: ",
-			() -> currentRobotSpeeds.omegaRadiansPerSecond,
-			null
-		);
 	}
 }

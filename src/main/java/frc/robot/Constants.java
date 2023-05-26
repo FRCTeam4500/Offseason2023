@@ -110,7 +110,7 @@ public class Constants {
 
 		public static final double ARM_EXTENSION_RATIO = 1 / 1; // Output shaft rotations per motor rotation
 
-		public static final double ARM_ROTATION_TO_LINEAR_RATIO =
+		public static final double ARM_RADIANS_TO_LINEAR_RATIO =
 			1 / (0.20955 / (Math.PI * 2)); // Output shaft radians per meters extended
 	}
 
