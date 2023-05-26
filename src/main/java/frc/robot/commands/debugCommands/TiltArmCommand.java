@@ -14,7 +14,7 @@ public class TiltArmCommand extends CommandBase {
 	}
 
 	public void initialize() {
-		arm.changeTilt(tiltChange);
+		arm.changeAngle(tiltChange);
 	}
 
 	public boolean isFinished() {

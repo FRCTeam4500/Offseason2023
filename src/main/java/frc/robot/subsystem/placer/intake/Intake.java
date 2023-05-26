@@ -13,12 +13,12 @@ import java.util.function.Supplier;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
 
-	private SparkMaxComponent speedMotor;
+	private SparkMaxComponent outputMotor;
 	private SparkMaxComponent angleMotor;
 	private SparkMaxPIDController anglePIDController;
 	private static GamePiece gamePiece = GamePiece.UprightCone;
 	private double targetAngle;
-	private double targetSpeed;
+	private double targetOutput;
 
 	private IntakeInputsAutoLogged inputs = new IntakeInputsAutoLogged();
 
@@ -29,7 +29,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	private static Intake instanceIntake = null;
 
 	private Intake() {
-		speedMotor =
+		outputMotor =
 			new SparkMaxComponent(
 				IntakeConstants.INTAKE_MOTOR_ID,
 				IntakeConstants.INTAKE_MOTOR_TYPE
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 				IntakeConstants.ANGLE_MOTOR_TYPE
 			);
 
-		speedMotor.setIdleMode(IdleMode.kBrake);
+		outputMotor.setIdleMode(IdleMode.kBrake);
 
 		angleMotor.setIdleMode(IdleMode.kCoast);
 		angleMotor.setSoftLimit(SoftLimitDirection.kReverse, -40);
@@ -63,17 +63,17 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		return instanceIntake;
 	}
 
-	public void setSpeed(double speed) {
-		targetSpeed = speed;
-		speedMotor.set(speed);
+	public void setOutput(double output) {
+		targetOutput = output;
+		outputMotor.set(output);
 	}
 
-	public DoubleSupplier getSpeed() {
-		return () -> speedMotor.getOutput();
+	public double getOutput() {
+		return outputMotor.getOutput();
 	}
 
-	public DoubleSupplier getTargetSpeed() {
-		return () -> targetSpeed;
+	public double getTargetOutput() {
+		return targetOutput;
 	}
 
 	public void setAngle(double angle) {
@@ -82,15 +82,15 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	}
 
 	public void changeAngle(double addition) {
-		setAngle(getAngle().getAsDouble() + addition);
+		setAngle(getAngle() + addition);
 	}
 
-	public DoubleSupplier getAngle() {
-		return () -> angleMotor.getAngle() * IntakeConstants.INTAKE_ANGLE_RATIO;
+	public double getAngle() {
+		return angleMotor.getAngle() * IntakeConstants.INTAKE_ANGLE_RATIO;
 	}
 
-	public DoubleSupplier getTargetAngle() {
-		return () -> targetAngle;
+	public double getTargetAngle() {
+		return targetAngle;
 	}
 
 	public static void setGamePiece(GamePiece piece) {
@@ -103,25 +103,34 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	@Override
 	public void updateInputs(IntakeInputs inputs) {
-		inputs.intakeAngleMotorRot = getAngle().getAsDouble();
-		inputs.intakeOutput = getSpeed().getAsDouble();
+		inputs.intakeAngleMotorRot = getAngle();
+		inputs.intakeOutput = getOutput();
 	}
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
 		builder.addDoubleProperty(
-			"Target Intake Tilt position",
-			getTargetAngle(),
+			"Target Angle: ",
+			() -> getTargetAngle(),
 			null
 		);
 		builder.addDoubleProperty(
-			"Target Intake Wheel output",
-			getTargetSpeed(),
+			"Target Percent Output: ",
+			() -> getTargetOutput(),
 			null
 		);
-		builder.addDoubleProperty("Intake Angle", getAngle(), null);
+		builder.addDoubleProperty(
+			"Curent Angle: ", 
+			() -> getAngle(), 
+			null
+		);
+		builder.addDoubleProperty(
+			"Current Percent Output: ", 
+			() -> getOutput(), 
+			null
+		);
 		builder.addStringProperty(
-			"Current Game Piece",
+			"Current Game Piece: ",
 			() -> gamePiece.name(),
 			null
 		);

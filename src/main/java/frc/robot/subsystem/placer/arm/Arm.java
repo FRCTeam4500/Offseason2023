@@ -6,15 +6,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.component.SparkMaxComponent;
 import frc.robot.component.TalonSRXComponent;
-import java.util.function.DoubleSupplier;
 
 public class Arm extends SubsystemBase implements ArmInterface {
 
-	private SparkMaxComponent tiltMotor;
-	private TalonSRXComponent winchMotor;
-	private SparkMaxPIDController tiltPIDController;
-	private double targetTiltAngle;
-	private double targetWinchPosition;
+	private SparkMaxComponent angleMotor;
+	private TalonSRXComponent extensionMotor;
+	private SparkMaxPIDController anglePIDController;
+	private double targetAngle;
+	private double targetExtension;
 
 	private ArmInputsAutoLogged inputs = new ArmInputsAutoLogged();
 
@@ -28,29 +27,29 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	 * Creates a new Arm from Constants
 	 */
 	private Arm() {
-		tiltMotor =
+		angleMotor =
 			new SparkMaxComponent(
 				ArmConstants.TILT_MOTOR_ID,
 				ArmConstants.TILT_MOTOR_TYPE
 			);
-		winchMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
+		extensionMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
 
-		tiltMotor.setInverted(true);
+		angleMotor.setInverted(true);
 
-		tiltPIDController = tiltMotor.getPIDController();
-		tiltPIDController.setP(0.04);
-		tiltPIDController.setI(0);
-		tiltPIDController.setD(0);
-		tiltPIDController.setOutputRange(-.5, .5);
+		anglePIDController = angleMotor.getPIDController();
+		anglePIDController.setP(0.04);
+		anglePIDController.setI(0);
+		anglePIDController.setD(0);
+		anglePIDController.setOutputRange(-.5, .5);
 
-		winchMotor.config_kP(0, .4);
-		winchMotor.config_kI(0, 0);
-		winchMotor.config_kD(0, 0);
-		winchMotor.configAllowableClosedloopError(0, 400);
-		winchMotor.configForwardSoftLimitEnable(true);
-		winchMotor.configForwardSoftLimitThreshold(10000);
-		winchMotor.configPeakOutputForward(.6);
-		winchMotor.configPeakOutputReverse(-0.3);
+		extensionMotor.config_kP(0, .4);
+		extensionMotor.config_kI(0, 0);
+		extensionMotor.config_kD(0, 0);
+		extensionMotor.configAllowableClosedloopError(0, 400);
+		extensionMotor.configForwardSoftLimitEnable(true);
+		extensionMotor.configForwardSoftLimitThreshold(10000);
+		extensionMotor.configPeakOutputForward(.6);
+		extensionMotor.configPeakOutputReverse(-0.3);
 	}
 
 	/**
@@ -64,69 +63,69 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		return instanceArm;
 	}
 
-	public void setTilt(double position) {
-		targetTiltAngle = position;
-		tiltMotor.setAngle(position / ArmConstants.ARM_ANGLE_RATIO);
+	public void setAngle(double position) {
+		targetAngle = position;
+		angleMotor.setAngle(position / ArmConstants.ARM_ANGLE_RATIO);
 	}
 
-	public void changeTilt(double addition) {
-		setTilt(getTilt().getAsDouble() + addition);
+	public void changeAngle(double addition) {
+		setAngle(getAngle() + addition);
 	}
 
-	public DoubleSupplier getTilt() {
-		return () -> tiltMotor.getAngle() * ArmConstants.ARM_ANGLE_RATIO;
+	public double getAngle() {
+		return angleMotor.getAngle() * ArmConstants.ARM_ANGLE_RATIO;
 	}
 
-	public DoubleSupplier getTargetTilt() {
-		return () -> targetTiltAngle;
+	public double getTargetAngle() {
+		return targetAngle;
 	}
 
-	public void setWinchPosition(double position) {
-		targetWinchPosition = position;
-		winchMotor.setAngle(position);
+	public void setExtension(double position) {
+		targetExtension = position;
+		extensionMotor.setAngle(position * ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO / ArmConstants.ARM_EXTENSION_RATIO);
 	}
 
-	public void changeWinchPosition(double addition) {
-		setWinchPosition(getWinchPosition().getAsDouble() + addition);
+	public void changeExtension(double addition) {
+		setExtension(getExtension() + addition);
 	}
 
-	public DoubleSupplier getWinchPosition() {
-		return () ->
-			winchMotor.getAngle() *
+	public double getExtension() {
+		return	
+			extensionMotor.getAngle() *
 			ArmConstants.ARM_EXTENSION_RATIO /
-			ArmConstants.ARM_ROTATION_TO_LINEAR_RATIO;
+			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO;
 	}
 
-	public DoubleSupplier getTargetWinchPosition() {
-		return () -> targetWinchPosition;
+	public double getTargetExtension() {
+		return targetExtension;
 	}
 
 	public void updateInputs(ArmInputs inputs) {
-		inputs.extentionMotorRot = getWinchPosition().getAsDouble();
-		inputs.tiltMotorRot = getTilt().getAsDouble();
+		inputs.extentionMotorRot = getExtension();
+		inputs.tiltMotorRot = getAngle();
 	}
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
 		builder.addDoubleProperty(
-			"Target tilt position",
-			getTargetTilt(),
+			"Target Angle: ",
+			() -> getTargetAngle(),
 			null
 		);
 		builder.addDoubleProperty(
-			"Target winch output",
-			getTargetWinchPosition(),
+			"Target Extension: ",
+			() -> getTargetExtension(),
 			null
 		);
 
 		builder.addDoubleProperty(
-			"Current Encoder Tilt Position",
-			getTilt(),
+			"Current Angle: ",
+			() -> getAngle(),
 			null
 		);
 		builder.addDoubleProperty(
-			"Current Winch Encoder Position",
-			getWinchPosition(),
+			"Current Extension: ",
+			() -> getExtension(),
 			null
 		);
 	}

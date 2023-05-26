@@ -1,6 +1,5 @@
 package frc.robot.commands.baseCommands;
 
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeSpeed;
@@ -45,28 +44,14 @@ public class SetIntakeSpeedCommand extends CommandBase {
 				rawTargetSpeed = 0;
 				break;
 		}
-		intake.setSpeed(rawTargetSpeed);
+		intake.setOutput(rawTargetSpeed);
 	}
 
 	@Override
 	public boolean isFinished() {
 		return (
-			Math.abs(rawTargetSpeed - intake.getSpeed().getAsDouble()) <
+			Math.abs(rawTargetSpeed - intake.getOutput()) <
 			IntakeConstants.INTAKE_SPEED_THRESHOLD
-		);
-	}
-
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty(
-			"Target Intake Speed: ",
-			() -> rawTargetSpeed,
-			null
-		);
-		builder.addDoubleProperty(
-			"Difference to Target Speed: ",
-			() -> Math.abs(rawTargetSpeed - intake.getSpeed().getAsDouble()),
-			null
 		);
 	}
 }

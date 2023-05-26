@@ -71,12 +71,12 @@ public class SetArmAndIntakeCommand extends CommandBase {
 				targetWinchPosition = ArmConstants.ARM_RETRACT;
 				targetArmAngle = 0;
 				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_ANGLE;
-				intake.setSpeed(0);
+				intake.setOutput(0);
 				break;
 		}
 
-		arm.setWinchPosition(targetWinchPosition);
-		arm.setTilt(targetArmAngle);
+		arm.setExtension(targetWinchPosition);
+		arm.setAngle(targetArmAngle);
 		intake.setAngle(targetIntakeAngle);
 	}
 
