@@ -1,11 +1,11 @@
 package frc.robot.subsystem.swerve;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
+import frc.robot.component.LimelightVisionComponent;
 
 /**
  * Subsystem class which represents the drivetrain of our robot
@@ -39,7 +40,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 * An object which calculates the robot's position based on the positions of the swerve modules.
 	 * <p> Used for autonomous driving to correct for errors
 	 */
-	private SwerveDriveOdometry odometry;
+	private SwerveDrivePoseEstimator poseEstimator;
 	/**
 	 * The angle of the current zero relative to the angle of the gyroscope. This is in radians
 	 */
@@ -117,11 +118,12 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		currentGyroZero = 0;
 		gyro = new AHRSAngleGetterComponent(I2C.Port.kMXP);
 		kinematics = new SwerveDriveKinematics(getModuleTranslations());
-		odometry =
-			new SwerveDriveOdometry(
+		poseEstimator =
+			new SwerveDrivePoseEstimator(
 				kinematics,
 				new Rotation2d(gyro.getAngle()),
-				getModulePositions()
+				getModulePositions(),
+				new Pose2d()
 			);
 	}
 
@@ -141,7 +143,10 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	@Override
 	public void periodic() {
-		odometry.update(new Rotation2d(gyro.getAngle()), getModulePositions());
+		poseEstimator.update(
+			new Rotation2d(gyro.getAngle()),
+			getModulePositions()
+		);
 	}
 
 	/**
@@ -234,7 +239,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	}
 
 	/**
-	 * Gets the positions of the swerve modules. Used primarily for odometry
+	 * Gets the positions of the swerve modules. Used primarily for poseEstimator
 	 * @return an array containing the positions of the swerve modules in the same order they were put into the SwerveDrive constructor
 	 */
 	public SwerveModulePosition[] getModulePositions() {
@@ -258,7 +263,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 * @return the robot's current pose
 	 */
 	public Pose2d getRobotPose() {
-		return odometry.getPoseMeters();
+		return poseEstimator.getEstimatedPosition();
 	}
 
 	/**
@@ -266,7 +271,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 * @param newPose the pose the robot should be
 	 */
 	public void resetPose(Pose2d newPose) {
-		odometry.resetPosition(
+		poseEstimator.resetPosition(
 			new Rotation2d(gyro.getAngle()),
 			getModulePositions(),
 			newPose
