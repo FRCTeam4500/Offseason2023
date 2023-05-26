@@ -14,13 +14,6 @@
       "/LiveWindow/Ungrouped/navX-Sensor[1]": "Gyro",
       "/Shuffleboard/Auto/Auto Routes": "String Chooser",
       "/Shuffleboard/placer/Placer": "Mechanism2d"
-    },
-    "windows": {
-      "/Shuffleboard/placer/Placer": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables": {

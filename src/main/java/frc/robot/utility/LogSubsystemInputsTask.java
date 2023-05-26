@@ -1,6 +1,7 @@
 package frc.robot.utility;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
@@ -39,5 +40,8 @@ public class LogSubsystemInputsTask extends TimerTask {
 				states[2],
 				states[3]
 			);
+		Logger
+			.getInstance()
+			.recordOutput("Placer", Placer.getInstance().getMechanism2d());
 	}
 }

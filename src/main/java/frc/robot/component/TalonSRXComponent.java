@@ -14,7 +14,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
  * An {@link OutputSetterComponent}, {@link AngleSetterComponent}, and
  * {@link AngleGetterComponent} wrapper for {@link TalonSRX}.
  */
-public class TalonSRXComponent extends TalonSRX implements GenericMotorInterface{
+public class TalonSRXComponent
+	extends TalonSRX
+	implements GenericMotorInterface {
 
 	public static final double TICKS_PER_DEGREE = 4096 / 360.0;
 	public static final double TICKS_PER_RADIAN = 4096 / Math.PI / 2.0;

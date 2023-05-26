@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.*;
+import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
@@ -11,6 +12,7 @@ public class RobotContainer {
 	private final SwerveDrive swerve = SwerveDrive.getInstance();
 	private final Arm arm = Arm.getInstance();
 	private final Intake intake = Intake.getInstance();
+	private final Placer placer = Placer.getInstance();
 
 	/* Setting controller Buttons */
 	private final DriveController driveStick = DriveController.getInstance(
