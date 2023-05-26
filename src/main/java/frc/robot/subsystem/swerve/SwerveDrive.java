@@ -10,10 +10,12 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
-import frc.robot.component.LimelightVisionComponent;
+import frc.robot.subsystem.vision.Vision;
+import frc.robot.utility.Transform3D;
 
 /**
  * Subsystem class which represents the drivetrain of our robot
@@ -59,6 +61,11 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 * The instance of the swerve drive. Used to make sure only one swerve drive is created
 	 */
 	private static SwerveDrive instanceSwerve;
+
+	/**
+	 * Instance of Vision
+	 */
+	private Vision vision;
 
 	/**
 	 * Creates a new Swerve Drive with 4 swerve modules, which uses 8 falcon motors. kP of the motors and whether to invert them is set here. Everything else is pulled from constants
@@ -125,6 +132,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				getModulePositions(),
 				new Pose2d()
 			);
+		this.vision = Vision.getInstance();
 	}
 
 	/**
@@ -146,6 +154,14 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		poseEstimator.update(
 			new Rotation2d(gyro.getAngle()),
 			getModulePositions()
+		);
+		Transform3D botpose = vision.getRobotPoseToField();
+		poseEstimator.addVisionMeasurement(
+			new Pose2d(
+				new Translation2d(botpose.getX(), botpose.getY()),
+				new Rotation2d(botpose.getYaw())
+			),
+			Timer.getFPGATimestamp()
 		);
 	}
 

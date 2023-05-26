@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.component.SparkMaxComponent;
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
@@ -119,14 +118,10 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 			() -> getTargetOutput(),
 			null
 		);
+		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), null);
 		builder.addDoubleProperty(
-			"Curent Angle: ", 
-			() -> getAngle(), 
-			null
-		);
-		builder.addDoubleProperty(
-			"Current Percent Output: ", 
-			() -> getOutput(), 
+			"Current Percent Output: ",
+			() -> getOutput(),
 			null
 		);
 		builder.addStringProperty(

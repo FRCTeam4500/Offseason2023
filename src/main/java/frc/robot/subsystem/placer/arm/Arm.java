@@ -82,7 +82,11 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	public void setExtension(double position) {
 		targetExtension = position;
-		extensionMotor.setAngle(position * ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO / ArmConstants.ARM_EXTENSION_RATIO);
+		extensionMotor.setAngle(
+			position *
+			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO /
+			ArmConstants.ARM_EXTENSION_RATIO
+		);
 	}
 
 	public void changeExtension(double addition) {
@@ -90,10 +94,11 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	}
 
 	public double getExtension() {
-		return	
+		return (
 			extensionMotor.getAngle() *
 			ArmConstants.ARM_EXTENSION_RATIO /
-			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO;
+			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO
+		);
 	}
 
 	public double getTargetExtension() {
@@ -118,11 +123,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 			null
 		);
 
-		builder.addDoubleProperty(
-			"Current Angle: ",
-			() -> getAngle(),
-			null
-		);
+		builder.addDoubleProperty("Current Angle: ", () -> getAngle(), null);
 		builder.addDoubleProperty(
 			"Current Extension: ",
 			() -> getExtension(),
