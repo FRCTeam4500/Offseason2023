@@ -155,10 +155,12 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			new Rotation2d(gyro.getAngle()),
 			getModulePositions()
 		);
-		poseEstimator.addVisionMeasurement(
-			vision.getRobotPoseToField().getPose2d(),
-			Timer.getFPGATimestamp()
-		);
+		if (vision.hasValidTargets()) {
+			poseEstimator.addVisionMeasurement(
+				vision.getRobotPoseToField().toPose2d(),
+				Timer.getFPGATimestamp()
+			);
+		}
 	}
 
 	/**

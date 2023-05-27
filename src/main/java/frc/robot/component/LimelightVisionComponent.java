@@ -8,7 +8,9 @@
 package frc.robot.component;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -108,53 +110,78 @@ public class LimelightVisionComponent {
 	 * Pose of the robot in Field Coordinates
 	 * @return Transform3D x,y,z pitch,yaw,roll
 	 */
-	public Transform3D getRobotPoseToField() {
+	public Pose3d getRobotPoseToField() {
 		double[] raw = table.getEntry("botpose").getDoubleArray(new double[6]);
-		return new Transform3D(raw[0], raw[1], raw[2], raw[4], raw[5], raw[3]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
 	 * Pose of the robot in terms of the April Tag coordinate system
 	 * @return Transform3D x,y,z pitch,yaw,roll
 	 */
-	public Transform3D getRobotPoseToTarget() {
+	public Pose3d getRobotPoseToTarget() {
 		double[] raw = table
 			.getEntry("botpose_targetspace")
 			.getDoubleArray(new double[6]);
-		return new Transform3D(raw[0], raw[1], raw[2], raw[4], raw[5], raw[3]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
 	 * Pose of the Target April Tag in terms of the Camera coordinate system
 	 * @return Transform3D x,y,z pitch,yaw,roll
 	 */
-	public Transform3D getTargetPoseToCamera() {
+	public Pose3d getTargetPoseToCamera() {
 		double[] raw = table
 			.getEntry("targetpose_cameraspace")
 			.getDoubleArray(new double[6]);
-		return new Transform3D(raw[0], raw[1], raw[2], raw[4], raw[5], raw[3]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
 	 * Pose of the Target April Tag in terms of Robot coordinate system
 	 * @return Transform3D x,y,z pitch,yaw,roll
 	 */
-	public Transform3D getTargetPoseToRobot() {
+	public Pose3d getTargetPoseToRobot() {
 		double[] raw = table
 			.getEntry("targetpose_robotspace")
 			.getDoubleArray(new double[6]);
-		return new Transform3D(raw[0], raw[1], raw[2], raw[4], raw[5], raw[3]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
 	 * Pose of the camera in terms of the Target coordinate system
 	 * @return Transform3D x,y,z pitch,yaw,roll
 	 */
-	public Transform3D getCameraPoseToTarget() {
+	public Pose3d getCameraPoseToTarget() {
 		double[] raw = table
 			.getEntry("camerapose_targetspace")
 			.getDoubleArray(new double[6]);
-		return new Transform3D(raw[0], raw[1], raw[2], raw[4], raw[5], raw[3]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
