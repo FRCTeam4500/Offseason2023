@@ -164,14 +164,4 @@ public class LimelightVisionComponent {
 	public int getTargetId() {
 		return (int) table.getEntry("tid").getInteger(0);
 	}
-
-	/**
-	 * Transform3D to Pose2d
-	 */
-	public Pose2d getPoseFromTransform3D(Transform3D transform) {
-		return new Pose2d(
-			new Translation2d(transform.getX(), transform.getY()),
-			new Rotation2d(transform.getYaw())
-		);
-	}
 }

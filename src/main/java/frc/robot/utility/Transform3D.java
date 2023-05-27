@@ -1,5 +1,9 @@
 package frc.robot.utility;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+
 /*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018 FIRST. All Rights Reserved. */
 /* Open Source Software - may be modified and shared by FRC teams. The code */
@@ -75,5 +79,15 @@ public class Transform3D {
 		this.pitch = pitch;
 		this.yaw = yaw;
 		this.roll = roll;
+	}
+
+	/**
+	 * Transform3D to Pose2d
+	 */
+	public Pose2d getPose2d() {
+		return new Pose2d(
+			new Translation2d(getX(), getY()),
+			new Rotation2d(getYaw())
+		);
 	}
 }
