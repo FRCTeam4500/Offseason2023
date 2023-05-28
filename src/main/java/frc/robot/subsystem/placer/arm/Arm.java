@@ -63,23 +63,40 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		return instanceArm;
 	}
 
+	/**
+	 * Sets the angle of the arm
+	 * @param position The new target angle of the arm, in radians
+	 */
 	public void setAngle(double position) {
 		targetAngle = position;
 		angleMotor.setAngle(position / ArmConstants.ARM_ANGLE_RATIO);
 	}
 
+	/**
+	 * Changes the angle of the arm <p>
+	 * Useful for when things go wrong/debugging
+	 * @param addition how much the current angle should be changed, in radians
+	 */
 	public void changeAngle(double addition) {
-		setAngle(getAngle() + addition);
+		setAngle(targetAngle + addition);
 	}
 
+	/**
+	 * Gets the angle of the arm
+	 * @return the current angle of the arm, in radians
+	 */
 	public double getAngle() {
-		return angleMotor.getAngle() * ArmConstants.ARM_ANGLE_RATIO;
+		return angleMotor.getAngle()  * ArmConstants.ARM_ANGLE_RATIO;
 	}
 
 	public double getTargetAngle() {
 		return targetAngle;
 	}
 
+	/**
+	 * Sets the extension of the arm
+	 * @param position the new target extension of the arm, in meters
+	 */
 	public void setExtension(double position) {
 		targetExtension = position;
 		extensionMotor.setAngle(
@@ -89,10 +106,19 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		);
 	}
 
+	/**
+	 * Changes the extension of the arm <p>
+	 * Useful for when things go wrong/debugging
+	 * @param addition how much the current extension should be changed, in meters
+	 */
 	public void changeExtension(double addition) {
-		setExtension(getExtension() + addition);
+		setExtension(targetExtension + addition);
 	}
 
+	/**
+	 * Gets the extension of the arm
+	 * @return the current extension of the arm, in meters
+	 */
 	public double getExtension() {
 		return (
 			extensionMotor.getAngle() *

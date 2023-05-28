@@ -3,7 +3,8 @@ package frc.robot;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.util.Units;
+
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class Constants {
 	public static class SwerveConstants {
 
 		public static final double MAX_LINEAR_SPEED =
-			((1276 * 9.42) / 60) / 12 * 0.3048; // 1276 is rpm, 9.42 is wheel circumference (in.), final units are ft/s
+			((1276 * 9.42) / 60) / 12 * 0.3048; // 1276 is rpm, 9.42 is wheel circumference (in.), final units are m/s
 		public static final double MAX_LINEAR_ACCELERATION = 4; //Test
 		public static final double MAX_ROTATIONAL_SPEED =
 			MAX_LINEAR_SPEED / (4 / 3); // 4/3 is (about) the radius from the center of the robot to the swerve drive wheels.
@@ -50,14 +51,17 @@ public class Constants {
 		public static final int AFRPORT = 8; //angle front right port
 
 		public static final double WHEEL_DIAMETER = 0.0762; // in meters
-		// distances from the gyro to the swerve module wheel.
-		public static final double DRIVE_X_RIGHT_TRANSLATION = -0.2413;
-		public static final double DRIVE_X_LEFT_TRANSLATION = 0.2413;
-		public static final double DRIVE_Y_FRONT_TRANSLATION = 0.3175;
-		public static final double DRIVE_Y_BACK_TRANSLATION = -0.3175;
+
+		// These are the translations of the swerve modules from the center of the robot. 
+		// Specifically, these measurments should land on the line that the swerve module wheel rotates around
+		// Units are meters
+		public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(0.3175, 0.2413);
+		public static final Translation2d FRONT_RIGHT_MODULE_TRANSLATION = new Translation2d(0.3175, -0.2413);
+		public static final Translation2d BACK_LEFT_MODULE_TRANSLATION = new Translation2d(-0.3175, 0.2413);
+		public static final Translation2d BACK_RIGHT_MODULE_TRANSLATION = new Translation2d(-0.3175, -0.2413);
 	}
 
-	public static class ArmConstants { // Arm Contstants
+	public static class ArmConstants { 
 
 		/** The CAN ID of the arm tilt motor */
 		public static final int TILT_MOTOR_ID = 10;
@@ -66,56 +70,52 @@ public class Constants {
 		/** The CAN ID of the arm winch motor */
 		public static final int WINCH_MOTOR_ID = 15;
 
-		/** The angle the arm must be at to pickup game pieces from the high substation <p> Units are whatever shuffleboard says*/
-		public static final double ARM_HIGH_SUBSTATION_ANGLE = Units.rotationsToRadians(
-			-3
-		);
-		/** The angle the arm must be at to place at the middle level <p> Units are whatever shuffleboard says*/
-		public static final double ARM_PLACE_ANGLE = Units.rotationsToRadians(
-			-6
-		);
-		/** The angle the arm must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double ARM_LAUNCH_ANGLE = Units.rotationsToRadians(
-			1
-		);
-		/** The angle the arm must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double ARM_GROUND_ANGLE = Units.rotationsToRadians(
-			-43
-		);
-		/** The angle the arm will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double ARM_ZERO_ANGLE = Units.rotationsToRadians(
-			-10
-		);
+		/** The ratio between rotations of the arm and the rotations of the arm angle motor <p> Output shaft rotations / motor rotations */
+		public static final double ARM_ANGLE_RATIO = 5. / 5346; 
+		/** The ratio between rotations of the arm extension shaft and the rotations of the arm extension motor <p> Output shaft rotations / motor rotations */
+		public static final double ARM_EXTENSION_RATIO = 1. / 35; 
+		/** The ratio between radians turned by the arm sproket and meters extended by the arm <p> Sproket radians / meters extended */
+		public static final double ARM_RADIANS_TO_LINEAR_RATIO = 
+			1 / (0.20955 / (Math.PI * 2));
 
+		/** The angle the arm must be at to pickup game pieces from the high substation <p> Units are radians */
+		public static final double ARM_HIGH_SUBSTATION_ANGLE = 
+			-3 * ARM_ANGLE_RATIO * 2 * Math.PI;
+		/** The angle the arm must be at to place at the middle level <p> Units are radians */
+		public static final double ARM_PLACE_ANGLE = 
+			-6 * ARM_ANGLE_RATIO * 2 * Math.PI;
+		/** The angle the arm must be at to launch a cone onto the top node <p> Units are radians */
+		public static final double ARM_LAUNCH_ANGLE = 
+			1 * ARM_ANGLE_RATIO * 2 * Math.PI;
+		/** The angle the arm must be at to pickup game pieces from the ground <p> Units are radians */
+		public static final double ARM_GROUND_ANGLE = 
+			-43 * ARM_ANGLE_RATIO * 2 * Math.PI;
+		/** The angle the arm will go to while traveling <p> Units are radians */
+		public static final double ARM_ZERO_ANGLE = 
+			-10 * ARM_ANGLE_RATIO * 2 * Math.PI;
+		/** The angle the arm must be at to launch a tilted cone onto the middle node <p> Units are radians*/
 		public static final double ARM_PLACE_TILTED_CONE_ANGLE = 0;
 
-		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are raw sensor units */
-		public static final double ARM_PLACE_TOP =
-			10900.0 / (4096 / Math.PI / 2.0);
-		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are raw sensor units */
+		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are meters */
+		public static final double ARM_PLACE_TOP = 
+			10900.0 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are meters */
 		public static final double ARM_PLACE_MID =
-			3229 / (4096 / Math.PI / 2.0);
-		/** The extension the arm must have to pickup a game piece from the ground <p> Units are raw sensor units*/
-		public static final double ARM_PICKUP = 4324 / (4096 / Math.PI / 2.0);
-		/** The extension the arm will have while traveling <p> Units are raw sensor units */
-		public static final double ARM_RETRACT = 0 / (4096 / Math.PI / 2.0);
-
+			3229 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+		/** The extension the arm must have to pickup a game piece from the ground <p> Units are meters */
+		public static final double ARM_PICKUP = 
+			4324 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+		/** The extension the arm must have to place a tilted cone on the middle node <p> Units are meters */
 		public static final double ARM_PLACE_TILTED_CONE_MID =
-			5000 / (4096 / Math.PI / 2.0);
-
+			5000 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+		/** The minimun distance the arm must be from its target value to stop trying to reach the value <p> Units are meters */
 		public static final double ARM_WINCH_THRESHOLD =
-			250 / (4096 / Math.PI / 2.0);
-
-		public static final double ARM_ANGLE_RATIO = 1 / 1; // Output shaft rotations per motor rotation TODO: Fix this value
-
-		public static final double ARM_EXTENSION_RATIO = 1 / 1; // Output shaft rotations per motor rotation
-
-		public static final double ARM_RADIANS_TO_LINEAR_RATIO =
-			1 / (0.20955 / (Math.PI * 2)); // Output shaft radians per meters extended
+			250 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+		/** The extension the arm will have while traveling <p> Units are meters */
+		public static final double ARM_RETRACT = 0;
 	}
 
 	public static class IntakeConstants {
-
 		/** The speed of the intake while it is intaking cones and placing cubes <p> Units are percentage of full power */
 		public static final double INTAKE_CONE_SPEED = .8;
 		/** The speed of the intake while it is intaking cubes and placing cones <p> Units are percentage of full power */
@@ -137,24 +137,25 @@ public class Constants {
 		public static final MotorType ANGLE_MOTOR_TYPE = MotorType.kBrushless;
 
 		/** The angle the intake must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_BOT_ANGLE = -1;
-
+		public static final double INTAKE_BOT_ANGLE = 
+			-7 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
 		/** The angle the intake must be at to pickup games pieces from the high substation <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_HIGH_SUBSTATION_ANGLE = -1;
-
+		public static final double INTAKE_HIGH_SUBSTATION_ANGLE = 
+			-25 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
 		/** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TOP_CONE_PLACE_ANGLE = -1;
-
+		public static final double INTAKE_TOP_CONE_PLACE_ANGLE = 
+			-18.4 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
 		/** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TILTED_CONE_ANGLE = -1;
-
+		public static final double INTAKE_TILTED_CONE_ANGLE = 
+			-23.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
 		/** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_ZERO_ANGLE = -1;
-
+		public static final double INTAKE_ZERO_ANGLE = 
+			-5.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
 		/** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_LAUNCHING_ANGLE = -1;
-
-		public static final double INTAKE_ANGLE_RATIO = 1 / 1; // Output shaft rotations per motor rotations TODO: Fix this
+		public static final double INTAKE_LAUNCHING_ANGLE = 
+			-15.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
+		/** The ratio between rotations of the intake and the rotations of the intake angle motor <p> Output shaft rotations / motor rotations*/
+		public static final double INTAKE_ANGLE_RATIO = 144. / 15125;
 	}
 
 	public static class EnumConstants {
@@ -188,7 +189,7 @@ public class Constants {
 		}
 	}
 
-	public static class AutoConstants { //Everything in this class must be in meters
+	public static class AutoConstants {
 
 		/** The maximum velocity the robot will travel at during auto <p> Units are meters per second*/
 		public static final double AUTO_MAX_SPEED = 2;

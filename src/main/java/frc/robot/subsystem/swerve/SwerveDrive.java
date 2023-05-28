@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
 import frc.robot.subsystem.vision.Vision;
-import frc.robot.utility.Transform3D;
 
 /**
  * Subsystem class which represents the drivetrain of our robot
@@ -75,10 +74,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			new SwerveModule(
 				SwerveConstants.DFLPORT,
 				SwerveConstants.AFLPORT,
-				new Translation2d(
-					SwerveConstants.DRIVE_Y_FRONT_TRANSLATION,
-					SwerveConstants.DRIVE_X_LEFT_TRANSLATION
-				),
+				SwerveConstants.FRONT_LEFT_MODULE_TRANSLATION,
 				true,
 				false,
 				0.1,
@@ -87,10 +83,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			new SwerveModule(
 				SwerveConstants.DFRPORT,
 				SwerveConstants.AFRPORT,
-				new Translation2d(
-					SwerveConstants.DRIVE_Y_FRONT_TRANSLATION,
-					SwerveConstants.DRIVE_X_RIGHT_TRANSLATION
-				),
+				SwerveConstants.FRONT_RIGHT_MODULE_TRANSLATION,
 				false,
 				false,
 				0.1,
@@ -99,10 +92,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			new SwerveModule(
 				SwerveConstants.DBLPORT,
 				SwerveConstants.ABLPORT,
-				new Translation2d(
-					SwerveConstants.DRIVE_Y_BACK_TRANSLATION,
-					SwerveConstants.DRIVE_X_LEFT_TRANSLATION
-				),
+				SwerveConstants.BACK_LEFT_MODULE_TRANSLATION,
 				true,
 				false,
 				0.1,
@@ -111,10 +101,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			new SwerveModule(
 				SwerveConstants.DBRPORT,
 				SwerveConstants.ABRPORT,
-				new Translation2d(
-					SwerveConstants.DRIVE_Y_BACK_TRANSLATION,
-					SwerveConstants.DRIVE_X_RIGHT_TRANSLATION
-				),
+				SwerveConstants.BACK_RIGHT_MODULE_TRANSLATION,
 				false,
 				false,
 				0.1,
@@ -316,6 +303,10 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		resetRobotAngle(0);
 	}
 
+	public double getCurrentZero() {
+		return currentGyroZero;
+	}
+	
 	/**
 	 * Update with real values
 	 * <p>Order:

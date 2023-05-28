@@ -75,15 +75,28 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		return targetOutput;
 	}
 
+	/**
+	 * Sets the angle of the intake
+	 * @param angle the new target angle of the intake, in radians
+	 */
 	public void setAngle(double angle) {
 		targetAngle = angle;
 		angleMotor.setAngle(angle / IntakeConstants.INTAKE_ANGLE_RATIO);
 	}
 
+	/**
+	 * Changes the angle of the intake <p>
+	 * Useful for when things go wrong/debugging
+	 * @param addition how much the current angle should be changed, in radians
+	 */
 	public void changeAngle(double addition) {
 		setAngle(getAngle() + addition);
 	}
 
+	/**
+	 * Gets the angle of the intake
+	 * @return the current angle of the intake, in radians
+	 */
 	public double getAngle() {
 		return angleMotor.getAngle() * IntakeConstants.INTAKE_ANGLE_RATIO;
 	}
@@ -118,7 +131,11 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 			() -> getTargetOutput(),
 			null
 		);
-		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), null);
+		builder.addDoubleProperty(
+			"Curent Angle: ", 
+			() -> getAngle(), 
+			null
+		);
 		builder.addDoubleProperty(
 			"Current Percent Output: ",
 			() -> getOutput(),

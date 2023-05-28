@@ -3,7 +3,6 @@ package frc.robot.commands.complexCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.utility.ExtendedMath;
@@ -15,10 +14,11 @@ public class AutomatedDriveCommand extends CommandBase {
 	private Pose2d currentTargetPose;
 	private Transform2d relativeRobotPose;
 	private Pose2d relativeOrigin;
-	private ChassisSpeeds currentRobotSpeeds = new ChassisSpeeds();
 	private double translationalThreshold;
 	private double rotationalThreshold;
 	private double timeThreshold;
+	private double originalRobotZero;
+	private double currentRobotZero;
 	private double timeCorrect;
 	private int poseCounter;
 	private AutoDriveMode mode;
@@ -61,6 +61,9 @@ public class AutomatedDriveCommand extends CommandBase {
 		this.rotationalThreshold = rotationalThreshold;
 		this.timeThreshold = timeThreshold;
 		this.mode = mode;
+		originalRobotZero = swerve.getCurrentZero();
+		swerve.resetRobotAngle();
+		currentRobotZero = swerve.getCurrentZero();
 		addRequirements(swerve);
 	}
 
@@ -103,24 +106,16 @@ public class AutomatedDriveCommand extends CommandBase {
 			relativeRobotPose.getRotation().getRadians() % (2 * Math.PI),
 			currentTargetPose.getRotation().getRadians()
 		);
-		currentRobotSpeeds =
-			new ChassisSpeeds(
-				forwardVelocity,
-				sidewaysVelocity,
-				rotationalVelocity
-			);
 		swerve.driveFieldCentric(
 			forwardVelocity,
 			sidewaysVelocity,
 			rotationalVelocity
 		);
-
 		Pose2d robotPoseRel = new Pose2d(
 			relativeRobotPose.getTranslation(),
 			relativeRobotPose.getRotation()
 		);
-		if (
-			ExtendedMath.isClose(
+		if (ExtendedMath.isClose(
 				currentTargetPose,
 				robotPoseRel,
 				translationalThreshold,
@@ -148,6 +143,7 @@ public class AutomatedDriveCommand extends CommandBase {
 
 	@Override
 	public void end(boolean interrupted) {
+		swerve.resetRobotAngle(swerve.getRobotAngle() + currentRobotZero - originalRobotZero);
 		swerve.driveFieldCentric(0, 0, 0);
 	}
 }
