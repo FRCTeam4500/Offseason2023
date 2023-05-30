@@ -5,6 +5,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.util.List;
 
@@ -98,21 +99,25 @@ public class Constants {
 
 		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are meters */
 		public static final double ARM_PLACE_TOP = 
-			10900.0 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+			ticksToMeters(10900.0);
 		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are meters */
 		public static final double ARM_PLACE_MID =
-			3229 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+			ticksToMeters(3229);
 		/** The extension the arm must have to pickup a game piece from the ground <p> Units are meters */
 		public static final double ARM_PICKUP = 
-			4324 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+			ticksToMeters(4324);
 		/** The extension the arm must have to place a tilted cone on the middle node <p> Units are meters */
 		public static final double ARM_PLACE_TILTED_CONE_MID =
-			5000 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+			ticksToMeters(5000);
 		/** The minimun distance the arm must be from its target value to stop trying to reach the value <p> Units are meters */
 		public static final double ARM_WINCH_THRESHOLD =
-			250 / (4096 / Math.PI / 2.0) * ARM_EXTENSION_RATIO / ARM_RADIANS_TO_LINEAR_RATIO;
+			ticksToMeters(250);
 		/** The extension the arm will have while traveling <p> Units are meters */
 		public static final double ARM_RETRACT = 0;
+
+		public static double ticksToMeters(double ticks) {
+			return ticks * (.009525 * 22) / (4096 * 35);
+		}
 	}
 
 	public static class IntakeConstants {
