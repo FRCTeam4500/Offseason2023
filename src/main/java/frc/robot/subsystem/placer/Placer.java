@@ -71,7 +71,7 @@ public class Placer extends SubsystemBase {
 
 	@Override
 	public void periodic() {
-		setArmAngle(-Math.toDegrees(Arm.getInstance().getAngle()));
+		setArmAngle(Math.toDegrees(Arm.getInstance().getAngle()));
 		armExtention.setLength(
 			minimumExtention + Arm.getInstance().getExtension()
 		);

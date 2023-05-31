@@ -5,6 +5,8 @@ import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystem.vision.Vision;
+
 import java.util.TimerTask;
 import org.littletonrobotics.junction.Logger;
 
@@ -43,5 +45,6 @@ public class LogSubsystemInputsTask extends TimerTask {
 		Logger
 			.getInstance()
 			.recordOutput("Placer", Placer.getInstance().getMechanism2d());
+		Logger.getInstance().recordOutput("VisionPose", Vision.getInstance().getRobotPoseToField());
 	}
 }
