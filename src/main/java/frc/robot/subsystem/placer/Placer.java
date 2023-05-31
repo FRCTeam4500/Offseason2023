@@ -75,6 +75,6 @@ public class Placer extends SubsystemBase {
 		armExtention.setLength(
 			minimumExtention + Arm.getInstance().getExtension()
 		);
-		intakeAngle.setAngle(Math.toDegrees(Intake.getInstance().getAngle()));
+		intakeAngle.setAngle(-Math.toDegrees(Intake.getInstance().getAngle()));
 	}
 }

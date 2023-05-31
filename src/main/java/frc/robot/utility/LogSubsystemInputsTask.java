@@ -1,6 +1,7 @@
 package frc.robot.utility;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
@@ -45,6 +46,7 @@ public class LogSubsystemInputsTask extends TimerTask {
 		Logger
 			.getInstance()
 			.recordOutput("Placer", Placer.getInstance().getMechanism2d());
-		Logger.getInstance().recordOutput("VisionPose", Vision.getInstance().getRobotPoseToField());
+		Logger.getInstance().recordOutput("VisionPose", Vision.getInstance().getRobotPoseToAlliance(Alliance.Red));
+		Logger.getInstance().recordOutput("VisionSkew", Vision.getInstance().getSkew());
 	}
 }

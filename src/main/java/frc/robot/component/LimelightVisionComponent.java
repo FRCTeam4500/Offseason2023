@@ -14,6 +14,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.TelemetryConstants;
 import frc.robot.utility.Transform3D;
 
 /**
@@ -29,6 +31,7 @@ public class LimelightVisionComponent {
 	 */
 	public LimelightVisionComponent() {
 		table = NetworkTableInstance.getDefault().getTable("limelight");
+		table.getEntry("getpipe").setNumber(0);
 	}
 
 	public enum CameraMode {
@@ -118,6 +121,42 @@ public class LimelightVisionComponent {
 			raw[2],
 			new Rotation3d(raw[3], raw[4], raw[5])
 		);
+	}
+
+	/**
+	 * Pose of the robot in Field Coordinated relative to Alliance
+	 * @return
+	 */
+	public Pose3d getRobotPoseToAlliance(Alliance alliance) {
+		double[] raw;
+		switch (alliance) {
+			case Red:
+				raw = table.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+				return new Pose3d(
+					raw[0],
+					raw[1],
+					raw[2],
+					new Rotation3d(
+						raw[3],
+						raw[4],
+						raw[5]
+					)
+				);
+			case Blue:
+				raw = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+				return new Pose3d(
+					raw[0],
+					raw[1],
+					raw[2],
+					new Rotation3d(
+						raw[3],
+						raw[4],
+						raw[5]
+					)
+				);
+			default:
+				return null;
+		}
 	}
 
 	/**
