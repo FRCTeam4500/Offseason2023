@@ -48,7 +48,7 @@ public class Placer extends SubsystemBase {
 			);
 		intakeAngle =
 			armExtention.append(
-				new MechanismLigament2d("intake", intakeLength, 90)
+				new MechanismLigament2d("intake", intakeLength, 120)
 			);
 		Shuffleboard.getTab("placer").add("Placer", mechanism2d);
 	}
