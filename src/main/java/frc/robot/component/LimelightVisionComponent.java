@@ -124,35 +124,33 @@ public class LimelightVisionComponent {
 	}
 
 	/**
-	 * Pose of the robot in Field Coordinated relative to Alliance
+	 * Pose of the robot in Field Coordinates relative to Alliance
 	 * @return
 	 */
 	public Pose3d getRobotPoseToAlliance(Alliance alliance) {
 		double[] raw;
 		switch (alliance) {
 			case Red:
-				raw = table.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+				raw =
+					table
+						.getEntry("botpose_wpired")
+						.getDoubleArray(new double[6]);
 				return new Pose3d(
 					raw[0],
 					raw[1],
 					raw[2],
-					new Rotation3d(
-						raw[3],
-						raw[4],
-						raw[5]
-					)
+					new Rotation3d(raw[3], raw[4], raw[5])
 				);
 			case Blue:
-				raw = table.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+				raw =
+					table
+						.getEntry("botpose_wpiblue")
+						.getDoubleArray(new double[6]);
 				return new Pose3d(
 					raw[0],
 					raw[1],
 					raw[2],
-					new Rotation3d(
-						raw[3],
-						raw[4],
-						raw[5]
-					)
+					new Rotation3d(raw[3], raw[4], raw[5])
 				);
 			default:
 				return null;

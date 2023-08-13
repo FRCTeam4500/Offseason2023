@@ -145,7 +145,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		if (vision.hasValidTargets()) {
 			poseEstimator.addVisionMeasurement(
 				vision.getRobotPoseToField().toPose2d(),
-				Timer.getFPGATimestamp()
+				Timer.getFPGATimestamp() - .2
 			);
 		}
 	}
@@ -306,7 +306,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	public double getCurrentZero() {
 		return currentGyroZero;
 	}
-	
+
 	/**
 	 * Update with real values
 	 * <p>Order:
