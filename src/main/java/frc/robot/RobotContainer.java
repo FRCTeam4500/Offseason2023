@@ -33,6 +33,8 @@ public class RobotContainer {
 		intake
 	);
 
+	TalonFXOrchestra orchestra = new TalonFXOrchestra(swerve.getTalons());
+
 	public RobotContainer() {}
 
 	public Command getAutonomousCommand() {

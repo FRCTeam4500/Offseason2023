@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
+import frc.robot.component.TalonFXComponent;
 import frc.robot.subsystem.vision.Vision;
 
 /**
@@ -131,6 +132,20 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			instanceSwerve = new SwerveDrive();
 		}
 		return instanceSwerve;
+	}
+
+	public TalonFXComponent[] getTalons() {
+		TalonFXComponent[] talons = {
+			modules[0].driveMotor,
+			modules[0].angleMotor,
+			modules[1].driveMotor,
+			modules[1].angleMotor,
+			modules[2].driveMotor,
+			modules[2].angleMotor,
+			modules[3].driveMotor,
+			modules[3].angleMotor,
+		};
+		return talons;
 	}
 
 	/**

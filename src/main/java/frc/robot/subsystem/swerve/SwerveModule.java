@@ -12,9 +12,9 @@ import frc.robot.component.TalonFXComponent;
 public class SwerveModule {
 
 	/** The drive motor of the module. Used to set the velocity of the module */
-	private TalonFXComponent driveMotor;
+	public TalonFXComponent driveMotor;
 	/** The angle motor of the module. Used to set the angle of the module */
-	private TalonFXComponent angleMotor;
+	public TalonFXComponent angleMotor;
 	/** The translation of the swerve module from the center of the robot. Used during kinematics operations */
 	private Translation2d translationFromCenter;
 
