@@ -12,7 +12,7 @@ public class TalonFXOrchestra extends SubsystemBase {
 
 	Orchestra orchestra;
 
-	TalonFXComponent[] controllers;
+	ArrayList<TalonFX> controllers;
 
 	/* An array of songs that are available to be played, can you guess the song/artists? */
 	String[] songs = new String[] {
@@ -42,7 +42,7 @@ public class TalonFXOrchestra extends SubsystemBase {
 	public final Trigger prevSongButton = instanceController.pov(270);
 	public final Trigger playPauseButton = instanceController.pov(0);
 
-	TalonFXOrchestra(TalonFXComponent[] controllers) {
+	TalonFXOrchestra(ArrayList<TalonFX> controllers) {
 		this.controllers = controllers;
 		createInstruments();
 		loadSelectedSong(0);
@@ -65,15 +65,7 @@ public class TalonFXOrchestra extends SubsystemBase {
 	}
 
 	private void createInstruments() {
-		/* A list of TalonFX's that are to be used as instruments */
-		ArrayList<TalonFX> instruments = new ArrayList<TalonFX>();
-
-		/* Initialize the TalonFX's to be used */
-		for (int i = 0; i < controllers.length; ++i) {
-			instruments.add(controllers[i]);
-		}
-
-		orchestra = new Orchestra(instruments);
+		orchestra = new Orchestra(controllers);
 	}
 
 	private void loadSelectedSong(int offset) {
