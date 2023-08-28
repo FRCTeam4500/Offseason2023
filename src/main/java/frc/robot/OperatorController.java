@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.GamePiece;
-import frc.robot.Constants.EnumConstants.IntakeSpeed;
-import frc.robot.Constants.EnumConstants.PlacerState;
+import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.RumbleCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
@@ -37,10 +36,8 @@ public class OperatorController extends CommandJoystick {
 		this.button(JoystickConstants.READY_MIDDLE);
 	private final Trigger readyBotButton =
 		this.button(JoystickConstants.READY_BOTTOM);
-	private final Trigger uprightConeButton =
-		this.button(JoystickConstants.UPRIGHT_CONE_INTAKE);
-	private final Trigger tiltedConeButton =
-		this.button(JoystickConstants.TILTED_CONE_INTAKE);
+	private final Trigger coneButton =
+		this.button(JoystickConstants.CONE_INTAKE);
 	private final Trigger tiltUpButton = this.button(4);
 	private final Trigger tiltDownButton = this.button(2);
 
@@ -49,7 +46,7 @@ public class OperatorController extends CommandJoystick {
 		this.intake = intake;
 		this.arm = arm;
 
-		setPlacerButtons();
+		setControllerButtons();
 	}
 
 	/**
@@ -80,52 +77,27 @@ public class OperatorController extends CommandJoystick {
 		return instanceOperatorController;
 	}
 
-	public void setPlacerButtons() {
+	public void setControllerButtons() {
 		tiltUpButton.toggleOnTrue(new TiltIntakeCommand(intake, 1));
 		tiltDownButton.toggleOnTrue(new TiltIntakeCommand(intake, -1));
 
-		cubeButton.toggleOnTrue(
-			new SetIntakeSpeedCommand(intake, IntakeSpeed.PickupCube)
-		);
-		cubeButton.toggleOnFalse(new ZeroCommand(arm, intake));
+		cubeButton.toggleOnTrue(new SetIntakeSpeedCommand(IntakeMode.PickupCube));
+		cubeButton.toggleOnFalse(new ZeroCommand());
 
-		uprightConeButton.toggleOnTrue(
-			new SetIntakeSpeedCommand(intake, IntakeSpeed.PickupUprightCone)
-		);
-		uprightConeButton.toggleOnFalse(new ZeroCommand(arm, intake));
+		coneButton.toggleOnTrue(new SetIntakeSpeedCommand(IntakeMode.PickupCone));
+		coneButton.toggleOnFalse(new ZeroCommand());
 
-		tiltedConeButton.toggleOnTrue(
-			new SetIntakeSpeedCommand(intake, IntakeSpeed.PickupTiltedCone)
-		);
-		tiltedConeButton.toggleOnFalse(new ZeroCommand(arm, intake));
+		readyBotButton.toggleOnTrue(new SetArmAndIntakeCommand(ArmPosition.Bot));
 
-		readyBotButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(ArmPosition.Bot)
-		);
+		readyMidButton.toggleOnTrue(new SetArmAndIntakeCommand(ArmPosition.Mid));
 
-		readyMidButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(ArmPosition.Mid)
-			);
+		readyTopButton.toggleOnTrue(new SetArmAndIntakeCommand(ArmPosition.Top));
 
-		readyTopButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(ArmPosition.Top)			);
+		readySubstationButton.toggleOnTrue(new SetArmAndIntakeCommand(ArmPosition.Sub));
 
-		readySubstationButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(ArmPosition.Sub)
-		);
+		placeButton.toggleOnTrue(new PlaceCommand());
 
-		placeButton
-			.and(() ->
-				Intake.getGamePiece().get() == GamePiece.TiltedCone ||
-				Intake.getGamePiece().get() == GamePiece.UprightCone
-			)
-			.toggleOnTrue(new PlaceCommand(arm, intake, GamePiece.UprightCone));
-
-		placeButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.Cube)
-			.toggleOnTrue(new PlaceCommand(arm, intake, GamePiece.Cube));
-
-		placeButton.toggleOnFalse(new ZeroCommand(arm, intake));
+		placeButton.toggleOnFalse(new ZeroCommand());
 
 		Shuffleboard.getTab("Arm and Intake").add("Intake", intake);
 		Shuffleboard.getTab("Arm and Intake").add("Arm", arm);

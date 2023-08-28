@@ -3,8 +3,6 @@ package frc.robot.commands.baseCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.EnumConstants.ArmPosition;
-import frc.robot.Constants.EnumConstants.GamePiece;
-import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
@@ -16,7 +14,6 @@ public class SetArmAndIntakeCommand extends CommandBase {
 
 	private Arm arm;
 	private Intake intake;
-	private GamePiece gamePiece;
 	private ArmPosition position;
 
 	private double targetWinchPosition;
@@ -36,9 +33,13 @@ public class SetArmAndIntakeCommand extends CommandBase {
 	public void initialize() {
 		arm = Arm.getInstance();
 		intake = Intake.getInstance();
-		gamePiece = Intake.getGamePiece().get();
 
 		switch(position) {
+			case Start:
+				targetWinchPosition = ArmConstants.ARM_RETRACT;
+				targetArmAngle = 0;
+				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_ANGLE;
+				break;
 			case Zero:
 				targetWinchPosition = ArmConstants.ARM_RETRACT;
 				targetArmAngle = ArmConstants.ARM_ZERO_ANGLE;

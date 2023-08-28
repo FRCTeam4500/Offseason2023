@@ -15,7 +15,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	private SparkMaxComponent outputMotor;
 	private SparkMaxComponent angleMotor;
 	private SparkMaxPIDController anglePIDController;
-	private static GamePiece gamePiece = GamePiece.UprightCone;
+	private static GamePiece gamePiece = GamePiece.Cone;
 	private double targetAngle;
 	private double targetOutput;
 

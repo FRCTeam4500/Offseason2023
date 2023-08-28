@@ -1,19 +1,17 @@
 package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.EnumConstants.IntakeSpeed;
-import frc.robot.Constants.EnumConstants.PlacerState;
+import frc.robot.Constants.EnumConstants.ArmPosition;
+import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
-import frc.robot.subsystem.placer.arm.Arm;
-import frc.robot.subsystem.placer.intake.Intake;
 
 public class ZeroCommand extends SequentialCommandGroup {
 
-	public ZeroCommand(Arm arm, Intake intake) {
+	public ZeroCommand() {
 		addCommands(
-			new SetIntakeSpeedCommand(intake, IntakeSpeed.Off),
-			new SetArmAndIntakeCommand(arm, intake, PlacerState.Zero)
+			new SetIntakeSpeedCommand(IntakeMode.Off),
+			new SetArmAndIntakeCommand(ArmPosition.Zero)
 		);
 	}
 }

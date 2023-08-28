@@ -95,17 +95,9 @@ public class DriveController extends CommandXboxController {
 			})
 		);
 
-		driverPlaceButton
-			.and(() ->
-				Intake.getGamePiece().get() == GamePiece.TiltedCone ||
-				Intake.getGamePiece().get() == GamePiece.UprightCone
-			)
-			.toggleOnTrue(new PlaceCommand(arm, intake, GamePiece.UprightCone));
+		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 
-		driverPlaceButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.Cube)
-			.toggleOnTrue(new PlaceCommand(arm, intake, GamePiece.Cube));
-		driverPlaceButton.toggleOnFalse(new ZeroCommand(arm, intake));
+		driverPlaceButton.toggleOnFalse(new ZeroCommand());
 
 		Shuffleboard.getTab("Swerve").add("Swerve", swerve);
 		Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);

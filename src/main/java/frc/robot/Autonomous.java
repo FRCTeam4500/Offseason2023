@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.EnumConstants.GamePiece;
-import frc.robot.Constants.EnumConstants.PlacerState;
+import frc.robot.Constants.EnumConstants.ArmPosition;
+import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.complexCommands.AutoPickupCommand;
@@ -60,29 +60,29 @@ public class Autonomous {
 	private void configureAuto() {
 		autoCommandMap.put(
 			"start",
-			new SetArmAndIntakeCommand(arm, intake, PlacerState.Start)
+			new SetArmAndIntakeCommand(ArmPosition.Start)
 		);
 
-		autoCommandMap.put("zero", new ZeroCommand(arm, intake));
+		autoCommandMap.put("zero", new ZeroCommand());
 
 		autoCommandMap.put(
 			"placeCubeTop",
-			new AutoPlaceCommand(arm, intake, PlacerState.HighCube)
+			new AutoPlaceCommand(ArmPosition.Top)
 		);
 
 		autoCommandMap.put(
 			"placeConeTop",
-			new AutoPlaceCommand(arm, intake, PlacerState.HighUprightCone)
+			new AutoPlaceCommand(ArmPosition.Top)
 		);
 
 		autoCommandMap.put(
 			"placeCubeMid",
-			new AutoPlaceCommand(arm, intake, PlacerState.MidCube)
+			new AutoPlaceCommand(ArmPosition.Mid)
 		);
 
 		autoCommandMap.put(
 			"placeConeMid",
-			new AutoPlaceCommand(arm, intake, PlacerState.MidUprightCone)
+			new AutoPlaceCommand(ArmPosition.Mid)
 		);
 
 		autoCommandMap.put("resetGyro", new ResetGyroCommand(swerve));
@@ -91,12 +91,12 @@ public class Autonomous {
 
 		autoCommandMap.put(
 			"pickupCone",
-			new AutoPickupCommand(arm, intake, GamePiece.UprightCone)
+			new AutoPickupCommand(IntakeMode.PickupCone)
 		);
 
 		autoCommandMap.put(
 			"pickupCube",
-			new AutoPickupCommand(arm, intake, GamePiece.Cube)
+			new AutoPickupCommand(IntakeMode.PickupCube)
 		);
 
 		autonChooser.setDefaultOption(

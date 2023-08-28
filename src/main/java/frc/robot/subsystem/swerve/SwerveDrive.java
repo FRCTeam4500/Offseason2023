@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
-import frc.robot.component.TalonFXComponent;
 import frc.robot.subsystem.vision.Vision;
-import java.util.ArrayList;
 
 /**
  * Subsystem class which represents the drivetrain of our robot

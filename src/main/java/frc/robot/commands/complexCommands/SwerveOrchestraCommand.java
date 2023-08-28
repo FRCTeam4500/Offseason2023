@@ -3,7 +3,6 @@ package frc.robot.commands.complexCommands;
 import com.ctre.phoenix.music.Orchestra;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class SwerveOrchestraCommand extends CommandBase {

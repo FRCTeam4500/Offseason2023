@@ -4,7 +4,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import java.util.List;
 
@@ -20,8 +19,7 @@ public class Constants {
 		public static final int PLACE = 1;
 
 		public static final int CUBE_INTAKE = 12;
-		public static final int UPRIGHT_CONE_INTAKE = 6;
-		public static final int TILTED_CONE_INTAKE = 5;
+		public static final int CONE_INTAKE = 6;
 
 		public static final int READY_BOTTOM = 9;
 		public static final int READY_MIDDLE = 7;
@@ -176,11 +174,12 @@ public class Constants {
 
 		public static enum GamePiece {
 			Cube,
-			UprightCone,
+			Cone,
 			Nothing,
 		}
 
 		public static enum ArmPosition {
+			Start,
 			Zero,
 			Bot,
 			Mid,
@@ -188,25 +187,11 @@ public class Constants {
 			Sub
 		}
 
-		public static enum PlacerState {
-			HighUprightCone,
-			HighCube,
-			MidTiltedCone,
-			MidUprightCone,
-			MidCube,
-			GroundPickup,
-			SubstationPickup,
-			Zero,
-			Start,
-		}
-
-		public static enum IntakeSpeed {
-			PlaceCone,
-			PlaceCube,
-			PickupUprightCone,
-			PickupTiltedCone,
+		public static enum IntakeMode {
 			PickupCube,
-			Off,
+			PickupCone,
+			Place,
+			Off
 		}
 	}
 
