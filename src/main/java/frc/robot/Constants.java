@@ -176,9 +176,16 @@ public class Constants {
 
 		public static enum GamePiece {
 			Cube,
-			TiltedCone,
 			UprightCone,
 			Nothing,
+		}
+
+		public static enum ArmPosition {
+			Zero,
+			Bot,
+			Mid,
+			Top,
+			Sub
 		}
 
 		public static enum PlacerState {

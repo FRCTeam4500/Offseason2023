@@ -2,6 +2,7 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.Constants.EnumConstants.PlacerState;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
@@ -41,11 +42,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup {
 				break;
 			case MidUprightCone:
 				addCommands(
-					new SetArmAndIntakeCommand(
-						arm,
-						intake,
-						PlacerState.MidUprightCone
-					),
+					new SetArmAndIntakeCommand(ArmPosition.),
 					new WaitCommand(1),
 					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCone),
 					new WaitCommand(1),
@@ -54,11 +51,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup {
 				break;
 			case HighCube:
 				addCommands(
-					new SetArmAndIntakeCommand(
-						arm,
-						intake,
-						PlacerState.HighCube
-					),
+					new SetArmAndIntakeCommand(ArmPosition.Top),
 					new WaitCommand(1),
 					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
 					new WaitCommand(1),
@@ -67,11 +60,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup {
 				break;
 			case MidCube:
 				addCommands(
-					new SetArmAndIntakeCommand(
-						arm,
-						intake,
-						PlacerState.MidCube
-					),
+					new SetArmAndIntakeCommand(ArmPosition.Mid),
 					new WaitCommand(1),
 					new SetIntakeSpeedCommand(intake, IntakeSpeed.PlaceCube),
 					new WaitCommand(1),

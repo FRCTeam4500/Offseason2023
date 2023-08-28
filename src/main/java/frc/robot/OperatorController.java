@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeSpeed;
 import frc.robot.Constants.EnumConstants.PlacerState;
@@ -99,61 +100,18 @@ public class OperatorController extends CommandJoystick {
 		tiltedConeButton.toggleOnFalse(new ZeroCommand(arm, intake));
 
 		readyBotButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(arm, intake, PlacerState.GroundPickup)
+			new SetArmAndIntakeCommand(ArmPosition.Bot)
 		);
 
-		readyMidButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.Cube)
-			.toggleOnTrue(
-				new SetArmAndIntakeCommand(arm, intake, PlacerState.MidCube)
+		readyMidButton.toggleOnTrue(
+			new SetArmAndIntakeCommand(ArmPosition.Mid)
 			);
 
-		readyMidButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.UprightCone)
-			.toggleOnTrue(
-				new SetArmAndIntakeCommand(
-					arm,
-					intake,
-					PlacerState.MidUprightCone
-				)
-			);
-
-		readyMidButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone)
-			.toggleOnTrue(
-				new SetArmAndIntakeCommand(
-					arm,
-					intake,
-					PlacerState.MidTiltedCone
-				)
-			);
-
-		readyTopButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.Cube)
-			.toggleOnTrue(
-				new SetArmAndIntakeCommand(arm, intake, PlacerState.HighCube)
-			);
-
-		readyTopButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.UprightCone)
-			.toggleOnTrue(
-				new SetArmAndIntakeCommand(
-					arm,
-					intake,
-					PlacerState.HighUprightCone
-				)
-			);
-
-		readyTopButton
-			.and(() -> Intake.getGamePiece().get() == GamePiece.TiltedCone)
-			.toggleOnTrue(new RumbleCommand(driveController, .5));
+		readyTopButton.toggleOnTrue(
+			new SetArmAndIntakeCommand(ArmPosition.Top)			);
 
 		readySubstationButton.toggleOnTrue(
-			new SetArmAndIntakeCommand(
-				arm,
-				intake,
-				PlacerState.SubstationPickup
-			)
+			new SetArmAndIntakeCommand(ArmPosition.Sub)
 		);
 
 		placeButton
