@@ -4,10 +4,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.EnumConstants.ArmPosition;
-import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.JoystickConstants;
-import frc.robot.commands.baseCommands.RumbleCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
@@ -20,8 +18,6 @@ public class OperatorController extends CommandJoystick {
 
 	Intake intake;
 	Arm arm;
-
-	private DriveController driveController = DriveController.getInstance();
 
 	private static OperatorController instanceOperatorController = null;
 
@@ -41,39 +37,23 @@ public class OperatorController extends CommandJoystick {
 	private final Trigger tiltUpButton = this.button(4);
 	private final Trigger tiltDownButton = this.button(2);
 
-	private OperatorController(int port, Intake intake, Arm arm) {
-		super(port);
-		this.intake = intake;
-		this.arm = arm;
+	private OperatorController() {
+		super(JoystickConstants.OPERATOR_PORT);
+		intake = Intake.getInstance();
+		arm = Arm.getInstance();
 
 		setControllerButtons();
 	}
 
 	/**
 	 * Creates a new instance of the OperatorController. If the instance is null, it will create a new one.
-	 * Should be called
-	 * @param port
-	 * @param intake
-	 * @param arm
-	 * @return
-	 */
-	public static synchronized OperatorController getInstance(
-		int port,
-		Intake intake,
-		Arm arm
-	) {
-		if (instanceOperatorController == null) {
-			instanceOperatorController =
-				new OperatorController(port, intake, arm);
-		}
-		return instanceOperatorController;
-	}
-
-	/**
-	 * Returns the instance of the OperatorController. If the instance is null, it will return null.
-	 * @return
+	 * @return An instance of the OperatorController
 	 */
 	public static synchronized OperatorController getInstance() {
+		if (instanceOperatorController == null) {
+			instanceOperatorController =
+				new OperatorController();
+		}
 		return instanceOperatorController;
 	}
 

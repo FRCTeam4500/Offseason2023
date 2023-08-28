@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
@@ -27,17 +27,12 @@ public class DriveController extends CommandXboxController {
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
 
-	private DriveController(
-		int Connectedport,
-		Intake intake,
-		Arm arm,
-		SwerveDrive drive
-	) {
-		super(Connectedport);
-		this.intake = intake;
-		this.arm = arm;
-		this.swerve = drive;
-		this.swerveCommand = new SwerveDriveCommand(drive, this);
+	private DriveController() {
+		super(JoystickConstants.DRIVER_PORT);
+		intake = Intake.getInstance();
+		arm = Arm.getInstance();
+		swerve = SwerveDrive.getInstance();
+		swerveCommand = new SwerveDriveCommand(swerve, this);
 
 		setSwerveButtons();
 	}
@@ -45,31 +40,13 @@ public class DriveController extends CommandXboxController {
 	/**
 	 * Creates a new instance of the controller. If the controller is null, it will create a new one.
 	 * Should be called first before getIntstance() to ensure that the controller is not null.
-	 * @param Connectedport
-	 * @param intake
-	 * @param arm
-	 * @param drive
-	 * @param swerveCommand
 	 * @return controller type "DriveController"
 	 */
-	public static synchronized DriveController getInstance(
-		int Connectedport,
-		Intake intake,
-		Arm arm,
-		SwerveDrive drive
-	) {
+	public static synchronized DriveController getInstance() {
 		if (instanceDriveController == null) {
 			instanceDriveController =
-				new DriveController(Connectedport, intake, arm, drive);
+				new DriveController();
 		}
-		return instanceDriveController;
-	}
-
-	/**
-	 * Gets the instance of the controller. If the controller is null, it will return null.
-	 * @return
-	 */
-	public static synchronized DriveController getInstance() {
 		return instanceDriveController;
 	}
 

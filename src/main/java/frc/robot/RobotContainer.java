@@ -1,37 +1,14 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.*;
-import frc.robot.subsystem.placer.Placer;
-import frc.robot.subsystem.placer.arm.Arm;
-import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class RobotContainer {
+	private final DriveController driveStick = DriveController.getInstance();
 
-	private final SwerveDrive swerve = SwerveDrive.getInstance();
-	private final Arm arm = Arm.getInstance();
-	private final Intake intake = Intake.getInstance();
-	private final Placer placer = Placer.getInstance();
+	private final OperatorController controlJoystick = OperatorController.getInstance();
 
-	/* Setting controller Buttons */
-	private final DriveController driveStick = DriveController.getInstance(
-		JoystickConstants.DRIVER_PORT,
-		intake,
-		arm,
-		swerve
-	);
-	private final OperatorController controlJoystick = OperatorController.getInstance(
-		JoystickConstants.OPERATOR_PORT,
-		intake,
-		arm
-	);
-
-	private final Autonomous autonomous = Autonomous.getInstance(
-		swerve,
-		arm,
-		intake
-	);
+	private final Autonomous autonomous = Autonomous.getInstance();
 
 	public RobotContainer() {}
 
@@ -47,6 +24,6 @@ public class RobotContainer {
 	}
 
 	public void disabledInit() {
-		swerve.zeroModules();
+		SwerveDrive.getInstance().zeroModules();
 	}
 }

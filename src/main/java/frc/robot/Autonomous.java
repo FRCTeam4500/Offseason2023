@@ -39,10 +39,10 @@ public class Autonomous {
 	private final SwerveAutoBuilder autoBuilder;
 	private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
-	private Autonomous(SwerveDrive swerve, Arm arm, Intake intake) {
-		this.swerve = swerve;
-		this.arm = arm;
-		this.intake = intake;
+	private Autonomous() {
+		swerve = SwerveDrive.getInstance();
+		arm = Arm.getInstance();
+		intake = Intake.getInstance();
 		this.autoBuilder =
 			new SwerveAutoBuilder(
 				swerve::getRobotPose,
@@ -165,23 +165,12 @@ public class Autonomous {
 
 	/**
 	 * Returns the instance of the autonomous class. If the instance is null, it will create a new instance.
-	 * @param swerve
-	 * @param arm
-	 * @param intake
 	 * @return
 	 */
-	public static synchronized Autonomous getInstance(
-		SwerveDrive swerve,
-		Arm arm,
-		Intake intake
-	) {
-		if (autonomous == null) {
-			autonomous = new Autonomous(swerve, arm, intake);
-		}
-		return autonomous;
-	}
-
 	public static synchronized Autonomous getInstance() {
+		if (autonomous == null) {
+			autonomous = new Autonomous();
+		}
 		return autonomous;
 	}
 
