@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class RobotContainer {
@@ -9,6 +10,8 @@ public class RobotContainer {
 	private final OperatorController controlJoystick = OperatorController.getInstance();
 
 	private final Autonomous autonomous = Autonomous.getInstance();
+
+	private final Placer placer = Placer.getInstance();
 
 	public RobotContainer() {}
 

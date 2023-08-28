@@ -14,17 +14,17 @@ public class SwerveOrchestraCommand extends CommandBase {
 
 	/* An array of songs that are available to be played, can you guess the song/artists? */
 	String[] songs = new String[] {
-		"song1.chrp",
-		"song2.chrp",
-		"song3.chrp",
-		"song4.chrp",
-		"song5.chrp",
-		"song6.chrp",
-		"song7.chrp",
-		"song8.chrp",
-		"song9.chrp",/* the remaining songs play better with three or more FXs */
-		"song10.chrp",
-		"song11.chrp",
+		"talonSongs/song1.chrp",
+		"talonSongs/song2.chrp",
+		"talonSongs/song3.chrp",
+		"talonSongs/song4.chrp",
+		"talonSongs/song5.chrp",
+		"talonSongs/song6.chrp",
+		"talonSongs/song7.chrp",
+		"talonSongs/song8.chrp",
+		"talonSongs/song9.chrp",/* the remaining songs play better with three or more FXs */
+		"talonSongs/song10.chrp",
+		"talonSongs/song11.chrp",
 	};
 
 	/* track which song is selected for play */
