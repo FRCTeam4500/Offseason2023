@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class SparkMaxComponent
 	extends CANSparkMax
-	implements GenericMotorInterface {
+	implements GenericMotor {
 
 	public SparkMaxComponent(int deviceID, MotorType type) {
 		super(deviceID, type);

@@ -6,15 +6,15 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.component.TalonFXComponent;
+import frc.robot.component.TalonComponent;
 
 /** A class that represents one swerve module on the robot, containing a drive motor and a angle motor */
 public class SwerveModule {
 
 	/** The drive motor of the module. Used to set the velocity of the module */
-	public TalonFXComponent driveMotor;
+	public TalonComponent driveMotor;
 	/** The angle motor of the module. Used to set the angle of the module */
-	public TalonFXComponent angleMotor;
+	public TalonComponent angleMotor;
 	/** The translation of the swerve module from the center of the robot. Used during kinematics operations */
 	private Translation2d translationFromCenter;
 
@@ -37,20 +37,20 @@ public class SwerveModule {
 		double drivekP,
 		double anglekP
 	) {
-		angleMotor = new TalonFXComponent(angleId);
+		angleMotor = new TalonComponent(angleId, "Talon FX");
 		angleMotor.setInverted(invertAngle);
 		angleMotor.config_kP(0, anglekP);
-		angleMotor.configMotionCruiseVelocity(10000);
-		angleMotor.configMotionAcceleration(10000);
 		angleMotor.configAllowableClosedloopError(0, 0);
 		angleMotor.configSupplyCurrentLimit(
-			new SupplyCurrentLimitConfiguration(true, 25, 26, 0.1)
+			new SupplyCurrentLimitConfiguration(true, 25, 26, 0.1),
+			50
 		);
 		angleMotor.configClearPositionOnQuadIdx(true, 10);
 
-		driveMotor = new TalonFXComponent(driveId);
+		driveMotor = new TalonComponent(driveId, "Talon FX");
 		driveMotor.configSupplyCurrentLimit(
-			new SupplyCurrentLimitConfiguration(true, 35, 36, 0.1)
+			new SupplyCurrentLimitConfiguration(true, 35, 36, 0.1),
+			50
 		);
 		driveMotor.config_kP(0, drivekP);
 		driveMotor.config_kF(0, 0.047);
@@ -106,7 +106,8 @@ public class SwerveModule {
 	 */
 	public SwerveModulePosition getModulePosition() {
 		return new SwerveModulePosition(
-			driveMotor.getMotorRotations() *
+			driveMotor.getAngle() *
+			2 * Math.PI * 
 			SwerveConstants.DRIVE_RATIO *
 			SwerveConstants.WHEEL_DIAMETER *
 			Math.PI,

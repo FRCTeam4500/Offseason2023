@@ -1,9 +1,5 @@
 package frc.robot.subsystem.swerve;
 
-import java.util.ArrayList;
-
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -135,15 +131,6 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			instanceSwerve = new SwerveDrive();
 		}
 		return instanceSwerve;
-	}
-
-	public ArrayList<TalonFX> getTalons() {
-		ArrayList<TalonFX> talons = new ArrayList<TalonFX>();
-		for (int i = 0; i < modules.length; i++) {
-			talons.add(modules[i].driveMotor);
-			talons.add(modules[i].angleMotor);
-		}
-		return talons;
 	}
 
 	/**

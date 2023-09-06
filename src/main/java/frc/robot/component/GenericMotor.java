@@ -1,6 +1,6 @@
 package frc.robot.component;
 
-public interface GenericMotorInterface {
+public interface GenericMotor {
 	/** Units are radians/sec */
 	public void setAngularVelocity(double targetAngularVelocity);
 

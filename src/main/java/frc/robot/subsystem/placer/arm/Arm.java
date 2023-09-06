@@ -5,12 +5,12 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.component.SparkMaxComponent;
-import frc.robot.component.TalonSRXComponent;
+import frc.robot.component.TalonComponent;
 
 public class Arm extends SubsystemBase implements ArmInterface {
 
 	private SparkMaxComponent angleMotor;
-	private TalonSRXComponent extensionMotor;
+	private TalonComponent extensionMotor;
 	private SparkMaxPIDController anglePIDController;
 	private double targetAngle;
 	private double targetExtension;
@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 				ArmConstants.TILT_MOTOR_ID,
 				ArmConstants.TILT_MOTOR_TYPE
 			);
-		extensionMotor = new TalonSRXComponent(ArmConstants.WINCH_MOTOR_ID);
+		extensionMotor = new TalonComponent(ArmConstants.WINCH_MOTOR_ID, "Talon SRX");
 
 		angleMotor.setInverted(true);
 
