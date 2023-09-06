@@ -67,9 +67,13 @@ public class SwerveDriveCommand extends CommandBase {
 			previousControlMode = controlMode;
 		}
 
-		double xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
-		double ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-		double zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+		// double xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
+		// double ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
+		// double zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+
+		double xSpeed = -controller.getLeftX() * xSens;
+		double ySpeed = -controller.getLeftY() * ySens;
+		double zSpeed = -controller.getRightX() * zSens;
 
 		switch (controlMode) {
 			case FieldCentric:

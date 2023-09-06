@@ -8,10 +8,14 @@ public class TalonComponent extends BaseTalon implements GenericMotor{
 
     public TalonComponent(int deviceID, String motorModel) {
         super(deviceID, motorModel);
-        if (motorModel == "Talon SRX") {
-            TICKS_PER_RADIAN = 4096 / Math.PI / 2;
-        } else {
-            TICKS_PER_RADIAN = 2048 / Math.PI / 2;
+        switch (motorModel) {
+            case "Talon FX":
+                TICKS_PER_RADIAN = 2048 / Math.PI / 2;
+                break;
+            case "Talon SRX": 
+                TICKS_PER_RADIAN = 4096 / Math.PI / 2;
+                break;
+            default:
         }
     }
 
