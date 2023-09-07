@@ -33,10 +33,15 @@ public class SwerveDriveCommand extends CommandBase {
 	public SlewRateLimiter zLimiter = new SlewRateLimiter(1.4);
 
 	private PIDController angleController;
+	private boolean doSlew;
 
 	private double xSens;
 	private double ySens;
 	private double zSens;
+	
+	private double xSpeed;
+	private double ySpeed;
+	private double zSpeed;
 
 	public double targetAngle = 0;
 
@@ -67,13 +72,15 @@ public class SwerveDriveCommand extends CommandBase {
 			previousControlMode = controlMode;
 		}
 
-		// double xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
-		// double ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-		// double zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
-
-		double xSpeed = -controller.getLeftX() * xSens;
-		double ySpeed = -controller.getLeftY() * ySens;
-		double zSpeed = -controller.getRightX() * zSens;
+		if(doSlew) {
+			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
+			ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
+			zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+		} else {
+			xSpeed = -controller.getLeftX() * xSens;
+			ySpeed = -controller.getLeftY() * ySens;
+			zSpeed = -controller.getRightX() * zSens;
+		}
 
 		switch (controlMode) {
 			case FieldCentric:
@@ -120,18 +127,21 @@ public class SwerveDriveCommand extends CommandBase {
 		xSens = 4;
 		ySens = 4;
 		zSens = 3.5;
+		doSlew = true;
 	}
 
 	public void midSpeed() {
 		xSens = 2;
 		ySens = 2;
 		zSens = 1.75;
+		doSlew = false;
 	}
 
 	public void slowSpeed() {
 		xSens = .8;
 		ySens = .8;
 		zSens = .5;
+		doSlew = false;
 	}
 
 	public void setTargetAngle(double angle) {
