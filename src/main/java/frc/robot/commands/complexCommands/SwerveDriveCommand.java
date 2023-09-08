@@ -5,6 +5,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 /**
@@ -157,6 +158,7 @@ public class SwerveDriveCommand extends CommandBase {
 		} else {
 			controlMode = ControlMode.FieldCentric;
 		}
+		MessagingSystem.getInstance().addMessage("Control Mode Switched");
 	}
 
 	public void initSendable(SendableBuilder builder) {
