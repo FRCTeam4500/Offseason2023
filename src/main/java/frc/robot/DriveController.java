@@ -9,6 +9,7 @@ import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
+import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
@@ -17,6 +18,7 @@ public class DriveController extends CommandXboxController {
 
 	Intake intake;
 	Arm arm;
+	MessagingSystem messagingSystem;
 	SwerveDrive swerve;
 	SwerveDriveCommand swerveCommand;
 
@@ -31,6 +33,7 @@ public class DriveController extends CommandXboxController {
 		super(JoystickConstants.DRIVER_PORT);
 		intake = Intake.getInstance();
 		arm = Arm.getInstance();
+		messagingSystem = MessagingSystem.getInstance();
 		swerve = SwerveDrive.getInstance();
 		swerveCommand = new SwerveDriveCommand(swerve, this);
 
@@ -76,6 +79,7 @@ public class DriveController extends CommandXboxController {
 
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
 
+		Shuffleboard.getTab("Messaging").add("Messaging System", messagingSystem);
 		Shuffleboard.getTab("Swerve").add("Swerve", swerve);
 		Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
 	}
