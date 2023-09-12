@@ -2,6 +2,7 @@ package frc.robot.utility;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
@@ -16,11 +17,13 @@ public class LogSubsystemInputsTask extends TimerTask {
 	Arm arm;
 	Intake intake;
 	SwerveDrive swerve;
+	MessagingSystem messagingSystem;
 
 	public LogSubsystemInputsTask() {
 		this.swerve = SwerveDrive.getInstance();
 		this.arm = Arm.getInstance();
 		this.intake = Intake.getInstance();
+		this.messagingSystem = MessagingSystem.getInstance();
 	}
 
 	@Override
@@ -28,10 +31,12 @@ public class LogSubsystemInputsTask extends TimerTask {
 		arm.updateInputs(arm.getInputs());
 		intake.updateInputs(intake.getInputs());
 		swerve.updateInputs(swerve.getInputs());
+		messagingSystem.updateInputs(messagingSystem.getInputs());
 
 		Logger.getInstance().processInputs("Arm", arm.getInputs());
 		Logger.getInstance().processInputs("Intake", intake.getInputs());
 		Logger.getInstance().processInputs("Swerve", swerve.getInputs());
+		Logger.getInstance().processInputs("Messaging System", messagingSystem.getInputs());
 		Logger.getInstance().recordOutput("Odometry", swerve.getRobotPose());
 		SwerveModuleState[] states = swerve.getModuleStates();
 		Logger
