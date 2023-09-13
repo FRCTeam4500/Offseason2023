@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.TelemetryConstants;
+import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.utility.LogSubsystemInputsTask;
 import java.util.Timer;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -110,6 +111,8 @@ public class Robot extends LoggedRobot {
 
 	@Override
 	public void autonomousInit() {
+		MessagingSystem.getInstance().enableMessaging();
+		MessagingSystem.getInstance().addMessage("Auto Started");
 		autonomousCommand = robotContainer.getAutonomousCommand();
 
 		// schedule the autonomous command (example)
@@ -125,6 +128,8 @@ public class Robot extends LoggedRobot {
 	/** This function is called once when teleop is enabled. */
 	@Override
 	public void teleopInit() {
+		MessagingSystem.getInstance().enableMessaging();
+		MessagingSystem.getInstance().addMessage("Teleop Started");
 		robotContainer.teleopInit();
 	}
 

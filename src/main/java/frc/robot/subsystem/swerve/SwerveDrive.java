@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.component.AHRSAngleGetterComponent;
+import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.subsystem.vision.Vision;
 
 /**
@@ -294,6 +295,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void resetRobotAngle(double offset) {
 		currentGyroZero = gyro.getAngle() - offset;
+		MessagingSystem.getInstance().addMessage("Swerve -> Reset Gyro");
 	}
 
 	/**

@@ -1,13 +1,13 @@
 package frc.robot.subsystem.messaging;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class MessagingSystem extends SubsystemBase implements MessagingSystemInterface{
     private static MessagingSystem systemInstance;
     private String message;
-    private Timer timer = new Timer();
+    private String newestMessage;
+    private boolean isEnabled;
 
     private MessagingSystemInputsAutoLogged inputs = new MessagingSystemInputsAutoLogged();
 
@@ -16,12 +16,22 @@ public class MessagingSystem extends SubsystemBase implements MessagingSystemInt
     }
 
     private MessagingSystem() {
-        message = "        TIME | MESSAGE";
-        timer.start();
+        message = "MESSAGES APPEAR BELOW";
     }
 
     public void addMessage(String message) {
-        this.message = this.message + "\n" + "Time: " + (double) Math.round(timer.get() * 100) / 100 + " | " + message;
+        if(isEnabled) {
+            newestMessage = message;
+            this.message = this.message + "\n" + newestMessage;
+        }
+    }
+
+    public void enableMessaging(boolean enable) {
+        isEnabled = enable;
+    }
+
+    public void enableMessaging() {
+        isEnabled = true;
     }
 
     public static synchronized MessagingSystem getInstance() {
@@ -32,7 +42,7 @@ public class MessagingSystem extends SubsystemBase implements MessagingSystemInt
 	}
 
     public void updateInputs(MessagingSystemInputs inputs) {
-        inputs.messageString = message;
+        inputs.messageString = newestMessage;
     }
 
     public void initSendable(SendableBuilder builder) {

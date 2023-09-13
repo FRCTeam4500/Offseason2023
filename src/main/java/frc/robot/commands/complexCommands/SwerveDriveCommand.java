@@ -129,6 +129,7 @@ public class SwerveDriveCommand extends CommandBase {
 		ySens = 4;
 		zSens = 3.5;
 		doSlew = true;
+		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Fast");
 	}
 
 	public void midSpeed() {
@@ -143,6 +144,7 @@ public class SwerveDriveCommand extends CommandBase {
 		ySens = .8;
 		zSens = .5;
 		doSlew = false;
+		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Slow");
 	}
 
 	public void setTargetAngle(double angle) {
@@ -155,10 +157,11 @@ public class SwerveDriveCommand extends CommandBase {
 	public void switchControlMode() {
 		if (controlMode == ControlMode.FieldCentric) {
 			controlMode = ControlMode.RobotCentric;
+			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Robot Centric");
 		} else {
 			controlMode = ControlMode.FieldCentric;
+			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Field Centric");
 		}
-		MessagingSystem.getInstance().addMessage("Control Mode Switched");
 	}
 
 	public void initSendable(SendableBuilder builder) {
