@@ -45,17 +45,19 @@ public class TalonComponent extends BaseTalon implements SwerveMotor{
     }
 
     public void configureForSwerve(boolean isInverted, int currentLimit, double kP, double kD, boolean isDriveMotor){
-        configSupplyCurrentLimit(
-			new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1), 
-            50);
-        config_kP(0, kP);
-        config_kI(0, 0);
-        config_kD(0, kD);
-        config_kF(0, 0);
         if (isDriveMotor) {
+            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
+			50);
+            config_kP(0, kP);
+            config_kF(0, 0.047);
             config_IntegralZone(0, 0);
+            setInverted(isInverted);
         } else {
+            setInverted(isInverted);
+            config_kP(0, kP);
             configAllowableClosedloopError(0, 0);
+            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
+			50);
             configClearPositionOnQuadIdx(true, 10);
         }
     }
