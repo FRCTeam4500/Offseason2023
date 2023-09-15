@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
  */
 public class SparkMaxComponent
 	extends CANSparkMax
-	implements GenericMotor {
+	implements SwerveMotor {
 
 	public SparkMaxComponent(int deviceID, MotorType type) {
 		super(deviceID, type);
@@ -47,5 +47,14 @@ public class SparkMaxComponent
 				Units.radiansPerSecondToRotationsPerMinute(velocity),
 				ControlType.kVelocity
 			);
+	}
+
+	public void configureForSwerve(boolean isInverted, int currentLimit, double kP, double kD, boolean isDriveMotor) {
+		setInverted(isInverted);
+        getPIDController().setP(kP);
+        getPIDController().setI(0);
+        getPIDController().setD(kD);
+        getPIDController().setFF(0);
+        setSmartCurrentLimit(currentLimit);
 	}
 }

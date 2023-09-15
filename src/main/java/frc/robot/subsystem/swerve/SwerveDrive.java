@@ -79,7 +79,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				true,
 				false,
 				0.1,
-				0.3
+				0.3,
+				false,
+				false
 			),
 			new SwerveModule(
 				SwerveConstants.DFRPORT,
@@ -88,7 +90,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				false,
 				false,
 				0.1,
-				0.3
+				0.3,
+				false,
+				false
 			),
 			new SwerveModule(
 				SwerveConstants.DBLPORT,
@@ -97,7 +101,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				true,
 				false,
 				0.1,
-				0.3
+				0.3,
+				false,
+				false
 			),
 			new SwerveModule(
 				SwerveConstants.DBRPORT,
@@ -106,7 +112,9 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				false,
 				false,
 				0.1,
-				0.3
+				0.3,
+				false,
+				false
 			),
 		};
 		this.modules = modules;

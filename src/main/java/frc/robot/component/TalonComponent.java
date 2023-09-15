@@ -1,9 +1,10 @@
 package frc.robot.component;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 
-public class TalonComponent extends BaseTalon implements GenericMotor{
+public class TalonComponent extends BaseTalon implements SwerveMotor{
     private double TICKS_PER_RADIAN;
 
     public TalonComponent(int deviceID, String motorModel) {
@@ -41,5 +42,21 @@ public class TalonComponent extends BaseTalon implements GenericMotor{
 
     public double getAngle() {
         return getSelectedSensorPosition() / TICKS_PER_RADIAN;
+    }
+
+    public void configureForSwerve(boolean isInverted, int currentLimit, double kP, double kD, boolean isDriveMotor){
+        configSupplyCurrentLimit(
+			new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1), 
+            50);
+        config_kP(0, kP);
+        config_kI(0, 0);
+        config_kD(0, kD);
+        config_kF(0, 0);
+        if (isDriveMotor) {
+            config_IntegralZone(0, 0);
+        } else {
+            configAllowableClosedloopError(0, 0);
+            configClearPositionOnQuadIdx(true, 10);
+        }
     }
 }

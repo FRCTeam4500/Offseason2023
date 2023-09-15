@@ -1,20 +1,23 @@
 package frc.robot.subsystem.swerve;
 
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.component.SparkMaxComponent;
+import frc.robot.component.SwerveMotor;
 import frc.robot.component.TalonComponent;
 
 /** A class that represents one swerve module on the robot, containing a drive motor and a angle motor */
 public class SwerveModule {
 
 	/** The drive motor of the module. Used to set the velocity of the module */
-	public TalonComponent driveMotor;
+	private SwerveMotor driveMotor;
 	/** The angle motor of the module. Used to set the angle of the module */
-	public TalonComponent angleMotor;
+	private SwerveMotor angleMotor;
 	/** The translation of the swerve module from the center of the robot. Used during kinematics operations */
 	private Translation2d translationFromCenter;
 
@@ -35,28 +38,24 @@ public class SwerveModule {
 		boolean invertDrive,
 		boolean invertAngle,
 		double drivekP,
-		double anglekP
+		double anglekP,
+		boolean neoDrive,
+		boolean neoAngle
 	) {
-		angleMotor = new TalonComponent(angleId, "Talon FX");
-		angleMotor.setInverted(invertAngle);
-		angleMotor.config_kP(0, anglekP);
-		angleMotor.configAllowableClosedloopError(0, 0);
-		angleMotor.configSupplyCurrentLimit(
-			new SupplyCurrentLimitConfiguration(true, 25, 26, 0.1),
-			50
-		);
-		angleMotor.configClearPositionOnQuadIdx(true, 10);
+		if (neoDrive) {
+			driveMotor = new SparkMaxComponent(driveId, MotorType.kBrushless);
+		} else {
+			driveMotor = new TalonComponent(driveId, "Talon FX");
+		}
 
-		driveMotor = new TalonComponent(driveId, "Talon FX");
-		driveMotor.configSupplyCurrentLimit(
-			new SupplyCurrentLimitConfiguration(true, 35, 36, 0.1),
-			50
-		);
-		driveMotor.config_kP(0, drivekP);
-		driveMotor.config_kF(0, 0.047);
-		driveMotor.config_IntegralZone(0, 0);
-		driveMotor.setInverted(invertDrive);
+		if (neoAngle) {
+			angleMotor = new SparkMaxComponent(angleId, MotorType.kBrushless);
+		} else {
+			angleMotor = new TalonComponent(angleId, "Talon FX");
+		}
 
+		driveMotor.configureForSwerve(invertDrive, 35, drivekP, 0, true);
+		angleMotor.configureForSwerve(invertAngle, 25, anglekP, 0, false);
 		this.translationFromCenter = translationToCenter;
 	}
 
