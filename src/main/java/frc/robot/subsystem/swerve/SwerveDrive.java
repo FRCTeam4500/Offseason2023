@@ -153,7 +153,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		);
 		if (vision.hasValidTargets()) {
 			poseEstimator.addVisionMeasurement(
-				vision.getRobotPoseToField().toPose2d(),
+				vision.getRobotPose(),
 				Timer.getFPGATimestamp()
 			);
 		}

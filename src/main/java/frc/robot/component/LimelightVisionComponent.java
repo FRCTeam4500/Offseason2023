@@ -14,9 +14,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.utility.Transform3D;
 
-/**
- * An {@link VisionComponent} wrapper for a Limelight vision processor.
- */
 public class LimelightVisionComponent {
 
 	private NetworkTable table;
@@ -25,8 +22,8 @@ public class LimelightVisionComponent {
 	 * Creates a new VisionComponent component, which is essentially a wrapper
 	 * around the networktable entries modified by a Limelight.
 	 */
-	public LimelightVisionComponent() {
-		table = NetworkTableInstance.getDefault().getTable("limelight");
+	public LimelightVisionComponent(String limelightName) {
+		table = NetworkTableInstance.getDefault().getTable(limelightName);
 		table.getEntry("getpipe").setNumber(0);
 	}
 

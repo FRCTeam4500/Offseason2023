@@ -1,7 +1,6 @@
 package frc.robot.utility;
 
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.subsystem.messaging.MessagingSystem;
 import frc.robot.subsystem.placer.Placer;
 import frc.robot.subsystem.placer.arm.Arm;
@@ -18,12 +17,14 @@ public class LogSubsystemInputsTask extends TimerTask {
 	Intake intake;
 	SwerveDrive swerve;
 	MessagingSystem messagingSystem;
+	Vision vision;
 
 	public LogSubsystemInputsTask() {
 		this.swerve = SwerveDrive.getInstance();
 		this.arm = Arm.getInstance();
 		this.intake = Intake.getInstance();
 		this.messagingSystem = MessagingSystem.getInstance();
+		this.vision = Vision.getInstance();
 	}
 
 	@Override
@@ -32,11 +33,13 @@ public class LogSubsystemInputsTask extends TimerTask {
 		intake.updateInputs(intake.getInputs());
 		swerve.updateInputs(swerve.getInputs());
 		messagingSystem.updateInputs(messagingSystem.getInputs());
+		vision.updateInputs(vision.getInputs());
 
 		Logger.getInstance().processInputs("Arm", arm.getInputs());
 		Logger.getInstance().processInputs("Intake", intake.getInputs());
 		Logger.getInstance().processInputs("Swerve", swerve.getInputs());
 		Logger.getInstance().processInputs("Messaging System", messagingSystem.getInputs());
+		Logger.getInstance().processInputs("Vision", vision.getInputs());
 		Logger.getInstance().recordOutput("Odometry", swerve.getRobotPose());
 		SwerveModuleState[] states = swerve.getModuleStates();
 		Logger
@@ -51,7 +54,5 @@ public class LogSubsystemInputsTask extends TimerTask {
 		Logger
 			.getInstance()
 			.recordOutput("Placer", Placer.getInstance().getMechanism2d());
-		Logger.getInstance().recordOutput("VisionPose", Vision.getInstance().getRobotPoseToAlliance(Alliance.Red));
-		Logger.getInstance().recordOutput("VisionSkew", Vision.getInstance().getSkew());
 	}
 }
