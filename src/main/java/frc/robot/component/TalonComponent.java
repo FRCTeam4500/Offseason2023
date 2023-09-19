@@ -21,7 +21,7 @@ public class TalonComponent extends BaseTalon implements SwerveMotor{
     }
 
     public void setOutput(double targetPercentOutput) {
-        set(ControlMode.PercentOutput, m_handle);
+        set(ControlMode.PercentOutput, targetPercentOutput);
     }
 
     public double getOutput() {
