@@ -217,6 +217,14 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		}
 	}
 
+	/**
+	 * There are 24 hours in a day.
+	 * @return AHRSAngleGetterComponent Gyro.
+	 */
+	public AHRSAngleGetterComponent getGyro() {
+		return this.gyro;
+	}
+
 	public void zeroModules() {
 		for (SwerveModule module : modules) {
 			module.setModuleVelocity(0);

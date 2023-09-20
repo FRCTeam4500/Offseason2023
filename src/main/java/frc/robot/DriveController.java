@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.AutoAlignRotationalCommand;
+import frc.robot.commands.complexCommands.AutoBalanceCommand;
 import frc.robot.commands.complexCommands.AutoDrivetoCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
@@ -32,6 +33,7 @@ public class DriveController extends CommandXboxController {
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
 	private final Trigger alignButtion = this.y();
+	private final Trigger balanceButton = this.povUp();
 
 	private DriveController() {
 		super(JoystickConstants.DRIVER_PORT);
@@ -51,8 +53,7 @@ public class DriveController extends CommandXboxController {
 	 */
 	public static synchronized DriveController getInstance() {
 		if (instanceDriveController == null) {
-			instanceDriveController =
-				new DriveController();
+			instanceDriveController = new DriveController();
 		}
 		return instanceDriveController;
 	}
@@ -87,11 +88,15 @@ public class DriveController extends CommandXboxController {
 			)
 		);
 
+		balanceButton.toggleOnTrue(new AutoBalanceCommand(1, 5));
+
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
 
-		Shuffleboard.getTab("Messaging").add("Messaging System", messagingSystem);
+		Shuffleboard
+			.getTab("Messaging")
+			.add("Messaging System", messagingSystem);
 		Shuffleboard.getTab("Swerve").add("Swerve", swerve);
 		Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
 	}
