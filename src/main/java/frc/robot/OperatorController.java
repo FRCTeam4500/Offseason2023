@@ -13,6 +13,7 @@ import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 import frc.robot.subsystem.placer.arm.Arm;
 import frc.robot.subsystem.placer.intake.Intake;
+import frc.robot.subsystem.vision.Vision;
 
 public class OperatorController extends CommandJoystick {
 
@@ -81,6 +82,7 @@ public class OperatorController extends CommandJoystick {
 
 		Shuffleboard.getTab("Arm and Intake").add("Intake", intake);
 		Shuffleboard.getTab("Arm and Intake").add("Arm", arm);
+		Shuffleboard.getTab("Vision").add("Vision", Vision.getInstance());
 		Shuffleboard
 			.getTab("Arm and Intake")
 			.addString(

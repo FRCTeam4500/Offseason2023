@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
+import frc.robot.commands.complexCommands.AutoLineupCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
@@ -28,6 +29,7 @@ public class DriveController extends CommandXboxController {
 	private final Trigger resetGyroButton = this.a();
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
+	private final Trigger alignButtion = this.y();
 
 	private DriveController() {
 		super(JoystickConstants.DRIVER_PORT);
@@ -74,6 +76,8 @@ public class DriveController extends CommandXboxController {
 				swerveCommand.fastSpeed();
 			})
 		);
+
+		alignButtion.toggleOnTrue(new AutoLineupCommand(0, 1, 1));
 
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 

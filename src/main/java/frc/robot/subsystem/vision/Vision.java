@@ -1,6 +1,8 @@
 package frc.robot.subsystem.vision;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.component.LimelightVisionComponent;
@@ -14,7 +16,8 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	private VisionInputsAutoLogged inputs = new VisionInputsAutoLogged();
 
 	private Vision() {
-		limelights[0] = new LimelightVisionComponent("limelight");
+		limelights[0] = new LimelightVisionComponent("limelight-hehehe");
+		// limelights[1] = new LimelightVisionComponent("limelight-haha");
 	}
 
 	public VisionInputsAutoLogged getInputs() {
@@ -115,5 +118,13 @@ public class Vision extends SubsystemBase implements VisionInterface{
 
 	public LimelightVisionComponent getLimelight(int limelightId) {
 		return limelights[limelightId];
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(), null);
+		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset()), null);
+		// builder.addBooleanProperty("Haha: Valid Targets", () -> hasValidTargets(1), null);
+		// builder.addDoubleProperty("Haha: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(1)), null);
 	}
 }
