@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.subsystem.vision.Vision;
 
-public class AutoLineupCommand extends CommandBase{
+public class AutoAlignHorizontalCommand extends CommandBase{
     private int limelightId;
     private SwerveDrive swerve;
     private Vision vision;
@@ -14,7 +14,7 @@ public class AutoLineupCommand extends CommandBase{
     private int translationThreshold;
     private int timeCorrect;
     private PIDController pid;
-    public AutoLineupCommand(int limelightId, int timeThreshold, int translationThreshold) {
+    public AutoAlignHorizontalCommand(int limelightId, int timeThreshold, int translationThreshold) {
         this.swerve = SwerveDrive.getInstance();
         this.vision = Vision.getInstance();
         this.limelightId = limelightId;

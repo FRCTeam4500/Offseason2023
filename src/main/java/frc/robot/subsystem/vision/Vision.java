@@ -17,7 +17,7 @@ public class Vision extends SubsystemBase implements VisionInterface{
 
 	private Vision() {
 		limelights[0] = new LimelightVisionComponent("limelight-hehehe");
-		// limelights[1] = new LimelightVisionComponent("limelight-haha");
+		setPipeline(0, 1);
 	}
 
 	public VisionInputsAutoLogged getInputs() {
@@ -25,8 +25,8 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	}
 
 	public void updateInputs(VisionInputs inputs) {
-		inputs.horizontalAngleOffset = getHorizontalAngleOffset();
-		inputs.robotPose = getRobotPose();
+		inputs.horizontalAngleOffset = getHorizontalAngleOffset(0);
+		inputs.robotPose = getRobotPose(0);
 	}
 
 	/**
@@ -40,80 +40,40 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		return instanceVision;
 	}
 
-	public double getHorizontalAngleOffset() {
-		return getHorizontalAngleOffset(0);
-	}
-
 	public double getHorizontalAngleOffset(int limelightId) {
 		return limelights[limelightId].getHorizontalOffsetFromCrosshair();
-	}
-
-	public double getVerticalAngleOffset() {
-		return getVerticalAngleOffset(0);
 	}
 
 	public double getVerticalAngleOffset(int limelightId) {
 		return limelights[limelightId].getVerticalOffsetFromCrosshair();
 	}
 
-	public double getTakenArea() {
-		return getTakenArea(0);
-	}
-
 	public double getTakenArea(int limelightId) {
 		return limelights[limelightId].getTargetArea();
-	}
-
-	public double getSkew() {
-		return getSkew(0);
 	}
 
 	public double getSkew(int limelightId) {
 		return limelights[limelightId].getSkew();
 	}
 
-	public Pose2d getRobotPose() {
-		return getRobotPose(0);
-	}
-
 	public Pose2d getRobotPose(int limelightId) {
 		return limelights[limelightId].getRobotPoseToAlliance(DriverStation.getAlliance()).toPose2d();
-	}
-
-	public Pose2d getTargetPose() {
-		return getTargetPose(0);
 	}
 
 	public Pose2d getTargetPose(int limelightId) {
 		return limelights[limelightId].getTargetPoseToRobot().toPose2d();
 	}
 
-	public boolean hasValidTargets() {
-		return hasValidTargets(0);
-	}
-
 	public boolean hasValidTargets(int limelightId) {
 		return limelights[limelightId].hasValidTargets();
-	}
-
-	public void setPipeline(int pipeline) {
-		setPipeline(0, pipeline);;
 	}
 
 	public void setPipeline(int limelightId, int pipeline) {
 		limelights[limelightId].setPipeline(pipeline);
 	}
 
-	public void setCameraMode(CameraMode mode) {
-		setCameraMode(0, mode);;
-	}
-
 	public void setCameraMode(int limelightId, CameraMode mode) {
 		limelights[limelightId].setCameraMode(mode);
-	}
-
-	public LimelightVisionComponent getLimelight() {
-		return getLimelight(0);
 	}
 
 	public LimelightVisionComponent getLimelight(int limelightId) {
@@ -122,9 +82,8 @@ public class Vision extends SubsystemBase implements VisionInterface{
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(), null);
-		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset()), null);
-		// builder.addBooleanProperty("Haha: Valid Targets", () -> hasValidTargets(1), null);
-		// builder.addDoubleProperty("Haha: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(1)), null);
+		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(0), null);
+		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(0)), null);
+		builder.addDoubleProperty("Target Area (%)", () -> getTakenArea(0), null);
 	}
 }
