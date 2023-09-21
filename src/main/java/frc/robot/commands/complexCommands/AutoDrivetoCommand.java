@@ -23,7 +23,12 @@ public class AutoDrivetoCommand extends CommandBase{
     @Override
     public void execute() {
         double area = vision.getTakenArea(limelightId);
-        swerve.driveRobotCentric(pid.calculate(area)/2, 0, 0);
+        if (vision.hasValidTargets(limelightId)) {
+            swerve.driveRobotCentric(pid.calculate(area)/2, 0, 0);
+        } else {
+            swerve.driveRobotCentric(0, 0, 0);
+        }
+        
     }
 
     @Override

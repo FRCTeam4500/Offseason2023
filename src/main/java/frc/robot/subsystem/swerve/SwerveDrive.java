@@ -4,6 +4,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -206,7 +207,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void driveModules(ChassisSpeeds targetChassisSpeeds) {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-			targetChassisSpeeds
+			discretize(targetChassisSpeeds)
 		);
 		SwerveDriveKinematics.desaturateWheelSpeeds(
 			states,
@@ -215,6 +216,17 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		for (int i = 0; i < modules.length; i++) {
 			modules[i].drive(states[i]);
 		}
+	}
+
+	/** Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time */
+	private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) {
+		double vx = originalChassisSpeeds.vxMetersPerSecond;
+		double vy = originalChassisSpeeds.vyMetersPerSecond;
+		double omega = originalChassisSpeeds.omegaRadiansPerSecond;
+		double dt = 0.02; // This should be the time these values will be used, so normally just the loop time
+		Pose2d desiredDeltaPose = new Pose2d(vx * dt, vy * dt, new Rotation2d(omega * dt));
+		Twist2d twist = new Pose2d().log(desiredDeltaPose);
+		return new ChassisSpeeds(twist.dx / dt, twist.dy / dt, twist.dtheta / dt);
 	}
 
 	/**

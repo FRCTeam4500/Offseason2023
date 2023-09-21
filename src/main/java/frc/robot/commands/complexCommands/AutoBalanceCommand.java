@@ -29,7 +29,7 @@ public class AutoBalanceCommand extends CommandBase {
 	@Override
 	public void execute() {
 		double pitch = Math.toDegrees(navx.getPitch());
-		swerve.driveRobotCentric(pid.calculate(pitch) / 30, 0, 0);
+		swerve.driveRobotCentric(-pid.calculate(pitch) / 30, 0, 0);
 		if (Math.abs(pitch) < pitchThreshold) {
 			timesCorrect++;
 		} else {

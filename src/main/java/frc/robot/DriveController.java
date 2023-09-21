@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -32,7 +33,8 @@ public class DriveController extends CommandXboxController {
 	private final Trigger resetGyroButton = this.a();
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
-	private final Trigger alignButtion = this.y();
+	private final Trigger alignButton = this.y();
+	private final Trigger cancelButton = this.start();
 	private final Trigger balanceButton = this.povUp();
 
 	private DriveController() {
@@ -80,13 +82,15 @@ public class DriveController extends CommandXboxController {
 			})
 		);
 
-		alignButtion.toggleOnTrue(
+		alignButton.toggleOnTrue(
 			new SequentialCommandGroup(
 				new AutoAlignRotationalCommand(0, 1, 2),
 				new AutoDrivetoCommand(0),
 				new AutoAlignRotationalCommand(0, 1, 2)
 			)
 		);
+
+		cancelButton.toggleOnTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
 
 		balanceButton.toggleOnTrue(new AutoBalanceCommand(1, 5));
 
