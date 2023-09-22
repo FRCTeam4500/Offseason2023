@@ -19,9 +19,19 @@ public class AutonomousDriveCommand extends CommandBase {
 	private Vision vision;
 	private PIDController translationPID = new PIDController(1, 0, 0);
 	private PIDController rotationPID = new PIDController(1, 0, 0);
+	AutonomousDriveStage stage;
+
+	Pose2d targetPose;
+	Pose2d currentPose;
+	double xSpeed;
+	double ySpeed;
+	double rotationalSpeed;
+	int timesCorrect = 0;
+	boolean finished = false;
 
 	public AutonomousDriveCommand(AutonomousDriveStage... stages) {
 		this.stages = stages;
+		this.stage = stages[0];
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
 	}
@@ -32,39 +42,32 @@ public class AutonomousDriveCommand extends CommandBase {
 
 	@Override
 	public void execute() {
-		Pose2d targetPose;
-		Pose2d currentPose;
-		double xSpeed;
-		double ySpeed;
-		double rotationalSpeed;
-
-		AutonomousDriveStage stage = stages[currentStage];
-		switch (stage.type) {
+		switch (stage.getType()) {
 			case VISION_ALIGN_TARGET_ROTATION:
-				if (vision.hasValidTargets(stage.limelightId)) {
+				if (vision.hasValidTargets(stage.getLimelightId())) {
 					CommandScheduler
 						.getInstance()
 						.schedule(
 							new AutoAlignRotationalCommand(
-								stage.limelightId,
-								stage.timeThreshold,
-								stage.rotationalThreshold
+								stage.getLimelightId(),
+								stage.getTimeThreshold(),
+								stage.getRotationalThreshold()
 							)
 						);
 				} else {
 					break;
 				}
 			case VISION_ALIGN_TARGET_TRANSLATION:
-				if (vision.hasValidTargets(stage.limelightId)) {
+				if (vision.hasValidTargets(stage.getLimelightId())) {
 					CommandScheduler
 						.getInstance()
 						.schedule(
 							new SequentialCommandGroup(
-								new AutoDriveToCommand(stage.limelightId),
+								new AutoDriveToCommand(stage.getLimelightId()),
 								new AutoAlignHorizontalCommand(
-									stage.limelightId,
-									stage.timeThreshold,
-									stage.xThreshold
+									stage.getLimelightId(),
+									stage.getTimeThreshold(),
+									stage.getXThreshold()
 								)
 							)
 						);
@@ -72,7 +75,7 @@ public class AutonomousDriveCommand extends CommandBase {
 					break;
 				}
 			case FOLLOW_POSE_2D_RELATIVE:
-				targetPose = stage.pose;
+				targetPose = stage.getPose();
 				currentPose = swerve.getRobotPose();
 
 				xSpeed =
@@ -94,8 +97,24 @@ public class AutonomousDriveCommand extends CommandBase {
 				swerve.driveRobotCentric(
 					xSpeed / 2,
 					ySpeed / 2,
-					rotationalSpeed / 10
+					rotationalSpeed / 30
 				);
+
+				if (
+					Math.abs(targetPose.getX() - currentPose.getX()) <
+					stage.getXThreshold() &&
+					Math.abs(targetPose.getY() - currentPose.getY()) <
+					stage.getYThreshold() &&
+					Math.abs(
+						targetPose.getRotation().getDegrees() -
+						currentPose.getRotation().getDegrees()
+					) <
+					stage.getRotationalThreshold()
+				) {
+					timesCorrect++;
+				} else {
+					timesCorrect = 0;
+				}
 
 				break;
 			case FOLLOW_POSE_2D_FIELD:
@@ -124,10 +143,45 @@ public class AutonomousDriveCommand extends CommandBase {
 					rotationalSpeed / 10
 				);
 
+				if (
+					Math.abs(targetPose.getX() - currentPose.getX()) <
+					stage.getXThreshold() &&
+					Math.abs(targetPose.getY() - currentPose.getY()) <
+					stage.getYThreshold() &&
+					Math.abs(
+						targetPose.getRotation().getDegrees() -
+						currentPose.getRotation().getDegrees()
+					) <
+					stage.getRotationalThreshold()
+				) {
+					timesCorrect++;
+				} else {
+					timesCorrect = 0;
+				}
+
 				break;
 			default:
 				break;
 		}
+		if (timesCorrect >= stage.getTimeThreshold() * 50) {
+			currentStage++;
+			if (currentStage >= stages.length) {
+				finished = true;
+			} else {
+				stage = stages[currentStage];
+			}
+			timesCorrect = 0;
+		}
+	}
+
+	@Override
+	public boolean isFinished() {
+		return finished;
+	}
+
+	@Override
+	public void end(boolean interrupted) {
+		swerve.driveRobotCentric(0, 0, 0);
 	}
 
 	public enum StageType {
@@ -170,6 +224,10 @@ public class AutonomousDriveCommand extends CommandBase {
 			this.limelightId = limelightId;
 		}
 
+		public int getLimelightId() {
+			return limelightId;
+		}
+
 		public Pose2d getPose() {
 			return pose;
 		}
@@ -186,7 +244,11 @@ public class AutonomousDriveCommand extends CommandBase {
 			return yThreshold;
 		}
 
-		public double getTimeThreshold() {
+		public double getRotationalThreshold() {
+			return rotationalThreshold;
+		}
+
+		public int getTimeThreshold() {
 			return timeThreshold;
 		}
 
