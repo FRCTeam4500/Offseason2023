@@ -137,7 +137,7 @@ public class AutonomousDriveCommand extends CommandBase {
 		FOLLOW_POSE_2D_FIELD,
 	}
 
-	public class AutonomousDriveStage {
+	public static class AutonomousDriveStage {
 
 		private StageType type;
 		private Pose2d pose;
@@ -152,24 +152,6 @@ public class AutonomousDriveCommand extends CommandBase {
 
 		public AutonomousDriveStage(
 			StageType type,
-			double speed,
-			int limelightId,
-			double xThreshold,
-			double yThreshold,
-			double rotationalThreshold,
-			int timeThreshold
-		) {
-			this.type = type;
-			this.speed = speed;
-			this.xThreshold = xThreshold;
-			this.yThreshold = yThreshold;
-			this.rotationalThreshold = rotationalThreshold;
-			this.timeThreshold = timeThreshold;
-			this.limelightId = limelightId;
-		}
-
-		public AutonomousDriveStage(
-			StageType type,
 			Pose2d pose,
 			double speed,
 			int limelightId,
@@ -180,25 +162,6 @@ public class AutonomousDriveCommand extends CommandBase {
 		) {
 			this.pose = pose;
 			this.type = type;
-			this.speed = speed;
-			this.xThreshold = xThreshold;
-			this.yThreshold = yThreshold;
-			this.rotationalThreshold = rotationalThreshold;
-			this.timeThreshold = timeThreshold;
-			this.limelightId = limelightId;
-		}
-
-		public AutonomousDriveStage(
-			Pose2d pose,
-			double speed,
-			int limelightId,
-			double xThreshold,
-			double yThreshold,
-			double rotationalThreshold,
-			int timeThreshold
-		) {
-			this.pose = pose;
-			this.type = StageType.FOLLOW_POSE_2D_RELATIVE;
 			this.speed = speed;
 			this.xThreshold = xThreshold;
 			this.yThreshold = yThreshold;
