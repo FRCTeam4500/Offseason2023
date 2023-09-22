@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.subsystem.vision.Vision;
 import frc.robot.utility.ExtendedMath;
+import javax.lang.model.util.Elements.Origin;
 
 public class AutonomousDriveCommand extends CommandBase {
 
@@ -51,8 +52,8 @@ public class AutonomousDriveCommand extends CommandBase {
 						0,
 						0,
 						ExtendedMath.clamp(
-							-stage.speed,
-							stage.speed,
+							-stage.getSpeed(),
+							stage.getSpeed(),
 							rotationPID.calculate(horizontalAngleOffset) / 2
 						)
 					);
@@ -75,8 +76,8 @@ public class AutonomousDriveCommand extends CommandBase {
 					swerve.driveRobotCentric(
 						0,
 						ExtendedMath.clamp(
-							-stage.speed,
-							stage.speed,
+							-stage.getSpeed(),
+							stage.getSpeed(),
 							translationPID.calculate(horizontalAngleOffset) / 2
 						),
 						0
@@ -95,22 +96,11 @@ public class AutonomousDriveCommand extends CommandBase {
 			case FOLLOW_POSE_2D_RELATIVE:
 				targetPose = stage.getPose();
 				currentPose =
-					new Pose2d(
-						new Translation2d(
-							swerve.getRobotPose().getX() -
-							stage.getOrigin().getX(),
-							swerve.getRobotPose().getY() -
-							stage.getOrigin().getY()
-						),
-						new Rotation2d(
-							swerve.getRobotPose().getRotation().getRadians() -
-							stage.getOrigin().getRotation().getRadians()
-						)
-					);
+					swerve.getRobotPose().relativeTo(stage.getOrigin());
 				xSpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						translationPID.calculate(
 							currentPose.getTranslation().getX(),
 							targetPose.getTranslation().getX()
@@ -118,8 +108,8 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 				ySpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						translationPID.calculate(
 							currentPose.getTranslation().getY(),
 							targetPose.getTranslation().getY()
@@ -128,8 +118,8 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 				rotationalSpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						rotationPID.calculate(
 							currentPose.getRotation().getRadians(),
 							targetPose.getRotation().getRadians()
@@ -157,25 +147,13 @@ public class AutonomousDriveCommand extends CommandBase {
 
 				break;
 			case FOLLOW_POSE_2D_FIELD:
-				targetPose = stage.pose;
-				currentPose =
-					new Pose2d(
-						new Translation2d(
-							swerve.getRobotPose().getX() -
-							stage.getOrigin().getX(),
-							swerve.getRobotPose().getY() -
-							stage.getOrigin().getY()
-						),
-						new Rotation2d(
-							swerve.getRobotPose().getRotation().getRadians() -
-							stage.getOrigin().getRotation().getRadians()
-						)
-					);
+				targetPose = stage.getPose();
+				currentPose = swerve.getRobotPose();
 
 				xSpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						translationPID.calculate(
 							currentPose.getTranslation().getX(),
 							targetPose.getTranslation().getX()
@@ -183,8 +161,8 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 				ySpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						translationPID.calculate(
 							currentPose.getTranslation().getY(),
 							targetPose.getTranslation().getY()
@@ -192,8 +170,8 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 				rotationalSpeed =
 					ExtendedMath.clamp(
-						-stage.speed,
-						stage.speed,
+						-stage.getSpeed(),
+						stage.getSpeed(),
 						rotationPID.calculate(
 							currentPose.getRotation().getRadians(),
 							targetPose.getRotation().getRadians()
@@ -253,6 +231,7 @@ public class AutonomousDriveCommand extends CommandBase {
 		VISION_ALIGN_TARGET_TRANSLATION,
 		FOLLOW_POSE_2D_RELATIVE,
 		FOLLOW_POSE_2D_FIELD,
+		FOLLOW_POSE_2D_UNTIL_VISION_TARGET,
 	}
 
 	public static class AutonomousDriveStage {
