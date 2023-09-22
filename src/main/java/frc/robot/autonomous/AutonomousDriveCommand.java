@@ -103,7 +103,8 @@ public class AutonomousDriveCommand extends CommandBase {
 							stage.getOrigin().getY()
 						),
 						new Rotation2d(
-							swerve.getRobotPose().getRotation().getRadians()
+							swerve.getRobotPose().getRotation().getRadians() -
+							stage.getOrigin().getRotation().getRadians()
 						)
 					);
 				xSpeed =
@@ -166,7 +167,8 @@ public class AutonomousDriveCommand extends CommandBase {
 							stage.getOrigin().getY()
 						),
 						new Rotation2d(
-							swerve.getRobotPose().getRotation().getRadians()
+							swerve.getRobotPose().getRotation().getRadians() -
+							stage.getOrigin().getRotation().getRadians()
 						)
 					);
 
