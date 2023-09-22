@@ -4,13 +4,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.commands.complexCommands.AutoAlignHorizontalCommand;
-import frc.robot.commands.complexCommands.AutoAlignRotationalCommand;
-import frc.robot.commands.complexCommands.AutoDriveToCommand;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.subsystem.vision.Vision;
+import frc.robot.utility.ExtendedMath;
 
 public class AutonomousDriveCommand extends CommandBase {
 
@@ -52,7 +48,11 @@ public class AutonomousDriveCommand extends CommandBase {
 					swerve.driveRobotCentric(
 						0,
 						0,
-						rotationPID.calculate(horizontalAngleOffset) / 10
+						ExtendedMath.clamp(
+							-stage.speed,
+							stage.speed,
+							rotationPID.calculate(horizontalAngleOffset) / 2
+						)
 					);
 					if (
 						Math.abs(horizontalAngleOffset) <
@@ -72,7 +72,11 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 					swerve.driveRobotCentric(
 						0,
-						translationPID.calculate(horizontalAngleOffset) / 10,
+						ExtendedMath.clamp(
+							-stage.speed,
+							stage.speed,
+							translationPID.calculate(horizontalAngleOffset) / 2
+						),
 						0
 					);
 					if (
@@ -91,26 +95,36 @@ public class AutonomousDriveCommand extends CommandBase {
 				currentPose = swerve.getRobotPose();
 
 				xSpeed =
-					translationPID.calculate(
-						currentPose.getTranslation().getX(),
-						targetPose.getTranslation().getX()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						translationPID.calculate(
+							currentPose.getTranslation().getX(),
+							targetPose.getTranslation().getX()
+						)
 					);
 				ySpeed =
-					translationPID.calculate(
-						currentPose.getTranslation().getY(),
-						targetPose.getTranslation().getY()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						translationPID.calculate(
+							currentPose.getTranslation().getY(),
+							targetPose.getTranslation().getY()
+						) /
+						2
 					);
 				rotationalSpeed =
-					rotationPID.calculate(
-						currentPose.getRotation().getRadians(),
-						targetPose.getRotation().getRadians()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						rotationPID.calculate(
+							currentPose.getRotation().getRadians(),
+							targetPose.getRotation().getRadians()
+						) /
+						2
 					);
 
-				swerve.driveRobotCentric(
-					xSpeed / 2,
-					ySpeed / 2,
-					rotationalSpeed / 30
-				);
+				swerve.driveRobotCentric(xSpeed, ySpeed, rotationalSpeed / 3);
 
 				if (
 					Math.abs(targetPose.getX() - currentPose.getX()) <
@@ -134,25 +148,37 @@ public class AutonomousDriveCommand extends CommandBase {
 				currentPose = swerve.getRobotPose();
 
 				xSpeed =
-					translationPID.calculate(
-						currentPose.getTranslation().getX(),
-						targetPose.getTranslation().getX()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						translationPID.calculate(
+							currentPose.getTranslation().getX(),
+							targetPose.getTranslation().getX()
+						)
 					);
 				ySpeed =
-					translationPID.calculate(
-						currentPose.getTranslation().getY(),
-						targetPose.getTranslation().getY()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						translationPID.calculate(
+							currentPose.getTranslation().getY(),
+							targetPose.getTranslation().getY()
+						)
 					);
 				rotationalSpeed =
-					rotationPID.calculate(
-						currentPose.getRotation().getRadians(),
-						targetPose.getRotation().getRadians()
+					ExtendedMath.clamp(
+						-stage.speed,
+						stage.speed,
+						rotationPID.calculate(
+							currentPose.getRotation().getRadians(),
+							targetPose.getRotation().getRadians()
+						)
 					);
 
 				swerve.driveFieldCentric(
 					xSpeed / 2,
 					ySpeed / 2,
-					rotationalSpeed / 10
+					rotationalSpeed / 3
 				);
 
 				if (
