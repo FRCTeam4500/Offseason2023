@@ -2,6 +2,8 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
@@ -92,8 +94,18 @@ public class AutonomousDriveCommand extends CommandBase {
 				}
 			case FOLLOW_POSE_2D_RELATIVE:
 				targetPose = stage.getPose();
-				currentPose = swerve.getRobotPose();
-
+				currentPose =
+					new Pose2d(
+						new Translation2d(
+							swerve.getRobotPose().getX() -
+							stage.getOrigin().getX(),
+							swerve.getRobotPose().getY() -
+							stage.getOrigin().getY()
+						),
+						new Rotation2d(
+							swerve.getRobotPose().getRotation().getRadians()
+						)
+					);
 				xSpeed =
 					ExtendedMath.clamp(
 						-stage.speed,
@@ -145,7 +157,18 @@ public class AutonomousDriveCommand extends CommandBase {
 				break;
 			case FOLLOW_POSE_2D_FIELD:
 				targetPose = stage.pose;
-				currentPose = swerve.getRobotPose();
+				currentPose =
+					new Pose2d(
+						new Translation2d(
+							swerve.getRobotPose().getX() -
+							stage.getOrigin().getX(),
+							swerve.getRobotPose().getY() -
+							stage.getOrigin().getY()
+						),
+						new Rotation2d(
+							swerve.getRobotPose().getRotation().getRadians()
+						)
+					);
 
 				xSpeed =
 					ExtendedMath.clamp(
@@ -207,6 +230,7 @@ public class AutonomousDriveCommand extends CommandBase {
 				finished = true;
 			} else {
 				stage = stages[currentStage];
+				stage.setOrigin(swerve.getRobotPose());
 			}
 			timesCorrect = 0;
 		}
@@ -233,6 +257,7 @@ public class AutonomousDriveCommand extends CommandBase {
 
 		private StageType type;
 		private Pose2d pose;
+		private Pose2d origin;
 
 		private double xThreshold;
 		private double yThreshold;
@@ -292,6 +317,14 @@ public class AutonomousDriveCommand extends CommandBase {
 
 		public double getSpeed() {
 			return speed;
+		}
+
+		public Pose2d getOrigin() {
+			return origin;
+		}
+
+		public void setOrigin(Pose2d origin) {
+			this.origin = origin;
 		}
 	}
 }
