@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.autonomous;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;

@@ -219,14 +219,24 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	}
 
 	/** Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time */
-	private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) {
+	private static ChassisSpeeds discretize(
+		ChassisSpeeds originalChassisSpeeds
+	) {
 		double vx = originalChassisSpeeds.vxMetersPerSecond;
 		double vy = originalChassisSpeeds.vyMetersPerSecond;
 		double omega = originalChassisSpeeds.omegaRadiansPerSecond;
 		double dt = 0.02; // This should be the time these values will be used, so normally just the loop time
-		Pose2d desiredDeltaPose = new Pose2d(vx * dt, vy * dt, new Rotation2d(omega * dt));
+		Pose2d desiredDeltaPose = new Pose2d(
+			vx * dt,
+			vy * dt,
+			new Rotation2d(omega * dt)
+		);
 		Twist2d twist = new Pose2d().log(desiredDeltaPose);
-		return new ChassisSpeeds(twist.dx / dt, twist.dy / dt, twist.dtheta / dt);
+		return new ChassisSpeeds(
+			twist.dx / dt,
+			twist.dy / dt,
+			twist.dtheta / dt
+		);
 	}
 
 	/**
@@ -289,7 +299,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	}
 
 	/**
-	 * Gets the robot's current odometric position
+	 * Gets the robot's current odometric position -- Estimated Using Vision if Possible
 	 * @return the robot's current pose
 	 */
 	public Pose2d getRobotPose() {

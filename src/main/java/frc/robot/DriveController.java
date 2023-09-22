@@ -10,7 +10,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.complexCommands.AutoBalanceCommand;
-import frc.robot.commands.complexCommands.AutoDrivetoCommand;
+import frc.robot.commands.complexCommands.AutoDriveToCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
@@ -85,12 +85,14 @@ public class DriveController extends CommandXboxController {
 		alignButton.toggleOnTrue(
 			new SequentialCommandGroup(
 				new AutoAlignRotationalCommand(0, 1, 2),
-				new AutoDrivetoCommand(0),
+				new AutoDriveToCommand(0),
 				new AutoAlignRotationalCommand(0, 1, 2)
 			)
 		);
 
-		cancelButton.toggleOnTrue(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()));
+		cancelButton.toggleOnTrue(
+			new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+		);
 
 		balanceButton.toggleOnTrue(new AutoBalanceCommand(1, 5));
 
