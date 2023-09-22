@@ -2,6 +2,7 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -45,32 +46,43 @@ public class AutonomousDriveCommand extends CommandBase {
 		switch (stage.getType()) {
 			case VISION_ALIGN_TARGET_ROTATION:
 				if (vision.hasValidTargets(stage.getLimelightId())) {
-					CommandScheduler
-						.getInstance()
-						.schedule(
-							new AutoAlignRotationalCommand(
-								stage.getLimelightId(),
-								stage.getTimeThreshold(),
-								stage.getRotationalThreshold()
-							)
-						);
+					double horizontalAngleOffset = Units.radiansToDegrees(
+						vision.getHorizontalAngleOffset(stage.getLimelightId())
+					);
+					swerve.driveRobotCentric(
+						0,
+						0,
+						rotationPID.calculate(horizontalAngleOffset) / 10
+					);
+					if (
+						Math.abs(horizontalAngleOffset) <
+						stage.getRotationalThreshold()
+					) {
+						timesCorrect++;
+					} else {
+						timesCorrect = 0;
+					}
 				} else {
 					break;
 				}
 			case VISION_ALIGN_TARGET_TRANSLATION:
 				if (vision.hasValidTargets(stage.getLimelightId())) {
-					CommandScheduler
-						.getInstance()
-						.schedule(
-							new SequentialCommandGroup(
-								new AutoDriveToCommand(stage.getLimelightId()),
-								new AutoAlignHorizontalCommand(
-									stage.getLimelightId(),
-									stage.getTimeThreshold(),
-									stage.getXThreshold()
-								)
-							)
-						);
+					double horizontalAngleOffset = Units.radiansToDegrees(
+						vision.getHorizontalAngleOffset(stage.getLimelightId())
+					);
+					swerve.driveRobotCentric(
+						0,
+						translationPID.calculate(horizontalAngleOffset) / 10,
+						0
+					);
+					if (
+						Math.abs(horizontalAngleOffset) <
+						stage.getRotationalThreshold()
+					) {
+						timesCorrect++;
+					} else {
+						timesCorrect = 0;
+					}
 				} else {
 					break;
 				}
