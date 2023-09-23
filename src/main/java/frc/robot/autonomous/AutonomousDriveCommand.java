@@ -2,14 +2,11 @@ package frc.robot.autonomous;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.subsystem.vision.Vision;
 import frc.robot.utility.ExtendedMath;
-import javax.lang.model.util.Elements.Origin;
 
 public class AutonomousDriveCommand extends CommandBase {
 

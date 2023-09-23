@@ -37,7 +37,11 @@ public class TalonComponent extends BaseTalon implements SwerveMotor{
     }
 
     public void setAngle(double targetAngle) {
-        set(ControlMode.Position, targetAngle * TICKS_PER_RADIAN);
+        if (TICKS_PER_RADIAN == 4096 / Math.PI / 2) {
+            set(ControlMode.Position, targetAngle * TICKS_PER_RADIAN);
+        } else {
+            set(ControlMode.MotionMagic, targetAngle * TICKS_PER_RADIAN);
+        }
     }
 
     public double getAngle() {
@@ -55,6 +59,8 @@ public class TalonComponent extends BaseTalon implements SwerveMotor{
         } else {
             setInverted(isInverted);
             config_kP(0, kP);
+            configMotionCruiseVelocity(10000);
+            configMotionAcceleration(10000);
             configAllowableClosedloopError(0, 0);
             configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
 			50);
