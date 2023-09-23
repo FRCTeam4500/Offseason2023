@@ -5,14 +5,14 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystem.swerve.SwerveDrive;
 import frc.robot.subsystem.vision.Vision;
 
-public class AutoDriveToCommand extends CommandBase {
+public class AutoDrivetoCommand extends CommandBase {
 
 	private int limelightId;
 	private SwerveDrive swerve;
 	private Vision vision;
 	private PIDController pid;
 
-	public AutoDriveToCommand(int limelightId) {
+	public AutoDrivetoCommand(int limelightId) {
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
 		this.limelightId = limelightId;

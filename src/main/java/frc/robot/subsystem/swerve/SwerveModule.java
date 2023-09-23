@@ -105,8 +105,8 @@ public class SwerveModule {
 	 */
 	public SwerveModulePosition getModulePosition() {
 		return new SwerveModulePosition(
-			driveMotor.getAngle() *
-			2 * Math.PI * 
+			driveMotor.getAngle() /
+			(2 * Math.PI) * 
 			SwerveConstants.DRIVE_RATIO *
 			SwerveConstants.WHEEL_DIAMETER *
 			Math.PI,
