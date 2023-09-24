@@ -6,7 +6,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.vision.Vision;
-import frc.robot.utilities.ExtendedMath;
+import frc.robot.utilities.HelperMethods;
 
 public class AutonomousDriveCommand extends CommandBase {
 
@@ -48,7 +48,7 @@ public class AutonomousDriveCommand extends CommandBase {
 					swerve.driveRobotCentric(
 						0,
 						0,
-						ExtendedMath.clamp(
+						HelperMethods.clamp(
 							-stage.getSpeed(),
 							stage.getSpeed(),
 							rotationPID.calculate(horizontalAngleOffset) / 2
@@ -72,7 +72,7 @@ public class AutonomousDriveCommand extends CommandBase {
 					);
 					swerve.driveRobotCentric(
 						0,
-						ExtendedMath.clamp(
+						HelperMethods.clamp(
 							-stage.getSpeed(),
 							stage.getSpeed(),
 							translationPID.calculate(horizontalAngleOffset) / 2
@@ -95,7 +95,7 @@ public class AutonomousDriveCommand extends CommandBase {
 				currentPose =
 					swerve.getRobotPose().relativeTo(stage.getOrigin());
 				xSpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						translationPID.calculate(
@@ -104,7 +104,7 @@ public class AutonomousDriveCommand extends CommandBase {
 						)
 					);
 				ySpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						translationPID.calculate(
@@ -114,7 +114,7 @@ public class AutonomousDriveCommand extends CommandBase {
 						2
 					);
 				rotationalSpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						rotationPID.calculate(
@@ -148,7 +148,7 @@ public class AutonomousDriveCommand extends CommandBase {
 				currentPose = swerve.getRobotPose();
 
 				xSpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						translationPID.calculate(
@@ -157,7 +157,7 @@ public class AutonomousDriveCommand extends CommandBase {
 						)
 					);
 				ySpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						translationPID.calculate(
@@ -166,7 +166,7 @@ public class AutonomousDriveCommand extends CommandBase {
 						)
 					);
 				rotationalSpeed =
-					ExtendedMath.clamp(
+					HelperMethods.clamp(
 						-stage.getSpeed(),
 						stage.getSpeed(),
 						rotationPID.calculate(

@@ -19,7 +19,7 @@ import edu.wpi.first.math.geometry.Twist2d;
 
 // Feel free to add any useful math-related functions to this class. Please do not implement any
 // non-static methods.
-public class ExtendedMath {
+public class HelperMethods {
 
 	/**
 	 * Clamps an output between {@code min} and {@code max}. "Clamping" refers to restricting a

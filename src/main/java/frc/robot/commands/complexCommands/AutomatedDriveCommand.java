@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.utilities.ExtendedMath;
+import frc.robot.utilities.HelperMethods;
 
 public class AutomatedDriveCommand extends CommandBase {
 
@@ -115,7 +115,7 @@ public class AutomatedDriveCommand extends CommandBase {
 			relativeRobotPose.getTranslation(),
 			relativeRobotPose.getRotation()
 		);
-		if (ExtendedMath.isClose(
+		if (HelperMethods.isClose(
 				currentTargetPose,
 				robotPoseRel,
 				translationalThreshold,
