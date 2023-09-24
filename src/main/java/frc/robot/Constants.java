@@ -25,6 +25,9 @@ public class Constants {
 		public static final int READY_MIDDLE = 7;
 		public static final int READY_TOP = 8;
 		public static final int SUBSTATION_PICKUP = 10;
+
+		public static final int TILT_INTAKE_UP = 4;
+		public static final int TILT_INTAKE_DOWN = 2;
 	}
 
 	public static class SwerveConstants {

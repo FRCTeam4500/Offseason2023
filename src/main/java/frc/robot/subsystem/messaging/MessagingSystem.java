@@ -7,7 +7,7 @@ public class MessagingSystem extends SubsystemBase implements MessagingSystemInt
     private static MessagingSystem systemInstance;
     private String message;
     private String newestMessage;
-    private boolean isEnabled;
+    private boolean isEnabled = false;
 
     private MessagingSystemInputsAutoLogged inputs = new MessagingSystemInputsAutoLogged();
 

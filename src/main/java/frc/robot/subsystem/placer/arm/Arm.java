@@ -8,24 +8,20 @@ import frc.robot.component.SparkMaxComponent;
 import frc.robot.component.TalonComponent;
 
 public class Arm extends SubsystemBase implements ArmInterface {
-
 	private SparkMaxComponent angleMotor;
 	private TalonComponent extensionMotor;
 	private SparkMaxPIDController anglePIDController;
 	private double targetAngle;
 	private double targetExtension;
-
+	private static Arm instanceArm = null;
 	private ArmInputsAutoLogged inputs = new ArmInputsAutoLogged();
 
+	/** Gets inputs for logging */
 	public ArmInputsAutoLogged getInputs() {
 		return inputs;
 	}
 
-	private static Arm instanceArm = null;
-
-	/**
-	 * Creates a new Arm from Constants
-	 */
+	/** Creates a new arm */
 	private Arm() {
 		angleMotor =
 			new SparkMaxComponent(
@@ -52,10 +48,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		extensionMotor.configPeakOutputReverse(-0.3);
 	}
 
-	/**
-	 * Gets instance of Arm. If the Arm is null, it will create a new one.
-	 * @return Arm type "Arm"
-	 */
+	/** Gets global arm instance*/
 	public static synchronized Arm getInstance() {
 		if (instanceArm == null) {
 			instanceArm = new Arm();
@@ -63,74 +56,49 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		return instanceArm;
 	}
 
-	/**
-	 * Sets the angle of the arm
-	 * @param position The new target angle of the arm, in radians
-	 */
-	public void setAngle(double position) {
-		targetAngle = position;
-		angleMotor.setAngle(position / ArmConstants.ARM_ANGLE_RATIO);
+	/** Sets arm angle */
+	public void setAngle(double angle) {
+		targetAngle = angle;
+		angleMotor.setAngle(angle);
 	}
 
-	/**
-	 * Changes the angle of the arm <p>
-	 * Useful for when things go wrong/debugging
-	 * @param addition how much the current angle should be changed, in radians
-	 */
+	/** Changes arm angle */
 	public void changeAngle(double addition) {
 		setAngle(targetAngle + addition);
 	}
 
-	/**
-	 * Gets the angle of the arm
-	 * @return the current angle of the arm, in radians
-	 */
+	/** Gets arm angle */
 	public double getAngle() {
-		return angleMotor.getAngle()  * ArmConstants.ARM_ANGLE_RATIO;
+		return angleMotor.getAngle();
 	}
 
-	public double getTargetAngle() {
+	/** Gets target arm angle */
+	private double getTargetAngle() {
 		return targetAngle;
 	}
 
-	/**
-	 * Sets the extension of the arm
-	 * @param position the new target extension of the arm, in meters
-	 */
+	/** Sets the arm extension */
 	public void setExtension(double position) {
 		targetExtension = position;
-		extensionMotor.setAngle(
-			position *
-			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO /
-			ArmConstants.ARM_EXTENSION_RATIO
-		);
+		extensionMotor.setAngle(position);
 	}
 
-	/**
-	 * Changes the extension of the arm <p>
-	 * Useful for when things go wrong/debugging
-	 * @param addition how much the current extension should be changed, in meters
-	 */
+	/** Changes arm extension*/
 	public void changeExtension(double addition) {
 		setExtension(targetExtension + addition);
 	}
 
-	/**
-	 * Gets the extension of the arm
-	 * @return the current extension of the arm, in meters
-	 */
+	/** Gets arm extension*/
 	public double getExtension() {
-		return (
-			extensionMotor.getAngle() *
-			ArmConstants.ARM_EXTENSION_RATIO /
-			ArmConstants.ARM_RADIANS_TO_LINEAR_RATIO
-		);
+		return extensionMotor.getAngle();
 	}
 
-	public double getTargetExtension() {
+	/** Gets target arm extension */
+	private double getTargetExtension() {
 		return targetExtension;
 	}
 
+	/** Updates inputs for logging */
 	public void updateInputs(ArmInputs inputs) {
 		inputs.extentionMotorRot = getExtension();
 		inputs.tiltMotorRot = getAngle();
@@ -138,22 +106,9 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty(
-			"Target Angle: ",
-			() -> getTargetAngle(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Target Extension: ",
-			() -> getTargetExtension(),
-			null
-		);
-
+		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(), null);
+		builder.addDoubleProperty("Target Extension: ", () -> getTargetExtension(), null );
 		builder.addDoubleProperty("Current Angle: ", () -> getAngle(), null);
-		builder.addDoubleProperty(
-			"Current Extension: ",
-			() -> getExtension(),
-			null
-		);
+		builder.addDoubleProperty("Current Extension: ", () -> getExtension(), null);
 	}
 }

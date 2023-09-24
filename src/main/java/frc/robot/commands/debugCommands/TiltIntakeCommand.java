@@ -8,8 +8,8 @@ public class TiltIntakeCommand extends CommandBase {
 	private Intake intake;
 	private double tiltChange;
 
-	public TiltIntakeCommand(Intake intake, double tiltChange) {
-		this.intake = intake;
+	public TiltIntakeCommand(double tiltChange) {
+		this.intake = Intake.getInstance();
 		this.tiltChange = tiltChange;
 	}
 

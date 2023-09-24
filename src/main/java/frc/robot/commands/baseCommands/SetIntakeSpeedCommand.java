@@ -20,7 +20,7 @@ public class SetIntakeSpeedCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		intake = Intake.getInstance();
-		gamePiece = Intake.getGamePiece().get();
+		gamePiece = Intake.getGamePiece();
 		switch (intakeMode) {
 			case Place:
 				switch(gamePiece) {

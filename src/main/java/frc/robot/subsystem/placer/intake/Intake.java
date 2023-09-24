@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.component.SparkMaxComponent;
-import java.util.function.Supplier;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
 
@@ -51,10 +50,6 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		anglePIDController.setOutputRange(-.3, .3);
 	}
 
-	/**
-	 * Gets instance of Intake. If the Intake is null, it will create a new one.
-	 * @return
-	 */
 	public static synchronized Intake getInstance() {
 		if (instanceIntake == null) {
 			instanceIntake = new Intake();
@@ -75,30 +70,17 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		return targetOutput;
 	}
 
-	/**
-	 * Sets the angle of the intake
-	 * @param angle the new target angle of the intake, in radians
-	 */
 	public void setAngle(double angle) {
 		targetAngle = angle;
-		angleMotor.setAngle(angle / IntakeConstants.INTAKE_ANGLE_RATIO);
+		angleMotor.setAngle(angle);
 	}
 
-	/**
-	 * Changes the angle of the intake <p>
-	 * Useful for when things go wrong/debugging
-	 * @param addition how much the current angle should be changed, in radians
-	 */
 	public void changeAngle(double addition) {
 		setAngle(getAngle() + addition);
 	}
 
-	/**
-	 * Gets the angle of the intake
-	 * @return the current angle of the intake, in radians
-	 */
 	public double getAngle() {
-		return angleMotor.getAngle() * IntakeConstants.INTAKE_ANGLE_RATIO;
+		return angleMotor.getAngle();
 	}
 
 	public double getTargetAngle() {
@@ -109,8 +91,8 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		Intake.gamePiece = piece;
 	}
 
-	public static Supplier<GamePiece> getGamePiece() {
-		return () -> Intake.gamePiece;
+	public static GamePiece getGamePiece() {
+		return Intake.gamePiece;
 	}
 
 	@Override
@@ -119,32 +101,12 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		inputs.intakeOutput = getOutput();
 	}
 
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty(
-			"Target Angle: ",
-			() -> getTargetAngle(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Target Percent Output: ",
-			() -> getTargetOutput(),
-			null
-		);
-		builder.addDoubleProperty(
-			"Curent Angle: ", 
-			() -> getAngle(), 
-			null
-		);
-		builder.addDoubleProperty(
-			"Current Percent Output: ",
-			() -> getOutput(),
-			null
-		);
-		builder.addStringProperty(
-			"Current Game Piece: ",
-			() -> gamePiece.name(),
-			null
-		);
+	@Override // Used to put items on shuffleboard
+	public void initSendable(SendableBuilder builder) { 
+		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(),null);
+		builder.addDoubleProperty("Target Percent Output: ", () -> getTargetOutput(), null);
+		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), null);
+		builder.addDoubleProperty("Current Percent Output: ", () -> getOutput(), null);
+		builder.addStringProperty("Current Game Piece: ", () -> gamePiece.name(), null);
 	}
 }
