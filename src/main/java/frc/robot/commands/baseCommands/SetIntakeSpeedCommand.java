@@ -3,8 +3,8 @@ package frc.robot.commands.baseCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.EnumConstants.IntakeMode;
+import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.subsystem.placer.intake.Intake;
 
 public class SetIntakeSpeedCommand extends CommandBase {
 

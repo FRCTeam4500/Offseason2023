@@ -16,10 +16,11 @@ import frc.robot.commands.complexCommands.AutoPickupCommand;
 import frc.robot.commands.complexCommands.AutoPlaceCommand;
 import frc.robot.commands.complexCommands.AutomatedDriveCommand;
 import frc.robot.commands.complexCommands.AutomatedDriveCommand.AutoDriveMode;
+import frc.robot.subsystems.placer.arm.Arm;
+import frc.robot.subsystems.placer.intake.Intake;
+import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.commands.complexCommands.ZeroCommand;
-import frc.robot.subsystem.placer.arm.Arm;
-import frc.robot.subsystem.placer.intake.Intake;
-import frc.robot.subsystem.swerve.SwerveDrive;
+
 import java.util.HashMap;
 
 public class Autonomous {

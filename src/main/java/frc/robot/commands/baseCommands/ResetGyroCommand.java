@@ -1,7 +1,7 @@
 package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class ResetGyroCommand extends CommandBase {
 

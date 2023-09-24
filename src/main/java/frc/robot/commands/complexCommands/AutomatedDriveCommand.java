@@ -4,8 +4,8 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.SwerveDrive;
-import frc.robot.utility.ExtendedMath;
+import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.utilities.ExtendedMath;
 
 public class AutomatedDriveCommand extends CommandBase {
 

@@ -2,9 +2,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.Autonomous;
-import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.placer.Placer;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.placer.Placer;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
 

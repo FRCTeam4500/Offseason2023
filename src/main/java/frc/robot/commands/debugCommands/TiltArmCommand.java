@@ -1,7 +1,7 @@
 package frc.robot.commands.debugCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.placer.arm.Arm;
+import frc.robot.subsystems.placer.arm.Arm;
 
 public class TiltArmCommand extends CommandBase {
 

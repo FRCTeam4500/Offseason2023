@@ -2,8 +2,8 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.SwerveDrive;
-import frc.robot.subsystem.vision.Vision;
+import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.vision.Vision;
 
 public class AutoDrivetoCommand extends CommandBase {
 

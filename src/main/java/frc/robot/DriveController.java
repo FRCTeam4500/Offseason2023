@@ -15,8 +15,8 @@ import frc.robot.commands.complexCommands.AutoDrivetoCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
-import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class DriveController extends CommandXboxController {
 

@@ -2,12 +2,12 @@ package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.component.AHRSAngleGetterComponent;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.hardware.Gyro;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoBalanceCommand extends CommandBase {
 
-	private AHRSAngleGetterComponent navx;
+	private Gyro navx;
 	private SwerveDrive swerve;
 	private PIDController pid;
 	private int timeThreshold;

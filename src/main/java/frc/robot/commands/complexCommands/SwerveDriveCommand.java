@@ -6,8 +6,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DriveController;
-import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
  * A swerve command with support for two swerve control modes:
