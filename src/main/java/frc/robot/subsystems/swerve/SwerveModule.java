@@ -61,7 +61,7 @@ public class SwerveModule {
 
 	/**
 	 * Takes in a target state of the module, and sets the motors to meet that state. Should only be called by the drive methods of the SwerveDrive Class
-	 * <p><strong>Note: </strong> the target velocity is multiplied by the cosiine of the distance to the target angle.
+	 * <p><strong>Note: </strong> the target velocity is multiplied by the cosine of the distance to the target angle.
 	 * This means that while the wheel is rotating to its target angle, it will be scaled down proportionally to how far off from the target angle it is
 	 * @param initialTargetState the target state this module should reach
 	 */
@@ -71,7 +71,7 @@ public class SwerveModule {
 			getModuleState().angle
 		);
 		setModuleVelocity(
-			targetState.speedMetersPerSecond *
+			targetState.speedMetersPerSecond * // This is multiplying the drive wheel's velocity by the cosine of how far the modules angle is from where it should be.
 			Math.abs(targetState.angle.minus(getModuleState().angle).getCos())
 		);
 		setModuleAngle(targetState.angle.getRadians());

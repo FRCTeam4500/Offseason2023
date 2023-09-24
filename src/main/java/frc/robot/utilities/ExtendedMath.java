@@ -71,11 +71,7 @@ public class ExtendedMath {
 		}
 	}
 
-	public static double withContinuousDeadzone(
-		double input,
-		double slope,
-		double deadzone
-	) {
+	public static double withContinuousDeadzone(double input, double slope, double deadzone) {
 		if (input <= -deadzone) {
 			return (input + deadzone) * slope;
 		} else if (-deadzone < input && input < deadzone) {
@@ -110,13 +106,9 @@ public class ExtendedMath {
 	 * @param targetAngle  the final angle
 	 * @return the smallest difference and direction between these two angles
 	 */
-	public static double getShortestRadianToTarget(
-		double currentAngle,
-		double targetAngle
-	) {
+	public static double getShortestRadianToTarget(double currentAngle, double targetAngle) {
 		double actualDifference = targetAngle - currentAngle;
-		double shortestDifference =
-			customMod(actualDifference + Math.PI, 2 * Math.PI) - Math.PI;
+		double shortestDifference = customMod(actualDifference + Math.PI, 2 * Math.PI) - Math.PI;
 		return shortestDifference;
 	}
 

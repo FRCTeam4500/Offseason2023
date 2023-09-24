@@ -12,7 +12,6 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.utilities.Transform3D;
 
 public class Limelight {
 
@@ -82,24 +81,6 @@ public class Limelight {
 
 	private void setEntry(String key, Number value) {
 		table.getEntry(key).setNumber(value);
-	}
-
-	@Deprecated
-	private double[] getCameraTranslationEntry() {
-		return table.getEntry("camtran").getDoubleArray(new double[6]);
-	}
-
-	@Deprecated
-	public Transform3D getCameraTransform() {
-		double[] translation = getCameraTranslationEntry();
-		return new Transform3D(
-			translation[0],
-			translation[1],
-			translation[2],
-			translation[3],
-			translation[4],
-			translation[5]
-		);
 	}
 
 	/**

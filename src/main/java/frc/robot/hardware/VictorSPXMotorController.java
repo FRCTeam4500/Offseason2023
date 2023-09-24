@@ -14,7 +14,6 @@ public class VictorSPXMotorController extends VictorSPX {
 	}
 
 	public double getOutput() {
-		//return getMotorOutputPercent();
-		return 0;
+		return getMotorOutputPercent();
 	}
 }

@@ -21,56 +21,21 @@ import frc.robot.subsystems.vision.Vision;
 /**
  * Subsystem class which represents the drivetrain of our robot
  * <p> Used to move the robot chassis
- * <p> Since we are logging,
  */
 public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
-
-	/**
-	 * The gyroscope of the robot. Used to get the absolute angle of the robot relative to its angle on startup
-	 */
-	private Gyro gyro;
-	/**
-	 * An array containing the swerve drive modules of the robot.
-	 * The order of the modules in the array is dependent on the order they are made in the SwerveDrive constructor
-	 */
+	private Gyro gyro;	
 	private SwerveModule[] modules;
-	/**
-	 * An object containing the kinematics of the swerve modules (where they are relative to the center of the robot).
-	 * <p>Used to calulate module states based on a target chassis speeds and vice versa
-	 */
 	private SwerveDriveKinematics kinematics;
-	/**
-	 * An object which calculates the robot's position based on the positions of the swerve modules.
-	 * <p> Used for autonomous driving to correct for errors
-	 */
 	private SwerveDrivePoseEstimator poseEstimator;
-	/**
-	 * The angle of the current zero relative to the angle of the gyroscope. This is in radians
-	 */
+	private static SwerveDrive instanceSwerve;
+	private Vision vision;
 	private double currentGyroZero;
-
-	/**
-	 * The Inputs
-	 */
 	private DriveInputsAutoLogged inputs = new DriveInputsAutoLogged();
 
 	public DriveInputsAutoLogged getInputs() {
 		return inputs;
 	}
 
-	/**
-	 * The instance of the swerve drive. Used to make sure only one swerve drive is created
-	 */
-	private static SwerveDrive instanceSwerve;
-
-	/**
-	 * Instance of Vision
-	 */
-	private Vision vision;
-
-	/**
-	 * Creates a new Swerve Drive with 4 swerve modules, which uses 8 falcon motors. kP of the motors and whether to invert them is set here. Everything else is pulled from constants
-	 */
 	private SwerveDrive() {
 		SwerveModule[] modules = {
 			new SwerveModule(
@@ -218,10 +183,11 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		}
 	}
 
-	/** Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time */
-	private static ChassisSpeeds discretize(
-		ChassisSpeeds originalChassisSpeeds
-	) {
+	/** 
+	 * Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time 
+	 * @see https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
+	*/
+	private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) {
 		double vx = originalChassisSpeeds.vxMetersPerSecond;
 		double vy = originalChassisSpeeds.vyMetersPerSecond;
 		double omega = originalChassisSpeeds.omegaRadiansPerSecond;
@@ -239,12 +205,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		);
 	}
 
-	/**
-	 * There are 24 hours in a day.
-	 * @return AHRSAngleGetterComponent Gyro.
-	 */
 	public Gyro getGyro() {
-		return this.gyro;
+		return gyro;
 	}
 
 	public void zeroModules() {

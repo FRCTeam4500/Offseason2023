@@ -16,8 +16,10 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	private VisionInputsAutoLogged inputs = new VisionInputsAutoLogged();
 
 	private Vision() {
-		limelights[0] = new Limelight("limelight-hehehe");
-		setPipeline(0, 1);
+		limelights[0] = new Limelight("limelight-hehehe"); // Limelight 3, used for april tags
+		limelights[1] = new Limelight("limelight-haha"); // Limelight 2, used for game pieces
+		setPipeline(0, 0);
+		setPipeline(1, 0);
 	}
 
 	public VisionInputsAutoLogged getInputs() {
@@ -29,10 +31,6 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		inputs.robotPose = getRobotPose(0);
 	}
 
-	/**
-	 * Gets the instance of the vision. If the instance doesn't exist, it creates it
-	 * @return the instance of the swerve drive
-	 */
 	public static synchronized Vision getInstance() {
 		if (instanceVision == null) {
 			instanceVision = new Vision();
@@ -60,7 +58,7 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		return limelights[limelightId].getRobotPoseToAlliance(DriverStation.getAlliance()).toPose2d();
 	}
 
-	public Pose2d getTargetPose(int limelightId) {
+	public Pose2d getRelativeTargetPose(int limelightId) {
 		return limelights[limelightId].getTargetPoseToRobot().toPose2d();
 	}
 

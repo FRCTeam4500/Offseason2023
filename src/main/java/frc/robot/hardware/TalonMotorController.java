@@ -64,8 +64,7 @@ public class TalonMotorController extends BaseTalon implements SwerveMotorContro
             configMotionCruiseVelocity(10000);
             configMotionAcceleration(10000);
             configAllowableClosedloopError(0, 0);
-            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
-			50);
+            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1), 50);
             configClearPositionOnQuadIdx(true, 10);
         }
     }
