@@ -10,10 +10,6 @@ package frc.robot.hardware;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI.Port;
 
-/**
- * An {@link Gyro} wrapper for {@link AHRS}.
- * All getters return radians.
- */
 public class Gyro extends AHRS {
 
 	/**
@@ -31,27 +27,23 @@ public class Gyro extends AHRS {
 	 * Gets the absolute angle of the gyro from the angle where power was turned on
 	 * @return the absolute angle of the robot in radians. Counter-Clockwise is positive
 	 */
+	@Override
 	public double getAngle() {
 		return -Math.toRadians(super.getAngle());
 	}
 
-	/**
-	 * Returns the pitch of the robot in radians
-	 * @return the pitch of the robot in radians
-	 */
 	@Override
 	public float getPitch() {
 		return (float) Math.toRadians(super.getPitch());
 	}
 
-	/**
-	 * Returns the roll of the robot in radians
-	 * @return the roll of the robot in radians
-	 */
+	
 	@Override
 	public float getRoll() {
 		return (float) Math.toRadians(super.getRoll());
 	}
 
-	public void reset() {}
+	public void reset() {
+		super.reset();
+	}
 }

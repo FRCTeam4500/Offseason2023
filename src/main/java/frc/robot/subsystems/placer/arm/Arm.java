@@ -16,18 +16,12 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	private static Arm instanceArm = null;
 	private ArmInputsAutoLogged inputs = new ArmInputsAutoLogged();
 
-	/** Gets inputs for logging */
 	public ArmInputsAutoLogged getInputs() {
 		return inputs;
 	}
 
-	/** Creates a new arm */
 	private Arm() {
-		angleMotor =
-			new SparkMaxMotorController(
-				ArmConstants.TILT_MOTOR_ID,
-				ArmConstants.TILT_MOTOR_TYPE
-			);
+		angleMotor = new SparkMaxMotorController(ArmConstants.TILT_MOTOR_ID, ArmConstants.TILT_MOTOR_TYPE);
 		extensionMotor = new TalonMotorController(ArmConstants.WINCH_MOTOR_ID, "Talon SRX");
 
 		angleMotor.setInverted(true);
@@ -48,7 +42,6 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		extensionMotor.configPeakOutputReverse(-0.3);
 	}
 
-	/** Gets global arm instance*/
 	public static synchronized Arm getInstance() {
 		if (instanceArm == null) {
 			instanceArm = new Arm();
@@ -56,49 +49,40 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		return instanceArm;
 	}
 
-	/** Sets arm angle */
 	public void setAngle(double angle) {
 		targetAngle = angle;
 		angleMotor.setAngle(angle);
 	}
 
-	/** Changes arm angle */
 	public void changeAngle(double addition) {
 		setAngle(targetAngle + addition);
 	}
 
-	/** Gets arm angle */
 	public double getAngle() {
 		return angleMotor.getAngle();
 	}
 
-	/** Gets target arm angle */
 	private double getTargetAngle() {
 		return targetAngle;
 	}
 
-	/** Sets the arm extension */
 	public void setExtension(double position) {
 		targetExtension = position;
 		extensionMotor.setAngle(position);
 	}
 
-	/** Changes arm extension*/
 	public void changeExtension(double addition) {
 		setExtension(targetExtension + addition);
 	}
 
-	/** Gets arm extension*/
 	public double getExtension() {
 		return extensionMotor.getAngle();
 	}
 
-	/** Gets target arm extension */
 	private double getTargetExtension() {
 		return targetExtension;
 	}
 
-	/** Updates inputs for logging */
 	public void updateInputs(ArmInputs inputs) {
 		inputs.extentionMotorRot = getExtension();
 		inputs.tiltMotorRot = getAngle();

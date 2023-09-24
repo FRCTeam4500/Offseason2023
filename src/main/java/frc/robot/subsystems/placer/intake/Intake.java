@@ -27,16 +27,8 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	private static Intake instanceIntake = null;
 
 	private Intake() {
-		outputMotor =
-			new SparkMaxMotorController(
-				IntakeConstants.INTAKE_MOTOR_ID,
-				IntakeConstants.INTAKE_MOTOR_TYPE
-			);
-		angleMotor =
-			new SparkMaxMotorController(
-				IntakeConstants.INTAKE_ANGLE_MOTOR_ID,
-				IntakeConstants.ANGLE_MOTOR_TYPE
-			);
+		outputMotor = new SparkMaxMotorController(IntakeConstants.INTAKE_MOTOR_ID,IntakeConstants.INTAKE_MOTOR_TYPE);
+		angleMotor = new SparkMaxMotorController(IntakeConstants.INTAKE_ANGLE_MOTOR_ID, IntakeConstants.ANGLE_MOTOR_TYPE);
 
 		outputMotor.setIdleMode(IdleMode.kBrake);
 
@@ -101,7 +93,7 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		inputs.intakeOutput = getOutput();
 	}
 
-	@Override // Used to put items on shuffleboard
+	@Override 
 	public void initSendable(SendableBuilder builder) { 
 		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(),null);
 		builder.addDoubleProperty("Target Percent Output: ", () -> getTargetOutput(), null);

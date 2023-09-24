@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 
 import frc.robot.hardware.interfaces.SwerveMotorController;
+import frc.robot.subsystems.messaging.MessagingSystem;
 
 public class TalonMotorController extends BaseTalon implements SwerveMotorController{
     private double TICKS_PER_RADIAN;
@@ -19,6 +20,7 @@ public class TalonMotorController extends BaseTalon implements SwerveMotorContro
                 TICKS_PER_RADIAN = 4096 / Math.PI / 2;
                 break;
             default:
+                MessagingSystem.getInstance().addMessage("Can ID #" + deviceID + "'s motor model isn't a valid option");
         }
     }
 

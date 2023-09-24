@@ -4,12 +4,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.util.Units;
 import frc.robot.hardware.interfaces.SwerveMotorController;
 
-/**
- * Wrapper for CANSparkMax motor controller which implements SmartMotorComponent
- */
-public class SparkMaxMotorController
-	extends CANSparkMax
-	implements SwerveMotorController {
+public class SparkMaxMotorController extends CANSparkMax implements SwerveMotorController {
 
 	public SparkMaxMotorController(int deviceID, MotorType type) {
 		super(deviceID, type);
@@ -33,9 +28,7 @@ public class SparkMaxMotorController
 	}
 
 	public double getAngularVelocity() {
-		return Units.rotationsPerMinuteToRadiansPerSecond(
-			getEncoder().getVelocity()
-		);
+		return Units.rotationsPerMinuteToRadiansPerSecond(getEncoder().getVelocity());
 	}
 
 	/**

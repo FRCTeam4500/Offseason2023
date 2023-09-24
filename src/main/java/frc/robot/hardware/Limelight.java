@@ -17,10 +17,6 @@ public class Limelight {
 
 	private NetworkTable table;
 
-	/**
-	 * Creates a new VisionComponent component, which is essentially a wrapper
-	 * around the networktable entries modified by a Limelight.
-	 */
 	public Limelight(String limelightName) {
 		table = NetworkTableInstance.getDefault().getTable(limelightName);
 		table.getEntry("getpipe").setNumber(0);
@@ -85,7 +81,7 @@ public class Limelight {
 
 	/**
 	 * Pose of the robot in Field Coordinates
-	 * @return Transform3D x,y,z pitch,yaw,roll
+	 * @return Pose3d x,y,z pitch,yaw,roll
 	 */
 	public Pose3d getRobotPoseToField() {
 		double[] raw = table.getEntry("botpose").getDoubleArray(new double[6]);
@@ -103,32 +99,19 @@ public class Limelight {
 	 */
 	public Pose3d getRobotPoseToAlliance(Alliance alliance) {
 		double[] raw;
-		switch (alliance) {
-			case Red:
-				raw =
-					table
-						.getEntry("botpose_wpired")
-						.getDoubleArray(new double[6]);
-				return new Pose3d(
-					raw[0],
-					raw[1],
-					raw[2],
-					new Rotation3d(raw[3], raw[4], raw[5])
-				);
-			case Blue:
-				raw =
-					table
-						.getEntry("botpose_wpiblue")
-						.getDoubleArray(new double[6]);
-				return new Pose3d(
-					raw[0],
-					raw[1],
-					raw[2],
-					new Rotation3d(raw[3], raw[4], raw[5])
-				);
-			default:
-				return null;
+		String allianceString;
+		if (alliance.name() != null) {
+			allianceString = alliance.name();
+		} else {
+			return null;
 		}
+		raw = table.getEntry(allianceString).getDoubleArray(new double[6]);
+		return new Pose3d(
+			raw[0],
+			raw[1],
+			raw[2],
+			new Rotation3d(raw[3], raw[4], raw[5])
+		);
 	}
 
 	/**
@@ -195,11 +178,7 @@ public class Limelight {
 		);
 	}
 
-	/**
-	 * Target ID
-	 * @return id of target :)
-	 */
-	public int getTargetId() {
+	public int getTargetTagId() {
 		return (int) table.getEntry("tid").getInteger(0);
 	}
 }
