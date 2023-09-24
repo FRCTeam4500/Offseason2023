@@ -8,13 +8,13 @@ public class ResetGyroCommand extends CommandBase {
 	private SwerveDrive swerve;
 	private double offset;
 
-	public ResetGyroCommand(SwerveDrive swerve, double degreeOffset) {
-		this.swerve = swerve;
+	public ResetGyroCommand(double degreeOffset) {
+		this.swerve = SwerveDrive.getInstance();
 		this.offset = degreeOffset;
 	}
 
-	public ResetGyroCommand(SwerveDrive swerve) {
-		this.swerve = swerve;
+	public ResetGyroCommand() {
+		this.swerve = SwerveDrive.getInstance();
 		offset = 0;
 	}
 

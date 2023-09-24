@@ -85,9 +85,9 @@ public class Autonomous {
 			new AutoPlaceCommand(ArmPosition.Mid)
 		);
 
-		autoCommandMap.put("resetGyro", new ResetGyroCommand(swerve));
+		autoCommandMap.put("resetGyro", new ResetGyroCommand());
 
-		autoCommandMap.put("reverseGyro", new ResetGyroCommand(swerve, 180));
+		autoCommandMap.put("reverseGyro", new ResetGyroCommand(180));
 
 		autoCommandMap.put(
 			"pickupCone",

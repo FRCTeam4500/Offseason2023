@@ -30,7 +30,8 @@ public class OperatorController extends CommandJoystick {
 
 	private OperatorController() {
 		super(JoystickConstants.OPERATOR_PORT);
-		setControllerButtons();
+		setButtons();
+		addToShuffleBoard();
 	}
 
 	public static synchronized OperatorController getInstance() {
@@ -41,7 +42,7 @@ public class OperatorController extends CommandJoystick {
 		return instanceOperatorController;
 	}
 
-	public void setControllerButtons() {
+	public void setButtons() {
 		tiltUpButton.toggleOnTrue(new TiltIntakeCommand(1));
 		tiltDownButton.toggleOnTrue(new TiltIntakeCommand(-1));
 
@@ -58,7 +59,9 @@ public class OperatorController extends CommandJoystick {
 
 		placeButton.toggleOnTrue(new PlaceCommand());
 		placeButton.toggleOnFalse(new ZeroCommand());
+	}
 
+	public void addToShuffleBoard() {
 		Shuffleboard.getTab("Arm and Intake").add("Intake", Intake.getInstance());
 		Shuffleboard.getTab("Arm and Intake").add("Arm", Arm.getInstance());
 		Shuffleboard.getTab("Vision").add("Vision", Vision.getInstance());

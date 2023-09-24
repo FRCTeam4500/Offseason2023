@@ -1,13 +1,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.autonomous.paths.TestPath1;
+import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.complexCommands.AutoBalanceCommand;
@@ -16,16 +16,10 @@ import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.placer.arm.Arm;
-import frc.robot.subsystem.placer.intake.Intake;
 import frc.robot.subsystem.swerve.SwerveDrive;
 
 public class DriveController extends CommandXboxController {
 
-	Intake intake;
-	Arm arm;
-	MessagingSystem messagingSystem;
-	SwerveDrive swerve;
 	SwerveDriveCommand swerveCommand;
 
 	private static DriveController instanceDriveController = null;
@@ -41,20 +35,10 @@ public class DriveController extends CommandXboxController {
 
 	private DriveController() {
 		super(JoystickConstants.DRIVER_PORT);
-		intake = Intake.getInstance();
-		arm = Arm.getInstance();
-		messagingSystem = MessagingSystem.getInstance();
-		swerve = SwerveDrive.getInstance();
-		swerveCommand = new SwerveDriveCommand(swerve, this);
-
-		setSwerveButtons();
+		setButtons();
+		addToShuffleBoard();
 	}
 
-	/**
-	 * Creates a new instance of the controller. If the controller is null, it will create a new one.
-	 * Should be called first before getIntstance() to ensure that the controller is not null.
-	 * @return controller type "DriveController"
-	 */
 	public static synchronized DriveController getInstance() {
 		if (instanceDriveController == null) {
 			instanceDriveController = new DriveController();
@@ -62,27 +46,16 @@ public class DriveController extends CommandXboxController {
 		return instanceDriveController;
 	}
 
-	public void setSwerveButtons() {
-		swerveCommand = new SwerveDriveCommand(swerve, this);
-		swerve.setDefaultCommand(swerveCommand);
+	public void setButtons() {
+		swerveCommand = new SwerveDriveCommand();
+		SwerveDrive.getInstance().setDefaultCommand(swerveCommand);
 
-		switchDriveModeButton.toggleOnTrue(
-			new InstantCommand(() -> {
-				swerveCommand.switchControlMode();
-			})
-		);
-		resetGyroButton.toggleOnTrue(new ResetGyroCommand(swerve));
+		switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.switchControlMode()));
 
-		slowModeButton.toggleOnTrue(
-			new InstantCommand(() -> {
-				swerveCommand.slowSpeed();
-			})
-		);
-		slowModeButton.toggleOnFalse(
-			new InstantCommand(() -> {
-				swerveCommand.fastSpeed();
-			})
-		);
+		resetGyroButton.toggleOnTrue(new ResetGyroCommand());
+
+		slowModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.slowSpeed()));
+		slowModeButton.toggleOnFalse(new InstantCommand(() -> swerveCommand.fastSpeed()));
 
 		alignButton.toggleOnTrue(
 			new SequentialCommandGroup(
@@ -92,22 +65,20 @@ public class DriveController extends CommandXboxController {
 			)
 		);
 
-		cancelButton.toggleOnTrue(
-			new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
-		);
+		cancelButton.toggleOnTrue(new CancellationCommand());
 
 		balanceButton.toggleOnTrue(new AutoBalanceCommand(1, 5));
 
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
-
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
 
 		autoTestButton.toggleOnTrue(TestPath1.getPathCommand());
+	}
 
-		Shuffleboard
-			.getTab("Messaging")
-			.add("Messaging System", messagingSystem);
-		Shuffleboard.getTab("Swerve").add("Swerve", swerve);
+	public void addToShuffleBoard() {
+		Shuffleboard.getTab("Messaging").add("Messaging System", MessagingSystem.getInstance());
+		Shuffleboard.getTab("Swerve").add("Swerve", SwerveDrive.getInstance());
 		Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
+
 	}
 }

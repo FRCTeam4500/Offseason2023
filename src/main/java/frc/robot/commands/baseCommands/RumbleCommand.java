@@ -3,6 +3,7 @@ package frc.robot.commands.baseCommands;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandGenericHID;
+import frc.robot.DriveController;
 
 public class RumbleCommand extends CommandBase {
 
@@ -15,8 +16,8 @@ public class RumbleCommand extends CommandBase {
 	 * @param controller the controller to make rumble
 	 * @param time the time it should rumble for, in seconds
 	 */
-	public RumbleCommand(CommandGenericHID controller, double time) {
-		this.controller = controller;
+	public RumbleCommand(double time) {
+		this.controller = DriveController.getInstance();
 		this.time = 50 * time; // 50 is how many times execute is called per second.
 	}
 
