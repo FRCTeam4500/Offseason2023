@@ -82,6 +82,6 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	public void initSendable(SendableBuilder builder) {
 		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(0), null);
 		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(0)), null);
-		builder.addDoubleProperty("Target Area (%)", () -> getTakenArea(0), null);
+		builder.addDoubleProperty("Hehehe: Target Area (%)", () -> getTakenArea(0), null);
 	}
 }

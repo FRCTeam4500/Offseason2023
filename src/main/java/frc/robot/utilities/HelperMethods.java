@@ -13,12 +13,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 
 /**
- * This is a simple container for math functions which are useful, but are not included in the
- * standard {@link Math} class.
+ * This is a simple container for methods which are useful
  */
-
-// Feel free to add any useful math-related functions to this class. Please do not implement any
-// non-static methods.
 public class HelperMethods {
 
 	/**

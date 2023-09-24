@@ -8,8 +8,8 @@ public class TiltArmCommand extends CommandBase {
 	private Arm arm;
 	private double tiltChange;
 
-	public TiltArmCommand(Arm arm, double tiltChange) {
-		this.arm = arm;
+	public TiltArmCommand(double tiltChange) {
+		this.arm = Arm.getInstance();
 		this.tiltChange = tiltChange;
 	}
 
