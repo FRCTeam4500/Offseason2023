@@ -36,34 +36,34 @@ public class SetArmAndIntakeCommand extends CommandBase {
 
 		switch(position) {
 			case Start:
-				targetWinchPosition = ArmConstants.ARM_RETRACT;
+				targetWinchPosition = ArmConstants.ARM_EXTENSION_ZERO;
 				targetArmAngle = 0;
-				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_ANGLE;
+				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_TILT;
 				break;
 			case Zero:
-				targetWinchPosition = ArmConstants.ARM_RETRACT;
-				targetArmAngle = ArmConstants.ARM_ZERO_ANGLE;
-				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_ANGLE;
+				targetWinchPosition = ArmConstants.ARM_EXTENSION_ZERO;
+				targetArmAngle = ArmConstants.ARM_TILT_PLACE;
+				targetIntakeAngle = IntakeConstants.INTAKE_ZERO_TILT;
 				break;
 			case Bot:
-				targetWinchPosition = ArmConstants.ARM_PICKUP;
-				targetArmAngle = ArmConstants.ARM_GROUND_ANGLE;
-				targetIntakeAngle = IntakeConstants.INTAKE_BOT_ANGLE;
-				break;
+				// targetWinchPosition = ArmConstants.ARM_PICKUP;
+				// targetArmAngle = ArmConstants.ARM_GROUND_ANGLE;
+				// targetIntakeAngle = IntakeConstants.INTAKE_BOT_ANGLE;
+				// break;
 			case Mid:
-				targetWinchPosition = ArmConstants.ARM_PLACE_MID;
-				targetArmAngle = ArmConstants.ARM_PLACE_ANGLE;
-				targetIntakeAngle = IntakeConstants.INTAKE_TOP_CONE_PLACE_ANGLE;
+				targetWinchPosition = ArmConstants.ARM_EXTENTION_MIDDLE;
+				targetArmAngle = ArmConstants.ARM_TILT_PLACE;
+				targetIntakeAngle = IntakeConstants.INTAKE_PLACE_ANGLE;
 				break;
 			case Top:
-				targetWinchPosition = ArmConstants.ARM_PLACE_TOP;
-				targetArmAngle = ArmConstants.ARM_LAUNCH_ANGLE;
-				targetIntakeAngle = IntakeConstants.INTAKE_LAUNCHING_ANGLE;
+				targetWinchPosition = ArmConstants.ARM_EXTENTION_HIGH;
+				targetArmAngle = ArmConstants.ARM_TILT_PLACE;
+				targetIntakeAngle = IntakeConstants.INTAKE_HIGH_ANGLE;
 				break;
 			case Sub:
-				targetWinchPosition = ArmConstants.ARM_PLACE_TOP;
-				targetArmAngle = ArmConstants.ARM_HIGH_SUBSTATION_ANGLE;
-				targetIntakeAngle = IntakeConstants.INTAKE_HIGH_SUBSTATION_ANGLE;
+				targetWinchPosition = ArmConstants.ARM_EXTENTION_SUBSTATION;
+				targetArmAngle = ArmConstants.ARM_TILT_SUBSTATION;
+				targetIntakeAngle = IntakeConstants.INTAKE_PLACE_ANGLE;
 				break;
 		}
 		arm.setExtension(targetWinchPosition);

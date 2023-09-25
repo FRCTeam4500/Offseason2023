@@ -47,7 +47,7 @@ public class DriveController extends CommandXboxController {
 	}
 
 	public void setButtons() {
-		swerveCommand = new SwerveDriveCommand();
+		swerveCommand = new SwerveDriveCommand(this);
 		SwerveDrive.getInstance().setDefaultCommand(swerveCommand);
 
 		switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.switchControlMode()));

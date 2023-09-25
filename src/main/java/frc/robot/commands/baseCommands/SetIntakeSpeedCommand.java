@@ -24,8 +24,8 @@ public class SetIntakeSpeedCommand extends CommandBase {
 		switch (intakeMode) {
 			case Place:
 				switch(gamePiece) {
-					case Cone: rawTargetSpeed = IntakeConstants.INTAKE_CUBE_SPEED; break;
-					case Cube: rawTargetSpeed = IntakeConstants.INTAKE_CONE_SPEED; break;
+					case Cone: rawTargetSpeed = IntakeConstants.OUTTAKE_CONE_SPEED; break;
+					case Cube: rawTargetSpeed = IntakeConstants.OUTTAKE_CUBE_SPEED; break;
 					case Nothing: rawTargetSpeed = 0; break;
 				}
 				Intake.setGamePiece(GamePiece.Nothing);

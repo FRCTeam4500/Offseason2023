@@ -83,50 +83,19 @@ public class Constants {
 		/** The CAN ID of the arm winch motor */
 		public static final int WINCH_MOTOR_ID = 15;
 
-		/** The ratio between rotations of the arm and the rotations of the arm angle motor <p> Output shaft rotations / motor rotations */
-		public static final double ARM_ANGLE_RATIO = 5. / 5346;
-		/** The ratio between rotations of the arm extension shaft and the rotations of the arm extension motor <p> Output shaft rotations / motor rotations */
-		public static final double ARM_EXTENSION_RATIO = 1. / 35;
-		/** The ratio between radians turned by the arm sproket and meters extended by the arm <p> Sproket radians / meters extended */
-		public static final double ARM_RADIANS_TO_LINEAR_RATIO =
-			1 / (0.20955 / (Math.PI * 2));
 
-		/** The angle the arm must be at to pickup game pieces from the high substation <p> Units are radians */
-		public static final double ARM_HIGH_SUBSTATION_ANGLE =
-			-3 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to place at the middle level <p> Units are radians */
-		public static final double ARM_PLACE_ANGLE =
-			-6 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to launch a cone onto the top node <p> Units are radians */
-		public static final double ARM_LAUNCH_ANGLE =
-			1 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to pickup game pieces from the ground <p> Units are radians */
-		public static final double ARM_GROUND_ANGLE =
-			-43 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm will go to while traveling <p> Units are radians */
-		public static final double ARM_ZERO_ANGLE =
-			-10 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to launch a tilted cone onto the middle node <p> Units are radians*/
-		public static final double ARM_PLACE_TILTED_CONE_ANGLE = 0;
+		public static final double ARM_EXTENSION_ZERO = 0.0;
+		/** Arm val new hehe	 */
+		public static final double ARM_EXTENTION_MIDDLE = 4.78;
+		/** Arm ext High */
+		public static final double ARM_EXTENTION_HIGH = 17.00;
+		/** Arm ext Substation */
+		public static final double ARM_EXTENTION_SUBSTATION = 8.62;
+		/** Arm tilt Substation */
+		public static final double ARM_TILT_SUBSTATION = -52.51;
+		/** Arm tilt Placing */
+		public static final double ARM_TILT_PLACE = -10;
 
-		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are meters */
-		public static final double ARM_PLACE_TOP = ticksToMeters(10900.0);
-		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are meters */
-		public static final double ARM_PLACE_MID = ticksToMeters(3229);
-		/** The extension the arm must have to pickup a game piece from the ground <p> Units are meters */
-		public static final double ARM_PICKUP = ticksToMeters(4324);
-		/** The extension the arm must have to place a tilted cone on the middle node <p> Units are meters */
-		public static final double ARM_PLACE_TILTED_CONE_MID = ticksToMeters(
-			5000
-		);
-		/** The minimun distance the arm must be from its target value to stop trying to reach the value <p> Units are meters */
-		public static final double ARM_WINCH_THRESHOLD = ticksToMeters(250);
-		/** The extension the arm will have while traveling <p> Units are meters */
-		public static final double ARM_RETRACT = 0;
-
-		public static double ticksToMeters(double ticks) {
-			return ticks * (.009525 * 22) / (4096 * 35);
-		}
 	}
 
 	public static class IntakeConstants {
@@ -151,26 +120,14 @@ public class Constants {
 		/** The motor type of the intake angle motor */
 		public static final MotorType ANGLE_MOTOR_TYPE = MotorType.kBrushless;
 
-		/** The angle the intake must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_BOT_ANGLE =
-			-7 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to pickup games pieces from the high substation <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_HIGH_SUBSTATION_ANGLE =
-			-25 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TOP_CONE_PLACE_ANGLE =
-			-18.4 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TILTED_CONE_ANGLE =
-			-23.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_ZERO_ANGLE =
-			-5.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_LAUNCHING_ANGLE =
-			-15.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The ratio between rotations of the intake and the rotations of the intake angle motor <p> Output shaft rotations / motor rotations*/
-		public static final double INTAKE_ANGLE_RATIO = 144. / 15125;
+		/* NEW VALUES WOW */
+		
+		/** NEW Intake angle hehe max val */
+		public static final double INTAKE_PLACE_ANGLE = -140;
+		/** NEW Intake angle hehe high only wow */
+		public static final double INTAKE_HIGH_ANGLE = -70;
+
+		public static final double INTAKE_ZERO_TILT = -27;
 	}
 
 	public static class EnumConstants {
