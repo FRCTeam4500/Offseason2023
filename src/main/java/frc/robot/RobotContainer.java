@@ -7,17 +7,15 @@ import frc.robot.subsystems.placer.Placer;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
+	private final Autonomous autonomous;
+	private final MessagingSystem messaging;
 
-	private final DriveController driveStick = DriveController.getInstance();
-	private final OperatorController controlJoystick = OperatorController.getInstance();
-	private final Autonomous autonomous = Autonomous.getInstance();
-	private final Placer placer = Placer.getInstance();
-	private final MessagingSystem messaging = MessagingSystem.getInstance();
-
-	public RobotContainer() {}
-
-	public Command getAutonomousCommand() {
-		return autonomous.getAutonCommand();
+	public RobotContainer() {
+		DriveController.getInstance();
+		OperatorController.getInstance();
+		Placer.getInstance();
+		autonomous = Autonomous.getInstance();
+		messaging = MessagingSystem.getInstance();
 	}
 
 	public void autonomousInit() {
