@@ -2,6 +2,7 @@ package frc.robot.subsystems.placer.intake;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMax.SoftLimitDirection;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,8 +28,8 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	private static Intake instanceIntake = null;
 
 	private Intake() {
-		outputMotor = new SparkMaxMotorController(IntakeConstants.INTAKE_MOTOR_ID,IntakeConstants.INTAKE_MOTOR_TYPE);
-		angleMotor = new SparkMaxMotorController(IntakeConstants.INTAKE_ANGLE_MOTOR_ID, IntakeConstants.ANGLE_MOTOR_TYPE);
+		outputMotor = new SparkMaxMotorController(IntakeConstants.OUTPUT_MOTOR_ID, MotorType.kBrushless);
+		angleMotor = new SparkMaxMotorController(IntakeConstants.ANGLE_MOTOR_ID, MotorType.kBrushless);
 
 		outputMotor.setIdleMode(IdleMode.kBrake);
 

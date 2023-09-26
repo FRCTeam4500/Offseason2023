@@ -1,6 +1,8 @@
 package frc.robot.subsystems.placer.arm;
 
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
@@ -21,8 +23,8 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	}
 
 	private Arm() {
-		angleMotor = new SparkMaxMotorController(ArmConstants.TILT_MOTOR_ID, ArmConstants.TILT_MOTOR_TYPE);
-		extensionMotor = new TalonMotorController(ArmConstants.WINCH_MOTOR_ID, "Talon SRX");
+		angleMotor = new SparkMaxMotorController(ArmConstants.ANGLE_MOTOR_ID, MotorType.kBrushless);
+		extensionMotor = new TalonMotorController(ArmConstants.EXTENSION_MOTOR_ID, "Talon SRX");
 
 		angleMotor.setInverted(true);
 
