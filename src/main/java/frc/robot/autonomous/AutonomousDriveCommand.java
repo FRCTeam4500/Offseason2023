@@ -29,6 +29,7 @@ public class AutonomousDriveCommand extends CommandBase {
 	public AutonomousDriveCommand(AutonomousDriveStage... stages) {
 		this.stages = stages;
 		this.stage = stages[0];
+		this.targetPose = stage.pose;
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
 	}
