@@ -2,8 +2,6 @@ package frc.robot.autonomous;
 
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -12,10 +10,10 @@ import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
+import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
+import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.complexCommands.AutoPickupCommand;
 import frc.robot.commands.complexCommands.AutoPlaceCommand;
-import frc.robot.commands.complexCommands.AutomatedDriveCommand;
-import frc.robot.commands.complexCommands.AutomatedDriveCommand.AutoDriveMode;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -100,18 +98,17 @@ public class Autonomous {
 			new AutoPickupCommand(IntakeMode.PickupCube)
 		);
 
-		autonChooser.setDefaultOption(
-			"Auto Driving Test",
-			new AutomatedDriveCommand(
-				swerve,
-				AutoDriveMode.kRelative,
-				0.1,
-				0.1,
-				1,
-				new Pose2d(2, 0, new Rotation2d()),
-				new Pose2d(0, 0, new Rotation2d())
-			)
+		autonChooser.setDefaultOption("No auto", null);
+
+		autonChooser.addOption(
+			"Align Horizontal", 
+			new AutoAlignHorizontalCommand(0)
 		);
+
+		autonChooser.addOption(
+			"Align Rotational", 
+			new AutoAlignRotationalCommand(0));
+
 		autonChooser.addOption(
 			"Blue Bottom: 2 Piece Top",
 			autoBuilder.fullAuto(AutoConstants.BlueBotRedTop2PieceTopAuto)

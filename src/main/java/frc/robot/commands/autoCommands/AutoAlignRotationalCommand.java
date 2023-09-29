@@ -1,4 +1,4 @@
-package frc.robot.commands.complexCommands;
+package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
@@ -6,28 +6,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.vision.Vision;
 
-public class AutoAlignHorizontalCommand extends CommandBase {
+public class AutoAlignRotationalCommand extends CommandBase {
 
 	private int limelightId;
 	private SwerveDrive swerve;
 	private Vision vision;
-	private int timeThreshold;
-	private double translationThreshold;
-	private int timeCorrect;
 	private PIDController pid;
+	private double timeThreshold;
+	private double rotationalThreshold;
+	private int timesCorrect;
 
-	public AutoAlignHorizontalCommand(
-		int limelightId,
-		int timeThreshold,
-		double translationThreshold
+	public AutoAlignRotationalCommand(
+		int limelightId
 	) {
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
 		this.limelightId = limelightId;
-		this.timeThreshold = timeThreshold;
-		this.timeCorrect = 0;
-		this.translationThreshold = translationThreshold;
 		this.pid = new PIDController(1, 0, 0);
+		timeThreshold = 0.5;
+		rotationalThreshold = 1;
+		this.timesCorrect = 0;
 		addRequirements(swerve, vision);
 		pid.reset();
 		pid.setSetpoint(0);
@@ -40,19 +38,19 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 		);
 		swerve.driveRobotCentric(
 			0,
-			pid.calculate(horizontalAngleOffset) / 10,
-			0
+			0,
+			pid.calculate(horizontalAngleOffset) / 10
 		);
-		if (Math.abs(horizontalAngleOffset) < translationThreshold) {
-			timeCorrect++;
+		if (Math.abs(horizontalAngleOffset) < rotationalThreshold) {
+			timesCorrect++;
 		} else {
-			timeCorrect = 0;
+			timesCorrect = 0;
 		}
 	}
 
 	@Override
 	public boolean isFinished() {
-		return timeCorrect >= timeThreshold * 50;
+		return timesCorrect >= timeThreshold * 50;
 	}
 
 	@Override

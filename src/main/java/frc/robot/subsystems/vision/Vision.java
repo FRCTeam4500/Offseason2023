@@ -16,7 +16,7 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	private VisionInputsAutoLogged inputs = new VisionInputsAutoLogged();
 
 	private Vision() {
-		limelights[0] = new Limelight("limelight-hehehe"); // Limelight 3, used for april tags
+		limelights[0] = new Limelight("limelight-hehehe"); // Limelight 3, used for april tags and reflective tape
 		limelights[1] = new Limelight("limelight-haha"); // Limelight 2, used for game pieces
 		setPipeline(0, 0);
 		setPipeline(1, 0);
@@ -83,5 +83,10 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(0), null);
 		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(0)), null);
 		builder.addDoubleProperty("Hehehe: Target Area (%)", () -> getTakenArea(0), null);
+		
+		builder.addBooleanProperty("Haha: Valid Targets", () -> hasValidTargets(1), null);
+		builder.addDoubleProperty("Haha: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(1)), null);
+		builder.addDoubleProperty("Haha: Target Area (%)", () -> getTakenArea(1), null);
+
 	}
 }
