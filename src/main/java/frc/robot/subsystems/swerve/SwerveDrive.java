@@ -90,7 +90,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		poseEstimator =
 			new SwerveDrivePoseEstimator(
 				kinematics,
-				new Rotation2d(gyro.getAngle()),
+				gyro.getRotation2d(),
 				getModulePositions(),
 				new Pose2d()
 			);
@@ -114,7 +114,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	@Override
 	public void periodic() {
 		poseEstimator.update(
-			new Rotation2d(gyro.getAngle()),
+			gyro.getRotation2d(),
 			getModulePositions()
 		);
 		if (vision.hasValidTargets(0)) {
@@ -274,8 +274,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void resetPose(Pose2d newPose) {
 		poseEstimator.resetPosition(
-			new Rotation2d(gyro.getAngle()),
-			getModulePositions(),
+		gyro.getRotation2d(),
+		getModulePositions(),
 			newPose
 		);
 	}
