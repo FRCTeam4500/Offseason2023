@@ -185,16 +185,18 @@ public class Constants {
 		}
 	
 		public static enum VisionTarget {
-			AprilTag(0, 0),
-			ReflectiveTape(0, 1),
-			GamePiece(1, 0);
+			AprilTag(0, 0, 0),
+			ReflectiveTape(0, 1, 0),
+			GamePiece(1, 0, 7);
 
 			public int limelightId;
 			public int pipeline;
+			public double setpoint;
 
-			private VisionTarget(int limelightId, int pipeline) {
+			private VisionTarget(int limelightId, int pipeline, double setpoint) {
 				this.limelightId = limelightId;
 				this.pipeline = pipeline;
+				this.setpoint = setpoint;
 			}
 		}
 	}

@@ -21,6 +21,7 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 	private double horizontalAngleOffset;
 	private VisionTarget target;
 
+	/** Moves horizontally to line up with a vision target */
 	public AutoAlignHorizontalCommand(
 		VisionTarget targetType
 	) {
@@ -36,13 +37,14 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		pid.reset();
-		pid.setSetpoint(0);
+		pid.setSetpoint(target.setpoint);
+		pid.setTolerance(translationThreshold);
 		timeCorrect = 0;
 		vision.setPipeline(target.limelightId, target.pipeline);
-		if (!vision.hasValidTargets(target.limelightId)) { // If there are no valid targets, we let the driver know and then end this command
-			CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
+		if (!vision.hasValidTargets(target.limelightId)) {
 			MessagingSystem.getInstance().addMessage("A " + getName() + "was scheduled, but there were no valid targets!");
-			end(false);
+            CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
+            CommandScheduler.getInstance().cancel(this);
 		}
 		horizontalAngleOffset = Units.radiansToDegrees(
 			vision.getHorizontalAngleOffset(target.limelightId)
@@ -59,7 +61,7 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 			pid.calculate(horizontalAngleOffset) / 10,
 			0
 		);
-		if (Math.abs(horizontalAngleOffset) < translationThreshold) {
+		if (pid.atSetpoint()) {
 			timeCorrect++;
 		} else {
 			timeCorrect = 0;

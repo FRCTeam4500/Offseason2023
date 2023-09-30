@@ -21,6 +21,7 @@ public class AutoAlignRotationalCommand extends CommandBase {
 	private double horizontalAngleOffset;
 	private VisionTarget target;
 
+	/** Rotates to line up with a vision target */
 	public AutoAlignRotationalCommand(VisionTarget targetType
 	) {
 		this.swerve = SwerveDrive.getInstance();
@@ -35,13 +36,14 @@ public class AutoAlignRotationalCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		pid.reset();
-		pid.setSetpoint(0);
+		pid.setSetpoint(target.setpoint);
+		pid.setTolerance(rotationalThreshold);
 		timeCorrect = 0;
 		vision.setPipeline(target.limelightId, target.pipeline);;
-		if (!vision.hasValidTargets(target.limelightId)) { // If there are no valid targets, we let the driver know and then end this command
-			CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
+		if (!vision.hasValidTargets(target.limelightId)) { 
 			MessagingSystem.getInstance().addMessage("A " + getName() + "was scheduled, but there were no valid targets!");
-			end(false);
+            CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
+            CommandScheduler.getInstance().cancel(this);
 		}
 		horizontalAngleOffset = Units.radiansToDegrees(
 			vision.getHorizontalAngleOffset(target.limelightId)
@@ -58,7 +60,7 @@ public class AutoAlignRotationalCommand extends CommandBase {
 			0,
 			pid.calculate(horizontalAngleOffset) / 10
 		);
-		if (Math.abs(horizontalAngleOffset) < rotationalThreshold) {
+		if (pid.atSetpoint()) {
 			timeCorrect++;
 		} else {
 			timeCorrect = 0;
