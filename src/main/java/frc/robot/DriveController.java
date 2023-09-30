@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
-import frc.robot.commands.complexCommands.AutoBalanceCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
@@ -24,8 +24,8 @@ public class DriveController extends CommandXboxController {
 	private final Trigger resetGyroButton = this.a();
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
+	private final Trigger gamePieceAlignButton = this.y();
 	private final Trigger cancelButton = this.start();
-	private final Trigger balanceButton = this.povUp();
 
 	private DriveController() {
 		super(JoystickConstants.DRIVER_PORT);
@@ -53,10 +53,10 @@ public class DriveController extends CommandXboxController {
 
 		cancelButton.toggleOnTrue(new CancellationCommand());
 
-		balanceButton.toggleOnTrue(new AutoBalanceCommand(1, 5));
-
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
+
+		gamePieceAlignButton.toggleOnTrue(new AutoAlignRotationalCommand(0));
 	}
 	public void addToShuffleBoard() {
 		Shuffleboard.getTab("Messaging").add("Messaging System", MessagingSystem.getInstance());

@@ -3,6 +3,7 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.vision.Vision;
 
@@ -25,10 +26,15 @@ public class AutoAlignRotationalCommand extends CommandBase {
 		this.pid = new PIDController(1, 0, 0);
 		timeThreshold = 0.5;
 		rotationalThreshold = 1;
-		this.timesCorrect = 0;
 		addRequirements(swerve, vision);
+	}
+
+	@Override
+	public void initialize() {
 		pid.reset();
 		pid.setSetpoint(0);
+		timesCorrect = 0;
+		vision.getLimelight(limelightId).setPipeline(VisionConstants.GAME_PIECE_PIPELINE);
 	}
 
 	@Override

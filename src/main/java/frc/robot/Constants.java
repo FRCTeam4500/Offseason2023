@@ -179,6 +179,12 @@ public class Constants {
 		}
 	}
 
+	public static class VisionConstants {
+		public static final int GAME_PIECE_PIPELINE = 0; // TODO: Change pipeline numbers
+		public static final int REFLECTION_PIPELINE = 1;
+		public static final int APRIL_TAG_PIPELINE = 0;
+	}
+
 	public static class AutoConstants {
 		/** The maximum velocity the robot will travel at during auto <p> Units are meters per second*/
 		public static final double AUTO_MAX_SPEED = 2;
