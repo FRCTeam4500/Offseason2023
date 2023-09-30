@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
+import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
@@ -102,12 +103,12 @@ public class Autonomous {
 
 		autonChooser.addOption(
 			"Align Horizontal", 
-			new AutoAlignHorizontalCommand(0)
+			new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape)
 		);
 
 		autonChooser.addOption(
 			"Align Rotational", 
-			new AutoAlignRotationalCommand(0));
+			new AutoAlignRotationalCommand(VisionTarget.GamePiece));
 
 		autonChooser.addOption(
 			"Blue Bottom: 2 Piece Top",

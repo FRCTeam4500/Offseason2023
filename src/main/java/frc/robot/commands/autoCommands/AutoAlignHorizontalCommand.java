@@ -2,45 +2,57 @@ package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.VisionConstants;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Constants.EnumConstants.VisionTarget;
+import frc.robot.commands.baseCommands.RumbleCommand;
+import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.vision.Vision;
 
 public class AutoAlignHorizontalCommand extends CommandBase {
-
-	private int limelightId;
 	private SwerveDrive swerve;
 	private Vision vision;
 	private double timeThreshold;
 	private double translationThreshold;
 	private int timeCorrect;
 	private PIDController pid;
+	private double horizontalAngleOffset;
+	private VisionTarget target;
 
 	public AutoAlignHorizontalCommand(
-		int limelightId
+		VisionTarget targetType
 	) {
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
-		this.limelightId = limelightId;
+		target = targetType;
 		timeThreshold = 0.5;
 		translationThreshold = 1;
 		this.pid = new PIDController(1, 0, 0);
 		addRequirements(swerve, vision);
 	}
-
+	
 	@Override
 	public void initialize() {
 		pid.reset();
 		pid.setSetpoint(0);
 		timeCorrect = 0;
-		vision.getLimelight(limelightId).setPipeline(VisionConstants.REFLECTION_PIPELINE);
+		vision.setPipeline(target.limelightId, target.pipeline);
+		if (!vision.hasValidTargets(target.limelightId)) { // If there are no valid targets, we let the driver know and then end this command
+			CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
+			MessagingSystem.getInstance().addMessage("A " + getName() + "was scheduled, but there were no valid targets!");
+			end(false);
+		}
+		horizontalAngleOffset = Units.radiansToDegrees(
+			vision.getHorizontalAngleOffset(target.limelightId)
+		);
 	}
 
 	@Override
 	public void execute() {
-		double horizontalAngleOffset = Units.radiansToDegrees(
-			vision.getHorizontalAngleOffset(limelightId)
+		horizontalAngleOffset = Units.radiansToDegrees(
+			vision.getHorizontalAngleOffset(target.limelightId)
 		);
 		swerve.driveRobotCentric(
 			0,
@@ -62,5 +74,11 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		swerve.driveRobotCentric(0, 0, 0);
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		builder.addStringProperty("Limelight Used", () -> vision.getLimelight(target.limelightId).getName(), null);
+		builder.addDoubleProperty("Time Correct (Seconds)", () -> timeCorrect / 50., null);
 	}
 }

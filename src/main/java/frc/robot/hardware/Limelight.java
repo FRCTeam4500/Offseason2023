@@ -14,12 +14,17 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class Limelight {
-
 	private NetworkTable table;
+	private String name;
 
 	public Limelight(String limelightName) {
+		name = limelightName;
 		table = NetworkTableInstance.getDefault().getTable(limelightName);
 		table.getEntry("getpipe").setNumber(0);
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public enum CameraMode {

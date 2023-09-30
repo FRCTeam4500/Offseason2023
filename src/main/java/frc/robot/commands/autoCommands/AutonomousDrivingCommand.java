@@ -6,6 +6,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.EnumConstants.AutoDriveMode;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.utilities.HelperMethods;
 
@@ -70,12 +71,6 @@ public class AutonomousDrivingCommand extends CommandBase{
         builder.addDoubleProperty("Target Y", () -> targetRelativePose.getY(), null);
         builder.addDoubleProperty("Target Z", () -> targetRelativePose.getRotation().getDegrees(), null);
 
-    }
-
-    public enum AutoDriveMode {
-        AprilTagAlign,
-        GamePieceAlign,
-        RelativePoseAlign
     }
 
     public static class AutoDriveStage {

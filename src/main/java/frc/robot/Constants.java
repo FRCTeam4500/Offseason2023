@@ -177,12 +177,26 @@ public class Constants {
 
 			public double getIntakeOutput() {return intakeOutput;}
 		}
-	}
+	
+		public static enum AutoDriveMode {
+			AprilTagAlign,
+			GamePieceAlign,
+			RelativePoseAlign
+		}
+	
+		public static enum VisionTarget {
+			AprilTag(0, 0),
+			ReflectiveTape(0, 1),
+			GamePiece(1, 0);
 
-	public static class VisionConstants {
-		public static final int GAME_PIECE_PIPELINE = 0; // TODO: Change pipeline numbers
-		public static final int REFLECTION_PIPELINE = 1;
-		public static final int APRIL_TAG_PIPELINE = 0;
+			public int limelightId;
+			public int pipeline;
+
+			private VisionTarget(int limelightId, int pipeline) {
+				this.limelightId = limelightId;
+				this.pipeline = pipeline;
+			}
+		}
 	}
 
 	public static class AutoConstants {
