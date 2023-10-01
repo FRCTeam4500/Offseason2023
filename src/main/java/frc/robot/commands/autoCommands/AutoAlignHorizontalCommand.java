@@ -2,7 +2,6 @@ package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.EnumConstants.VisionTarget;
@@ -76,11 +75,5 @@ public class AutoAlignHorizontalCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		swerve.driveRobotCentric(0, 0, 0);
-	}
-
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addStringProperty("Limelight Used", () -> vision.getLimelight(target.limelightId).getName(), null);
-		builder.addDoubleProperty("Time Correct (Seconds)", () -> timeCorrect / 50., null);
 	}
 }

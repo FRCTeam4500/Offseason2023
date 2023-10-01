@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.EnumConstants.VisionTarget;
+import frc.robot.commands.autoCommands.AutoAlignCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
@@ -60,8 +61,9 @@ public class DriveController extends CommandXboxController {
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
 
-		gamePieceAlignButton.toggleOnTrue(new AutoAlignRotationalCommand(VisionTarget.GamePiece));
-		placeAlignButton.toggleOnTrue(new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape));
+		gamePieceAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.GamePiece));
+		placeAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.ReflectiveTape));
+		substationAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.AprilTag));
 	}
 
 	public void addToShuffleBoard() {

@@ -54,6 +54,10 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		return limelights[limelightId].getSkew();
 	}
 
+	public int getTagId(int limelightId) {
+		return limelights[limelightId].getTargetTagId();
+	}
+
 	public Pose2d getRobotPose(int limelightId) {
 		return limelights[limelightId].getRobotPoseToAlliance(DriverStation.getAlliance()).toPose2d();
 	}
@@ -73,6 +77,7 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	public void setCameraMode(int limelightId, CameraMode mode) {
 		limelights[limelightId].setCameraMode(mode);
 	}
+
 
 	public Limelight getLimelight(int limelightId) {
 		return limelights[limelightId];
