@@ -30,16 +30,6 @@ public class TrajectoryUtilities {
         return trajectory;
     }
 
-    public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName, Rotation2d endRotation) {
-        SwerveDrive swerve = SwerveDrive.getInstance();
-        Trajectory path = getDeployedTrajectory(trajectoryName);
-        ProfiledPIDController anglePID = new ProfiledPIDController(4, 0, 0, new Constraints(SwerveConstants.MAX_ROTATIONAL_SPEED, SwerveConstants.MAX_ROTATIONAL_ACCELERATION));
-        anglePID.enableContinuousInput(-Math.PI, Math.PI);
-        Supplier<Rotation2d> rotation = () -> endRotation;
-        return new SwerveControllerCommand(path, swerve::getRobotPose, swerve.getKinematics(), new PIDController(1, 0, 0), new PIDController(1, 0, 0), anglePID, rotation, swerve::driveModules, swerve)
-            .andThen(() -> swerve.driveRobotCentric(0, 0, 0));
-    }
-
     public static SequentialCommandGroup generateSwervePathFollowingCommand(Trajectory trajectory, Rotation2d endRotation) {
         SwerveDrive swerve = SwerveDrive.getInstance();
         ProfiledPIDController anglePID = new ProfiledPIDController(4, 0, 0, new Constraints(SwerveConstants.MAX_ROTATIONAL_SPEED, SwerveConstants.MAX_ROTATIONAL_ACCELERATION));
@@ -49,13 +39,17 @@ public class TrajectoryUtilities {
             .andThen(() -> swerve.driveRobotCentric(0, 0, 0));
     }
 
+    public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName, Rotation2d endRotation) {
+        Trajectory path = getDeployedTrajectory(trajectoryName);
+        return generateSwervePathFollowingCommand(path, endRotation);
+    }
+
     public static SequentialCommandGroup generateSwervePathFollowingCommand(Trajectory trajectory) {
         Rotation2d rotation = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation();
         return generateSwervePathFollowingCommand(trajectory, rotation);
     }
 
     public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName) {
-        Rotation2d rotation = getDeployedTrajectory(trajectoryName).getStates().get(getDeployedTrajectory(trajectoryName).getStates().size() - 1).poseMeters.getRotation();
-        return generateSwervePathFollowingCommand(trajectoryName, rotation);
+        return generateSwervePathFollowingCommand(getDeployedTrajectory(trajectoryName));
     }
 }
