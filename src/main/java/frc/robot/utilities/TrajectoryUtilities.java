@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class TrajectoryUtilities {
@@ -25,6 +26,7 @@ public class TrajectoryUtilities {
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         } catch(IOException ex) {
+            MessagingSystem.getInstance().addMessage("Couldn't open the trajectory: " + trajectoryName);
             DriverStation.reportError("Unable to open trajectory: " + trajectoryName, ex.getStackTrace());
         }
         return trajectory;
@@ -40,16 +42,22 @@ public class TrajectoryUtilities {
     }
 
     public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName, Rotation2d endRotation) {
-        Trajectory path = getDeployedTrajectory(trajectoryName);
-        return generateSwervePathFollowingCommand(path, endRotation);
+        return generateSwervePathFollowingCommand(getDeployedTrajectory(trajectoryName), endRotation);
     }
 
     public static SequentialCommandGroup generateSwervePathFollowingCommand(Trajectory trajectory) {
-        Rotation2d rotation = trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation();
-        return generateSwervePathFollowingCommand(trajectory, rotation);
+        return generateSwervePathFollowingCommand(trajectory, getLastRotation(trajectory));
     }
 
     public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName) {
         return generateSwervePathFollowingCommand(getDeployedTrajectory(trajectoryName));
+    }
+
+    public static Rotation2d getLastRotation(Trajectory trajectory) {
+        return trajectory.getStates().get(trajectory.getStates().size() - 1).poseMeters.getRotation();
+    }
+
+    public static Rotation2d getLastRotation(String trajectoryString) {
+        return getLastRotation(getDeployedTrajectory(trajectoryString));
     }
 }

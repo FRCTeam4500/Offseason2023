@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.commands.autoCommands.AutoAlignCommand;
-import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
-import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
