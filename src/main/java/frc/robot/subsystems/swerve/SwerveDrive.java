@@ -174,6 +174,10 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
 			discretize(targetChassisSpeeds)
 		);
+		driveModules(states);
+	}
+
+	public void driveModules(SwerveModuleState[] states) {
 		SwerveDriveKinematics.desaturateWheelSpeeds(
 			states,
 			SwerveConstants.MAX_LINEAR_SPEED
@@ -250,6 +254,10 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			positions[i] = modules[i].getModulePosition();
 		}
 		return positions;
+	}
+
+	public SwerveDriveKinematics getKinematics() {
+		return kinematics;
 	}
 
 	/**
