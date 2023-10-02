@@ -10,6 +10,7 @@ import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.autonomous.routines.TestAuto;
+import frc.robot.autonomous.routines.TestAuto2;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
@@ -103,6 +104,8 @@ public class Autonomous {
 		autonChooser.setDefaultOption("No auto", null);
 
 		autonChooser.addOption("Pathweaver Test", new TestAuto());
+
+		autonChooser.addOption("Timed Drive Test", new TestAuto2());
 
 		autonChooser.addOption(
 			"Align Horizontal", 
