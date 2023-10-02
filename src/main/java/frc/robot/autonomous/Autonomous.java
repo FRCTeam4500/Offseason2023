@@ -10,24 +10,24 @@ import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.autonomous.routines.TestAuto;
-import frc.robot.commands.baseCommands.ResetGyroCommand;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
+import frc.robot.commands.baseCommands.ResetGyroCommand;
+import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.complexCommands.AutoPickupCommand;
 import frc.robot.commands.complexCommands.AutoPlaceCommand;
+import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.commands.complexCommands.ZeroCommand;
-
+import frc.robot.subsystems.swervydwervy.Swerve;
 import java.util.HashMap;
 
 public class Autonomous {
 
 	private static Autonomous autonomous = null;
 
-	SwerveDrive swerve;
+	Swerve swerve;
 	Arm arm;
 	Intake intake;
 
@@ -46,11 +46,11 @@ public class Autonomous {
 		intake = Intake.getInstance();
 		this.autoBuilder =
 			new SwerveAutoBuilder(
-				swerve::getRobotPose,
-				swerve::resetPose,
+				swerve::getPoseMeters,
+				swerve::resetOdometry,
 				new PIDConstants(5, 0, 0),
 				new PIDConstants(4, 0, 0),
-				swerve::driveModules,
+				swerve::drive,
 				autoCommandMap,
 				swerve
 			);
@@ -105,13 +105,14 @@ public class Autonomous {
 		autonChooser.addOption("Pathweaver Test", new TestAuto());
 
 		autonChooser.addOption(
-			"Align Horizontal", 
+			"Align Horizontal",
 			new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape)
 		);
 
 		autonChooser.addOption(
-			"Align Rotational", 
-			new AutoAlignRotationalCommand(VisionTarget.GamePiece));
+			"Align Rotational",
+			new AutoAlignRotationalCommand(VisionTarget.GamePiece)
+		);
 
 		autonChooser.addOption(
 			"Blue Bottom: 2 Piece Top",

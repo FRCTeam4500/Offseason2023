@@ -390,6 +390,24 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 	}
 
 	/**
+	 * Drive the robot with given chassis speeds using open-loop
+	 * velocity control.
+	 *
+	 * @param chassisSpeeds speeds the desired chassis speeds
+	 */
+	public void drive(ChassisSpeeds chassisSpeeds) {
+		SwerveModuleState[] swerveModuleStates = getSwerveModuleStates(
+			chassisSpeeds.vxMetersPerSecond,
+			chassisSpeeds.vyMetersPerSecond,
+			chassisSpeeds.omegaRadiansPerSecond,
+			true
+		);
+		for (int i = 0; i < 4; i++) {
+			swerveModules[i].setDesiredState(swerveModuleStates[i], true);
+		}
+	}
+
+	/**
 	 * Move the robot with given x, y, and rotational velocities using closed-loop
 	 * velocity control.
 	 *
