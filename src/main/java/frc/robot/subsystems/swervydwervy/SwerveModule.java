@@ -41,7 +41,19 @@ public class SwerveModule {
 		driveDeadbandMetersPerSecond = 0.05;
 		driveMaximumMetersPerSecond = 5.;
 		this.wheelLocationMeters = wheelLocationMeters;
+		setUpMotors();
 		resetDriveEncoder();
+	}
+
+	public void setUpMotors() {
+		angleMotor.configureForSwerve(false, 25, 0.3, 0, false);
+		driveMotor.configureForSwerve(
+			(wheelLocationMeters.getY() > 0) ? true : false,
+			25,
+			0.1,
+			0,
+			true
+		);
 	}
 
 	public double getMaxSpeedMetersPerSecond() {
