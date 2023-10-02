@@ -41,7 +41,7 @@ public class Autonomous {
 	private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
 
 	private Autonomous() {
-		swerve = SwerveDrive.getInstance();
+		swerve = Swerve.getInstance();
 		arm = Arm.getInstance();
 		intake = Intake.getInstance();
 		this.autoBuilder =

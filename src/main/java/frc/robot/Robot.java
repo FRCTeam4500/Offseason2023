@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.TelemetryConstants;
 import frc.robot.utilities.LogSubsystemInputsTask;
-
 import java.util.Timer;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -88,7 +87,7 @@ public class Robot extends LoggedRobot {
 	public void autonomousInit() {
 		robotContainer.autonomousInit();
 	}
-	
+
 	@Override
 	public void autonomousPeriodic() {}
 
