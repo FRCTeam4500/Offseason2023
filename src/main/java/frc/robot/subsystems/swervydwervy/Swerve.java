@@ -372,10 +372,7 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
      * 
      * @see https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
      */
-    private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) { // TODO: USE
-        double vx = originalChassisSpeeds.vxMetersPerSecond;
-        double vy = originalChassisSpeeds.vyMetersPerSecond;
-        double omega = originalChassisSpeeds.omegaRadiansPerSecond;
+    private static ChassisSpeeds discretize(double vx, double vy, double omega) { // TODO: Check if Needs Use
         double dt = 0.02; // This should be the time these values will be used, so normally just the loop
                           // time
         Pose2d desiredDeltaPose = new Pose2d(
