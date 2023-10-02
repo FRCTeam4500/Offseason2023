@@ -6,6 +6,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DriveController;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swervydwervy.Swerve;
 
@@ -86,11 +87,13 @@ public class SwervyDwervyCommand extends CommandBase {
     }
 
     private void moveFieldCentric(double x, double y, double w) {
-        swerve.drive(y, x, w, true);
+        swerve.drive(y * SwerveConstants.MAX_LINEAR_SPEED, x * SwerveConstants.MAX_LINEAR_SPEED,
+                w * SwerveConstants.MAX_ROTATIONAL_SPEED, true); // Convert from Percents to m/s
     }
 
     private void moveRobotCentric(double x, double y, double w) {
-        swerve.drive(y, x, w, false);
+        swerve.drive(y * SwerveConstants.MAX_LINEAR_SPEED, x * SwerveConstants.MAX_LINEAR_SPEED,
+                w * SwerveConstants.MAX_ROTATIONAL_SPEED, false);
     }
 
     private void moveAngleCentric(double xSpeed, double ySpeed) {
@@ -98,7 +101,7 @@ public class SwervyDwervyCommand extends CommandBase {
                 angleController.calculate(
                         swerve.getHeading().getRadians(),
                         Math.toRadians(targetAngle));
-        moveFieldCentric(xSpeed, ySpeed, wSpeed);
+        moveFieldCentric(xSpeed * SwerveConstants.MAX_LINEAR_SPEED, ySpeed * SwerveConstants.MAX_LINEAR_SPEED, wSpeed);
     }
 
     public enum ControlMode {

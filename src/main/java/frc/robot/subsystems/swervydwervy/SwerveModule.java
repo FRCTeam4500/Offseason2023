@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swervydervy;
+package frc.robot.subsystems.swervydwervy;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import frc.robot.hardware.TalonMotorController;
+import frc.robot.utilities.HelperMethods;
 
 public class SwerveModule {
     final int k100msPerSecond = 10;
@@ -134,10 +135,12 @@ public class SwerveModule {
     }
 
     private void setDriveOpenLoopMetersPerSecond(double metersPerSecond) {
-        driveMotor.set(ControlMode.PercentOutput, metersPerSecond / driveMaximumMetersPerSecond);
+        driveMotor.set(ControlMode.PercentOutput,
+                HelperMethods.clamp(-0.7, 0.7, metersPerSecond / driveMaximumMetersPerSecond)); // TODO: MINMAX
     }
 
-    private void setDriveClosedLoopMetersPerSecond(double metersPerSecond) {
+    private void setDriveClosedLoopMetersPerSecond(double metersPerSecond) { // Gets the robot going at specified
+                                                                             // velocity
         double wheelRotationsPerSecond = metersPerSecond / wheelCircumferenceMeters;
         double motorRotationsPerSecond = wheelRotationsPerSecond / driveGearRatio;
         double encoderCountsPerSecond = motorRotationsPerSecond * driveCountsPerRev;

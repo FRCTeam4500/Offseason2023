@@ -7,7 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import frc.robot.hardware.interfaces.SwerveMotorController;
 import frc.robot.subsystems.messaging.MessagingSystem;
 
-public class TalonMotorController extends BaseTalon implements SwerveMotorController{
+public class TalonMotorController extends BaseTalon implements SwerveMotorController {
     private double TICKS_PER_RADIAN;
 
     public TalonMotorController(int deviceID, String motorModel) {
@@ -16,11 +16,12 @@ public class TalonMotorController extends BaseTalon implements SwerveMotorContro
             case "Talon FX":
                 TICKS_PER_RADIAN = 2048 / Math.PI / 2;
                 break;
-            case "Talon SRX": 
+            case "Talon SRX":
                 TICKS_PER_RADIAN = 4096 / Math.PI / 2;
                 break;
             default:
-                MessagingSystem.getInstance().addMessage("Can ID #" + deviceID + "'s motor model isn't a valid option");
+                MessagingSystem.getInstance()
+                        .addMessage("Can ID #" + deviceID + "'s motor model, " + motorModel + " isn't a valid option");
         }
     }
 
@@ -52,10 +53,10 @@ public class TalonMotorController extends BaseTalon implements SwerveMotorContro
         return getSelectedSensorPosition() / TICKS_PER_RADIAN;
     }
 
-    public void configureForSwerve(boolean isInverted, int currentLimit, double kP, double kD, boolean isDriveMotor){
+    public void configureForSwerve(boolean isInverted, int currentLimit, double kP, double kD, boolean isDriveMotor) {
         if (isDriveMotor) {
             configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
-			50);
+                    50);
             config_kP(0, kP);
             config_kF(0, 0.047);
             config_IntegralZone(0, 0);
@@ -66,7 +67,8 @@ public class TalonMotorController extends BaseTalon implements SwerveMotorContro
             configMotionCruiseVelocity(10000);
             configMotionAcceleration(10000);
             configAllowableClosedloopError(0, 0);
-            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1), 50);
+            configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, currentLimit, currentLimit + 1, 0.1),
+                    50);
             configClearPositionOnQuadIdx(true, 10);
         }
     }
