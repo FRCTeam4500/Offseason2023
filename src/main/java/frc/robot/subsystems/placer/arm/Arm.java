@@ -1,15 +1,16 @@
 package frc.robot.subsystems.placer.arm;
 
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.EnumConstants.TalonType;
 import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonMotorController;
 
 public class Arm extends SubsystemBase implements ArmInterface {
+
 	private SparkMaxMotorController angleMotor;
 	private TalonMotorController extensionMotor;
 	private SparkMaxPIDController anglePIDController;
@@ -23,8 +24,16 @@ public class Arm extends SubsystemBase implements ArmInterface {
 	}
 
 	private Arm() {
-		angleMotor = new SparkMaxMotorController(ArmConstants.ANGLE_MOTOR_ID, MotorType.kBrushless);
-		extensionMotor = new TalonMotorController(ArmConstants.EXTENSION_MOTOR_ID, "Talon SRX");
+		angleMotor =
+			new SparkMaxMotorController(
+				ArmConstants.ANGLE_MOTOR_ID,
+				MotorType.kBrushless
+			);
+		extensionMotor =
+			new TalonMotorController(
+				ArmConstants.EXTENSION_MOTOR_ID,
+				TalonType.TalonSRX
+			);
 
 		angleMotor.setInverted(true);
 
@@ -92,9 +101,21 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(), null);
-		builder.addDoubleProperty("Target Extension: ", () -> getTargetExtension(), null );
+		builder.addDoubleProperty(
+			"Target Angle: ",
+			() -> getTargetAngle(),
+			null
+		);
+		builder.addDoubleProperty(
+			"Target Extension: ",
+			() -> getTargetExtension(),
+			null
+		);
 		builder.addDoubleProperty("Current Angle: ", () -> getAngle(), null);
-		builder.addDoubleProperty("Current Extension: ", () -> getExtension(), null);
+		builder.addDoubleProperty(
+			"Current Extension: ",
+			() -> getExtension(),
+			null
+		);
 	}
 }

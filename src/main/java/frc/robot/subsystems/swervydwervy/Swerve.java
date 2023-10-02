@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.EnumConstants.TalonType;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.Gyro;
 import frc.robot.hardware.TalonMotorController;
@@ -111,44 +112,44 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 					new SwerveModule(
 						new TalonMotorController(
 							SwerveConstants.DFLPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						new TalonMotorController(
 							SwerveConstants.AFLPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						SwerveConstants.FRONT_LEFT_MODULE_TRANSLATION
 					),
 					new SwerveModule(
 						new TalonMotorController(
 							SwerveConstants.DFRPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						new TalonMotorController(
 							SwerveConstants.AFRPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						SwerveConstants.FRONT_RIGHT_MODULE_TRANSLATION
 					),
 					new SwerveModule(
 						new TalonMotorController(
 							SwerveConstants.DBLPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						new TalonMotorController(
 							SwerveConstants.ABLPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						SwerveConstants.BACK_LEFT_MODULE_TRANSLATION
 					),
 					new SwerveModule(
 						new TalonMotorController(
 							SwerveConstants.DBRPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						new TalonMotorController(
 							SwerveConstants.ABRPORT,
-							"Talon FX"
+							TalonType.TalonFX
 						),
 						SwerveConstants.BACK_RIGHT_MODULE_TRANSLATION
 					)

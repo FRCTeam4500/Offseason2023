@@ -1,17 +1,18 @@
 package frc.robot.subsystems.swerve;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.robot.Constants.EnumConstants.TalonType;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonMotorController;
 import frc.robot.hardware.interfaces.SwerveMotorController;
 
 public class SwerveModule {
+
 	private SwerveMotorController driveMotor;
 	private SwerveMotorController angleMotor;
 	private Translation2d translationFromCenter;
@@ -38,15 +39,17 @@ public class SwerveModule {
 		boolean neoAngle
 	) {
 		if (neoDrive) {
-			driveMotor = new SparkMaxMotorController(driveId, MotorType.kBrushless);
+			driveMotor =
+				new SparkMaxMotorController(driveId, MotorType.kBrushless);
 		} else {
-			driveMotor = new TalonMotorController(driveId, "Talon FX");
+			driveMotor = new TalonMotorController(driveId, TalonType.TalonFX);
 		}
 
 		if (neoAngle) {
-			angleMotor = new SparkMaxMotorController(angleId, MotorType.kBrushless);
+			angleMotor =
+				new SparkMaxMotorController(angleId, MotorType.kBrushless);
 		} else {
-			angleMotor = new TalonMotorController(angleId, "Talon FX");
+			angleMotor = new TalonMotorController(angleId, TalonType.TalonFX);
 		}
 
 		driveMotor.configureForSwerve(invertDrive, 35, drivekP, 0, true);
@@ -83,7 +86,7 @@ public class SwerveModule {
 	public SwerveModulePosition getModulePosition() {
 		return new SwerveModulePosition(
 			driveMotor.getAngle() /
-			(2 * Math.PI) * 
+			(2 * Math.PI) *
 			SwerveConstants.DRIVE_RATIO *
 			SwerveConstants.WHEEL_DIAMETER *
 			Math.PI,
@@ -101,7 +104,8 @@ public class SwerveModule {
 
 	public void setModuleVelocity(double targetVelocityMetersPerSecond) {
 		driveMotor.setAngularVelocity(
-			targetVelocityMetersPerSecond * 2 /
+			targetVelocityMetersPerSecond *
+			2 /
 			(SwerveConstants.DRIVE_RATIO * SwerveConstants.WHEEL_DIAMETER)
 		);
 	}
