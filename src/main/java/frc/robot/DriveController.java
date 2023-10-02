@@ -10,14 +10,14 @@ import frc.robot.commands.autoCommands.AutoAlignCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
-import frc.robot.commands.complexCommands.SwerveDriveCommand;
+import frc.robot.commands.complexCommands.SwervyDwervyCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.subsystems.messaging.MessagingSystem;
-import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.swervydwervy.Swerve;
 
 public class DriveController extends CommandXboxController {
 
-	SwerveDriveCommand swerveCommand;
+	SwervyDwervyCommand swerveCommand;
 
 	private static DriveController instanceDriveController = null;
 
@@ -44,8 +44,8 @@ public class DriveController extends CommandXboxController {
 	}
 
 	public void setButtons() {
-		swerveCommand = new SwerveDriveCommand(this);
-		SwerveDrive.getInstance().setDefaultCommand(swerveCommand);
+		swerveCommand = new SwervyDwervyCommand(this);
+		Swerve.getInstance().setDefaultCommand(swerveCommand);
 
 		switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.switchControlMode()));
 
@@ -66,7 +66,7 @@ public class DriveController extends CommandXboxController {
 
 	public void addToShuffleBoard() {
 		Shuffleboard.getTab("Messaging").add("Messaging System", MessagingSystem.getInstance());
-		Shuffleboard.getTab("Swerve").add("Swerve", SwerveDrive.getInstance());
+		Shuffleboard.getTab("Swerve").add("Swerve", Swerve.getInstance());
 		Shuffleboard.getTab("Swerve").add("Swerve Command", swerveCommand);
 	}
 }

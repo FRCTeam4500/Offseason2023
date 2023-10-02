@@ -1,4 +1,4 @@
-package frc.robot.subsystems.swervydervy;
+package frc.robot.subsystems.swervydwervy;
 
 import java.util.Arrays;
 import java.util.Set;
@@ -338,6 +338,15 @@ public class Swerve extends SubsystemBase {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, maxSpeedMetersPerSecond);
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setDesiredState(desiredStates[i], true);
+        }
+    }
+
+    /**
+     * Sets module states to zero
+     */
+    public void zeroModules() {
+        for (SwerveModule module : swerveModules) {
+            module.setDesiredState(new SwerveModuleState(), true);
         }
     }
 }
