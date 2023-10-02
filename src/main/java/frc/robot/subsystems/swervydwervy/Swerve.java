@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -17,7 +18,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.Gyro;
 import frc.robot.hardware.TalonMotorController;
 
-public class Swerve extends SubsystemBase {
+public class Swerve extends SubsystemBase implements SwerveInterface {
 
     private final SwerveModule[] swerveModules;
     private final SwerveDriveKinematics kinematics;
@@ -26,6 +27,11 @@ public class Swerve extends SubsystemBase {
     private final double maxSpeedMetersPerSecond;
     private Rotation2d gyroOffset = new Rotation2d();
     private boolean hasGyroOffset = false;
+    private DriveInputsAutoLogged inputs = new DriveInputsAutoLogged();
+
+    public DriveInputsAutoLogged getInputs() {
+        return inputs;
+    }
 
     private static Swerve instance = null;
 
@@ -103,6 +109,25 @@ public class Swerve extends SubsystemBase {
                             SwerveConstants.BACK_RIGHT_MODULE_TRANSLATION));
         }
         return instance;
+    }
+
+    /**
+     * Update with real values
+     * <p>
+     * Order:
+     * <p>
+     * Front Left, Front Right, Back Left, Back Right
+     */
+    @Override
+    public void updateInputs(DriveInputs inputs) {
+        inputs.frontLeftModuleDriveVelocity = swerveModules[0].getState().speedMetersPerSecond;
+        inputs.frontLeftAngleRadians = swerveModules[0].getState().angle.getRadians();
+        inputs.frontRightModuleDriveVelocity = swerveModules[1].getState().speedMetersPerSecond;
+        inputs.frontRightAngleRadians = swerveModules[1].getState().angle.getRadians();
+        inputs.backLeftModuleDriveVelocity = swerveModules[2].getState().speedMetersPerSecond;
+        inputs.backLeftAngleRadians = swerveModules[2].getState().angle.getRadians();
+        inputs.backRightModuleDriveVelocity = swerveModules[3].getState().speedMetersPerSecond;
+        inputs.backRightAngleRadians = swerveModules[3].getState().angle.getRadians();
     }
 
     /**
@@ -339,6 +364,72 @@ public class Swerve extends SubsystemBase {
         for (int i = 0; i < 4; i++) {
             swerveModules[i].setDesiredState(desiredStates[i], true);
         }
+    }
+
+    /**
+     * Fixes situation where robot drifts in the direction it's rotating in if
+     * turning and translating at the same time
+     * 
+     * @see https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
+     */
+    private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) { // TODO: USE
+        double vx = originalChassisSpeeds.vxMetersPerSecond;
+        double vy = originalChassisSpeeds.vyMetersPerSecond;
+        double omega = originalChassisSpeeds.omegaRadiansPerSecond;
+        double dt = 0.02; // This should be the time these values will be used, so normally just the loop
+                          // time
+        Pose2d desiredDeltaPose = new Pose2d(
+                vx * dt,
+                vy * dt,
+                new Rotation2d(omega * dt));
+        Twist2d twist = new Pose2d().log(desiredDeltaPose);
+        return new ChassisSpeeds(
+                twist.dx / dt,
+                twist.dy / dt,
+                twist.dtheta / dt);
+    }
+
+    /**
+     * Gets the translations of the swerve modules from the center of the robot.
+     * Used when initializing the kinematics object
+     * 
+     * @return an array containing the translations of the swerve modules in the
+     *         same order they were put into the SwerveDrive constructor
+     */
+    public Translation2d[] getModuleTranslations() {
+        Translation2d[] translations = new Translation2d[swerveModules.length];
+        for (int i = 0; i < swerveModules.length; i++) {
+            translations[i] = swerveModules[i].getWheelLocationMeters();
+        }
+        return translations;
+    }
+
+    /**
+     * Gets the states of the swerve modules. Used primarily for kinematics
+     * 
+     * @return an array containing the states of the swerve modules in the same
+     *         order they were put into the SwerveDrive constructor
+     */
+    public SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[swerveModules.length];
+        for (int i = 0; i < swerveModules.length; i++) {
+            states[i] = swerveModules[i].getState();
+        }
+        return states;
+    }
+
+    /**
+     * Gets the positions of the swerve modules. Used primarily for poseEstimator
+     * 
+     * @return an array containing the positions of the swerve modules in the same
+     *         order they were put into the SwerveDrive constructor
+     */
+    public SwerveModulePosition[] getModulePositions() {
+        SwerveModulePosition[] positions = new SwerveModulePosition[swerveModules.length];
+        for (int i = 0; i < swerveModules.length; i++) {
+            positions[i] = swerveModules[i].getPosition();
+        }
+        return positions;
     }
 
     /**
