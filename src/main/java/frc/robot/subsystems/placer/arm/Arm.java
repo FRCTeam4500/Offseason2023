@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.EnumConstants.TalonType;
 import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonMotorController;
 
@@ -24,7 +25,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	private Arm() {
 		angleMotor = new SparkMaxMotorController(ArmConstants.ANGLE_MOTOR_ID, MotorType.kBrushless);
-		extensionMotor = new TalonMotorController(ArmConstants.EXTENSION_MOTOR_ID, "Talon SRX");
+		extensionMotor = new TalonMotorController(ArmConstants.EXTENSION_MOTOR_ID, TalonType.TalonSRX);
 
 		angleMotor.setInverted(true);
 

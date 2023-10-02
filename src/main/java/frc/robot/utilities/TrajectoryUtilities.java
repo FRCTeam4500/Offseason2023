@@ -26,7 +26,7 @@ public class TrajectoryUtilities {
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
         } catch(IOException ex) {
-            MessagingSystem.getInstance().addMessage("Couldn't open the trajectory: " + trajectoryName);
+            MessagingSystem.getInstance().addMessage("Unable to open trajectory: " + trajectoryName);
             DriverStation.reportError("Unable to open trajectory: " + trajectoryName, ex.getStackTrace());
         }
         return trajectory;

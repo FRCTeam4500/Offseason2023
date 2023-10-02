@@ -199,6 +199,15 @@ public class Constants {
 				this.setpoint = setpoint;
 			}
 		}
+	
+		public static enum TalonType {
+			TalonSRX("Talon SRX"),
+			TalonFX("Talon FX");
+			public String model;
+			private TalonType(String model) {
+				this.model = model;
+			}
+		}
 	}
 
 	public static class AutoConstants {
