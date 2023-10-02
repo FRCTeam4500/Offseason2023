@@ -18,10 +18,14 @@ import edu.wpi.first.math.geometry.Twist2d;
 public class HelperMethods {
 
 	/**
-	 * Clamps an output between {@code min} and {@code max}. "Clamping" refers to restricting a
-	 * value between a minimum and a maximum. If the given value is below the minimum, the returned
-	 * value is equal to the minimum. If the given value is above the maximum, the returned value is
-	 * equal to the maximum. If neither of these conditions are met, the given value is returned as
+	 * Clamps an output between {@code min} and {@code max}. "Clamping" refers to
+	 * restricting a
+	 * value between a minimum and a maximum. If the given value is below the
+	 * minimum, the returned
+	 * value is equal to the minimum. If the given value is above the maximum, the
+	 * returned value is
+	 * equal to the maximum. If neither of these conditions are met, the given value
+	 * is returned as
 	 * is.
 	 *
 	 * @param min    the value minimum
@@ -52,6 +56,7 @@ public class HelperMethods {
 
 	/**
 	 * Returns a normalized vector
+	 * 
 	 * @param a
 	 * @return
 	 */
@@ -82,8 +87,10 @@ public class HelperMethods {
 	}
 
 	/**
-	 * A custom mod function which returns a remainder with the same sign as the dividend. This is
-	 * different from using {@code %}, which returns the remainder with the same sign as the
+	 * A custom mod function which returns a remainder with the same sign as the
+	 * dividend. This is
+	 * different from using {@code %}, which returns the remainder with the same
+	 * sign as the
 	 * divisor.
 	 *
 	 * @param a the dividend
@@ -95,7 +102,8 @@ public class HelperMethods {
 	}
 
 	/**
-	 * Calculates the shortest radian to a given angle, assuming that all angles that are 2 pi away
+	 * Calculates the shortest radian to a given angle, assuming that all angles
+	 * that are 2 pi away
 	 * from each other are equivalent.
 	 *
 	 * @param currentAngle the starting angle
@@ -116,36 +124,36 @@ public class HelperMethods {
 
 	/**
 	 * Uses bigsad Euler Angles math to get the overall angle of the robot.
-	 * @param yaw the yaw angle in radians - Rotation about the Z axis
+	 * 
+	 * @param yaw   the yaw angle in radians - Rotation about the Z axis
 	 * @param pitch the pitch angle in radians - Rotation about the X axis
-	 * @param roll the roll angle in radians - Rotation about the Y axis
+	 * @param roll  the roll angle in radians - Rotation about the Y axis
 	 * @return the overall angle of the robot in radians
 	 */
 	public static double getOverallAngle(
-		double yaw,
-		double pitch,
-		double roll
-	) {
+			double yaw,
+			double pitch,
+			double roll) {
 		// Set the ground plane normal vector
 		double[] n1 = { 0.0, 0.0, 1.0 };
 
 		// Calculate the rotation matrices
 		double[][] Rx = {
-			{ 1.0, 0.0, 0.0 },
-			{ 0.0, Math.cos(pitch), -Math.sin(pitch) },
-			{ 0.0, Math.sin(pitch), Math.cos(pitch) },
+				{ 1.0, 0.0, 0.0 },
+				{ 0.0, Math.cos(pitch), -Math.sin(pitch) },
+				{ 0.0, Math.sin(pitch), Math.cos(pitch) },
 		};
 
 		double[][] Ry = {
-			{ Math.cos(roll), 0.0, Math.sin(roll) },
-			{ 0.0, 1.0, 0.0 },
-			{ -Math.sin(roll), 0.0, Math.cos(roll) },
+				{ Math.cos(roll), 0.0, Math.sin(roll) },
+				{ 0.0, 1.0, 0.0 },
+				{ -Math.sin(roll), 0.0, Math.cos(roll) },
 		};
 
 		double[][] Rz = {
-			{ Math.cos(yaw), -Math.sin(yaw), 0.0 },
-			{ Math.sin(yaw), Math.cos(yaw), 0.0 },
-			{ 0.0, 0.0, 1.0 },
+				{ Math.cos(yaw), -Math.sin(yaw), 0.0 },
+				{ Math.sin(yaw), Math.cos(yaw), 0.0 },
+				{ 0.0, 0.0, 1.0 },
 		};
 
 		// Calculate the normal vector of the rotated plane
@@ -168,28 +176,29 @@ public class HelperMethods {
 	}
 
 	/**
-	 * Checks to see if two positions are close enough to each other, given a certain threshold
-	 * <p> This is useful since in most cases, the robot's pose will not exactly match a target pose,
+	 * Checks to see if two positions are close enough to each other, given a
+	 * certain threshold
+	 * <p>
+	 * This is useful since in most cases, the robot's pose will not exactly match a
+	 * target pose,
 	 * but rather get very close to it.
-	 * @param pose1 one of the positions
-	 * @param pose2 the other position
-	 * @param translationalThreshold how close the x and y components of the positions must be
-	 * @param rotationalThreshold how close the angles of the positions must be
+	 * 
+	 * @param pose1                  one of the positions
+	 * @param pose2                  the other position
+	 * @param translationalThreshold how close the x and y components of the
+	 *                               positions must be
+	 * @param rotationalThreshold    how close the angles of the positions must be
 	 * @return whether the two positions are close enough to each other
 	 */
 	public static boolean isClose(
-		Pose2d pose1,
-		Pose2d pose2,
-		double translationalThreshold,
-		double rotationalThreshold
-	) {
+			Pose2d pose1,
+			Pose2d pose2,
+			double translationalThreshold,
+			double rotationalThreshold) {
 		Pose2d differenceInPose = pose1.relativeTo(pose2);
-		return (
-			Math.abs(differenceInPose.getX()) <= translationalThreshold &&
-			Math.abs(differenceInPose.getY()) <= translationalThreshold &&
-			Math.abs(differenceInPose.getRotation().getRadians()) <=
-			rotationalThreshold
-		);
+		return (Math.abs(differenceInPose.getX()) <= translationalThreshold &&
+				Math.abs(differenceInPose.getY()) <= translationalThreshold &&
+				Math.abs(differenceInPose.getRotation().getRadians()) <= rotationalThreshold);
 	}
 
 	private static final double kEps = 1E-9;
@@ -211,30 +220,24 @@ public class HelperMethods {
 		return Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
 	}
 
-	public static Twist2d log(final Pose2d transform) {
+	public static Twist2d log(final Pose2d transform) { // Look at Pose2d integrated log method
 		final double dtheta = transform.getRotation().getRadians();
 		final double half_dtheta = 0.5 * dtheta;
-		final double cos_minus_one =
-			Math.cos(transform.getRotation().getRadians()) - 1.0;
+		final double cos_minus_one = Math.cos(transform.getRotation().getRadians()) - 1.0;
 		double halftheta_by_tan_of_halfdtheta;
 		if (Math.abs(cos_minus_one) < kEps) {
 			halftheta_by_tan_of_halfdtheta = 1.0 - 1.0 / 12.0 * dtheta * dtheta;
 		} else {
-			halftheta_by_tan_of_halfdtheta =
-				-(
-					half_dtheta * Math.sin(transform.getRotation().getRadians())
-				) /
-				cos_minus_one;
+			halftheta_by_tan_of_halfdtheta = -(half_dtheta * Math.sin(transform.getRotation().getRadians())) /
+					cos_minus_one;
 		}
 		final Translation2d translation_part = transform
-			.getTranslation()
-			.rotateBy(
-				new Rotation2d(halftheta_by_tan_of_halfdtheta, -half_dtheta)
-			);
+				.getTranslation()
+				.rotateBy(
+						new Rotation2d(halftheta_by_tan_of_halfdtheta, -half_dtheta));
 		return new Twist2d(
-			translation_part.getX(),
-			translation_part.getY(),
-			dtheta
-		);
+				translation_part.getX(),
+				translation_part.getY(),
+				dtheta);
 	}
 }

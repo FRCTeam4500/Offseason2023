@@ -25,23 +25,28 @@ public class TrajectoryUtilities {
         Trajectory trajectory = null;
         try {
             trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             MessagingSystem.getInstance().addMessage("Couldn't open the trajectory: " + trajectoryName);
             DriverStation.reportError("Unable to open trajectory: " + trajectoryName, ex.getStackTrace());
         }
         return trajectory;
     }
 
-    public static SequentialCommandGroup generateSwervePathFollowingCommand(Trajectory trajectory, Rotation2d endRotation) {
+    public static SequentialCommandGroup generateSwervePathFollowingCommand(Trajectory trajectory,
+            Rotation2d endRotation) {
         SwerveDrive swerve = SwerveDrive.getInstance();
-        ProfiledPIDController anglePID = new ProfiledPIDController(4, 0, 0, new Constraints(SwerveConstants.MAX_ROTATIONAL_SPEED, SwerveConstants.MAX_ROTATIONAL_ACCELERATION));
+        ProfiledPIDController anglePID = new ProfiledPIDController(4, 0, 0,
+                new Constraints(SwerveConstants.MAX_ROTATIONAL_SPEED, SwerveConstants.MAX_ROTATIONAL_ACCELERATION));
         anglePID.enableContinuousInput(-Math.PI, Math.PI);
         Supplier<Rotation2d> rotation = () -> endRotation;
-        return new SwerveControllerCommand(trajectory, swerve::getRobotPose, swerve.getKinematics(), new PIDController(1, 0, 0), new PIDController(1, 0, 0), anglePID, rotation, swerve::driveModules, swerve)
-            .andThen(() -> swerve.driveRobotCentric(0, 0, 0));
+        return new SwerveControllerCommand(trajectory, swerve::getRobotPose, swerve.getKinematics(),
+                new PIDController(1, 0, 0), new PIDController(1, 0, 0), anglePID, rotation, swerve::driveModules,
+                swerve)
+                .andThen(() -> swerve.driveRobotCentric(0, 0, 0));
     }
 
-    public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName, Rotation2d endRotation) {
+    public static SequentialCommandGroup generateSwervePathFollowingCommand(String trajectoryName,
+            Rotation2d endRotation) {
         return generateSwervePathFollowingCommand(getDeployedTrajectory(trajectoryName), endRotation);
     }
 
