@@ -437,7 +437,10 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 				omegaRadiansPerSecond
 			);
 
-		var swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+		ChassisSpeeds discretizedSpeeds = discretize(chassisSpeeds);
+		var swerveModuleStates = kinematics.toSwerveModuleStates(
+			discretizedSpeeds
+		);
 		SwerveDriveKinematics.desaturateWheelSpeeds(
 			swerveModuleStates,
 			maxSpeedMetersPerSecond
@@ -461,18 +464,16 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 	}
 
 	/**
-	 * Fixes situation where robot drifts in the direction it's rotating in if
-	 * turning and translating at the same time
-	 *
+	 * Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time
 	 * @see https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
 	 */
 	private static ChassisSpeeds discretize(
-		double vx,
-		double vy,
-		double omega
-	) { // TODO: Check if Needs Use
-		double dt = 0.02; // This should be the time these values will be used, so normally just the loop
-		// time
+		ChassisSpeeds originalChassisSpeeds
+	) {
+		double vx = originalChassisSpeeds.vxMetersPerSecond;
+		double vy = originalChassisSpeeds.vyMetersPerSecond;
+		double omega = originalChassisSpeeds.omegaRadiansPerSecond;
+		double dt = 0.02; // This should be the time these values will be used, so normally just the loop time
 		Pose2d desiredDeltaPose = new Pose2d(
 			vx * dt,
 			vy * dt,

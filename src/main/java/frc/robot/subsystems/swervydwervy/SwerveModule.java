@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.BaseTalon;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
@@ -166,7 +167,7 @@ public class SwerveModule {
 				0.7,
 				metersPerSecond / driveMaximumMetersPerSecond
 			)
-		); // TODO: MINMAX
+		); // FIXME: Upspeed
 	}
 
 	private void setDriveClosedLoopMetersPerSecond(double metersPerSecond) { // Gets the robot going at specified
