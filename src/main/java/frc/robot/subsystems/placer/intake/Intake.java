@@ -7,8 +7,8 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
-import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.hardware.SparkMaxMotorController;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
 
@@ -28,8 +28,16 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 	private static Intake instanceIntake = null;
 
 	private Intake() {
-		outputMotor = new SparkMaxMotorController(IntakeConstants.OUTPUT_MOTOR_ID, MotorType.kBrushless);
-		angleMotor = new SparkMaxMotorController(IntakeConstants.ANGLE_MOTOR_ID, MotorType.kBrushless);
+		outputMotor =
+			new SparkMaxMotorController(
+				IntakeConstants.OUTPUT_MOTOR_ID,
+				MotorType.kBrushless
+			);
+		angleMotor =
+			new SparkMaxMotorController(
+				IntakeConstants.ANGLE_MOTOR_ID,
+				MotorType.kBrushless
+			);
 
 		outputMotor.setIdleMode(IdleMode.kBrake);
 
@@ -94,13 +102,28 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		inputs.intakeOutput = getOutput();
 	}
 
-	@Override 
-	public void initSendable(SendableBuilder builder) { 
-		builder.setSmartDashboardType("RobotPreferences");
-		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(),null);
-		builder.addDoubleProperty("Target Percent Output: ", () -> getTargetOutput(), null);
-		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), this::setAngle);
-		builder.addDoubleProperty("Current Percent Output: ", () -> getOutput(), this::setOutput);
-		builder.addStringProperty("Current Game Piece: ", () -> gamePiece.name(), null);
+	@Override
+	public void initSendable(SendableBuilder builder) {
+		builder.addDoubleProperty(
+			"Target Angle: ",
+			() -> getTargetAngle(),
+			null
+		);
+		builder.addDoubleProperty(
+			"Target Percent Output: ",
+			() -> getTargetOutput(),
+			null
+		);
+		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), null);
+		builder.addDoubleProperty(
+			"Current Percent Output: ",
+			() -> getOutput(),
+			null
+		);
+		builder.addStringProperty(
+			"Current Game Piece: ",
+			() -> gamePiece.name(),
+			null
+		);
 	}
 }

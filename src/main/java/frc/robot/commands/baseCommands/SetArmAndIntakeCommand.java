@@ -1,29 +1,41 @@
 package frc.robot.commands.baseCommands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.EnumConstants.ArmPosition;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 
-public class SetArmAndIntakeCommand extends SequentialCommandGroup {
+/**
+ * A command that sets the Arm winch state, the Arm angle, and the Intake angle
+ */
+public class SetArmAndIntakeCommand extends CommandBase {
+
 	private Arm arm;
 	private Intake intake;
+	private ArmPosition position;
+
+	/**
+	 * The constructor of SetArmAndIntakeCommand
+	 * @param arm the arm subsystem
+	 * @param intake the intake subsystem
+	 * @param state the desired state
+	 */
 	public SetArmAndIntakeCommand(ArmPosition position) {
-		intake = Intake.getInstance();
+		this.position = position;
+	}
+
+	public void initialize() {
 		arm = Arm.getInstance();
-		addCommands(
-			new InstantCommand(() -> intake.setAngle(IntakeConstants.ZERO_ANGLE)),
-			new InstantCommand(() -> arm.setExtension(ArmConstants.ZERO_EXTENSION)),
-			new WaitUntilCommand(() -> Math.abs(ArmConstants.ZERO_EXTENSION - arm.getExtension()) < 5),
-			new InstantCommand(() -> arm.setAngle(position.getArmAngle())),
-			new WaitUntilCommand(() -> Math.abs(position.getArmAngle() - arm.getAngle()) < 5),
-			new InstantCommand(() -> arm.setExtension(position.getArmExtension())),
-			new InstantCommand(() -> intake.setAngle(position.getIntakeAngle())),
-			new WaitUntilCommand(() -> Math.abs(position.getArmExtension() - arm.getExtension()) < 5)
-		);
+		intake = Intake.getInstance();
+
+		arm.setExtension(position.getArmExtension());
+		arm.setAngle(position.getArmAngle());
+		intake.setAngle(position.getIntakeAngle());
+	}
+
+	public boolean isFinished() {
+		return true;
 	}
 }
