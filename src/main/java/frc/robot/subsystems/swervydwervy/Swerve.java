@@ -464,9 +464,7 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 			);
 
 		ChassisSpeeds discretizedSpeeds = discretize(chassisSpeeds);
-		var swerveModuleStates = kinematics.toSwerveModuleStates(
-			discretizedSpeeds
-		);
+		var swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 		SwerveDriveKinematics.desaturateWheelSpeeds(
 			swerveModuleStates,
 			maxSpeedMetersPerSecond
