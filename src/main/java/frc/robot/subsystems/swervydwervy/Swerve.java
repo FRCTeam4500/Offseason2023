@@ -1,7 +1,6 @@
 package frc.robot.subsystems.swervydwervy;
 
 import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,12 +11,14 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EnumConstants.TalonType;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.Gyro;
 import frc.robot.hardware.TalonMotorController;
 import frc.robot.subsystems.swervydwervy.Estimator;
+import frc.robot.subsystems.vision.Vision;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,6 +33,7 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 	private Rotation2d gyroOffset = new Rotation2d();
 	private boolean hasGyroOffset = false;
 	private DriveInputsAutoLogged inputs = new DriveInputsAutoLogged();
+	private Vision vision = Vision.getInstance();
 
 	public DriveInputsAutoLogged getInputs() {
 		return inputs;
@@ -353,6 +355,12 @@ public class Swerve extends SubsystemBase implements SwerveInterface {
 			swerveModules[2].getPosition(),
 			swerveModules[3].getPosition()
 		);
+		if (vision.hasValidTargets(0)) {
+			odometry.addVisionMeasurement(
+				vision.getRobotPose(0),
+				Timer.getFPGATimestamp()
+			);
+		}
 	}
 
 	/**
