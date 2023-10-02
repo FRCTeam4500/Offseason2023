@@ -93,9 +93,10 @@ public class Arm extends SubsystemBase implements ArmInterface {
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
+		builder.setSmartDashboardType("RobotPreferences");
 		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(), null);
 		builder.addDoubleProperty("Target Extension: ", () -> getTargetExtension(), null );
-		builder.addDoubleProperty("Current Angle: ", () -> getAngle(), null);
-		builder.addDoubleProperty("Current Extension: ", () -> getExtension(), null);
+		builder.addDoubleProperty("Current Angle: ", () -> getAngle(), this::setAngle);
+		builder.addDoubleProperty("Current Extension: ", () -> getExtension(), this::setExtension);
 	}
 }

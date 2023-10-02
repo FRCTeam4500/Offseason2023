@@ -96,10 +96,11 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	@Override 
 	public void initSendable(SendableBuilder builder) { 
+		builder.setSmartDashboardType("RobotPreferences");
 		builder.addDoubleProperty("Target Angle: ", () -> getTargetAngle(),null);
 		builder.addDoubleProperty("Target Percent Output: ", () -> getTargetOutput(), null);
-		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), null);
-		builder.addDoubleProperty("Current Percent Output: ", () -> getOutput(), null);
+		builder.addDoubleProperty("Curent Angle: ", () -> getAngle(), this::setAngle);
+		builder.addDoubleProperty("Current Percent Output: ", () -> getOutput(), this::setOutput);
 		builder.addStringProperty("Current Game Piece: ", () -> gamePiece.name(), null);
 	}
 }
