@@ -49,7 +49,7 @@ public class SwerveModule {
 		angleMotor.configureForSwerve(false, 25, 0.3, 0, false);
 		driveMotor.configureForSwerve(
 			(wheelLocationMeters.getY() > 0) ? true : false,
-			25,
+			35,
 			0.1,
 			0,
 			true
