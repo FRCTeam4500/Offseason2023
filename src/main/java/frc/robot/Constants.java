@@ -137,7 +137,9 @@ public class Constants {
 			Cube(IntakeConstants.PLACE_CUBE_OUTPUT),
 			Cone(IntakeConstants.PLACE_CONE_OUTPUT),
 			Nothing(0.0);
+
 			public double intakeOutput;
+
 			private GamePiece(double intakeOutput) {
 				this.intakeOutput = intakeOutput;
 			}
@@ -178,6 +180,7 @@ public class Constants {
 			public double armExtension;
 			public double armAngle;
 			public double intakeAngle;
+
 			private ArmPosition(
 				double armExtension,
 				double armAngle,
@@ -194,8 +197,10 @@ public class Constants {
 			PickupCone(IntakeConstants.PICKUP_CONE_OUTPUT, GamePiece.Cone),
 			Place(0.0, GamePiece.Nothing), // The value for place doesn't matter, since that is decided by which game piece we have
 			Off(0.0, null);
+
 			public double intakeOutput;
 			public GamePiece newGamePiece;
+
 			private IntakeMode(double intakeOutput, GamePiece newGamePiece) {
 				this.intakeOutput = intakeOutput;
 				this.newGamePiece = newGamePiece;
@@ -246,6 +251,12 @@ public class Constants {
 		public static final double AUTO_MAX_SPEED = 2;
 		/** The maximum acceleration the robot will travel at during auto <p> Units are meters per second*/
 		public static final double AUTO_MAX_ACCEL = 2.0;
+
+		public static final List<PathPlannerTrajectory> TestPath = PathPlanner.loadPathGroup(
+			"TestPath",
+			2,
+			1
+		);
 
 		public static final List<PathPlannerTrajectory> BlueBotRedTop2PieceTopAuto = PathPlanner.loadPathGroup(
 			"BlueBotRedTop2PieceTop",

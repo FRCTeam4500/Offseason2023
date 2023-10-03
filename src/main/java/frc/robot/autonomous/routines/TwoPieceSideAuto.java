@@ -2,11 +2,9 @@ package frc.robot.autonomous.routines;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.EnumConstants.VisionTarget;
-import frc.robot.commands.autoCommands.AutoAlignCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignParallelCommand;
 import frc.robot.commands.autoCommands.AutoDriveToCommand;

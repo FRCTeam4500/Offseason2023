@@ -12,7 +12,7 @@ public class AutoPlaceCommand extends SequentialCommandGroup {
 	public AutoPlaceCommand(ArmPosition position) {
 		addCommands(
 			new SetArmAndIntakeCommand(position),
-			new WaitCommand(1),
+			new WaitCommand(1.5),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
 			new ZeroCommand()

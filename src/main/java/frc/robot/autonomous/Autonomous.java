@@ -11,17 +11,16 @@ import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.autonomous.routines.TestAuto;
 import frc.robot.autonomous.routines.TestAuto2;
-import frc.robot.commands.baseCommands.ResetGyroCommand;
-import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
+import frc.robot.commands.baseCommands.ResetGyroCommand;
+import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.complexCommands.AutoPickupCommand;
 import frc.robot.commands.complexCommands.AutoPlaceCommand;
+import frc.robot.commands.complexCommands.ZeroCommand;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
-import frc.robot.commands.complexCommands.ZeroCommand;
-
 import java.util.HashMap;
 
 public class Autonomous {
@@ -108,13 +107,21 @@ public class Autonomous {
 		autonChooser.addOption("Timed Drive Test", new TestAuto2());
 
 		autonChooser.addOption(
-			"Align Horizontal", 
+			"Align Horizontal",
 			new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape)
 		);
 
+		autonChooser.addOption("Auto PLace TESIUFBOEI", new TestAuto());
+
 		autonChooser.addOption(
-			"Align Rotational", 
-			new AutoAlignRotationalCommand(VisionTarget.GamePiece));
+			"Align Rotational",
+			new AutoAlignRotationalCommand(VisionTarget.GamePiece)
+		);
+
+		autonChooser.addOption(
+			"Path Planner Test",
+			autoBuilder.fullAuto(AutoConstants.TestPath)
+		);
 
 		autonChooser.addOption(
 			"Blue Bottom: 2 Piece Top",
