@@ -6,6 +6,7 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoTimedDriveCommand extends CommandBase{
     private SwerveDrive swerve;
+    private ChassisSpeeds targetVelocities;
     private double forwardSpeed;
     private double sidewaysSpeed;
     private double turningSpeed;
@@ -13,9 +14,10 @@ public class AutoTimedDriveCommand extends CommandBase{
     private double endTime;
     public AutoTimedDriveCommand(ChassisSpeeds targetVelocities, double timeSeconds) {
         this.swerve = SwerveDrive.getInstance();
-        forwardSpeed = targetVelocities.vxMetersPerSecond;
-        sidewaysSpeed = targetVelocities.vyMetersPerSecond;
-        turningSpeed = targetVelocities.omegaRadiansPerSecond;
+        // forwardSpeed = targetVelocities.vxMetersPerSecond;
+        // sidewaysSpeed = targetVelocities.vyMetersPerSecond;
+        // turningSpeed = targetVelocities.omegaRadiansPerSecond;
+        this.targetVelocities = targetVelocities;
         seconds = timeSeconds;
         addRequirements(swerve);
     }
@@ -27,7 +29,8 @@ public class AutoTimedDriveCommand extends CommandBase{
 
     @Override
     public void execute() {
-        swerve.driveFieldCentric(forwardSpeed, sidewaysSpeed, turningSpeed);
+        // swerve.driveFieldCentric(forwardSpeed, sidewaysSpeed, turningSpeed);
+        swerve.driveModules(targetVelocities);
     }
 
     @Override

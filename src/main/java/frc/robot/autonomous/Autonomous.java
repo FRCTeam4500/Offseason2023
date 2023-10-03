@@ -5,6 +5,7 @@ import com.pathplanner.lib.auto.SwerveAutoBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
@@ -106,6 +107,13 @@ public class Autonomous {
 		autonChooser.addOption("Pathweaver Test", new TestAuto());
 
 		autonChooser.addOption("Timed Drive Test", new TestAuto2());
+
+		autonChooser.addOption("Auto Rotate Test", 
+			new SequentialCommandGroup(
+				new ZeroCommand(),
+				new AutoAlignRotationalCommand(VisionTarget.GamePiece),
+				new TestGroundPickup()
+			));
 
 		autonChooser.addOption(
 			"Align Horizontal",

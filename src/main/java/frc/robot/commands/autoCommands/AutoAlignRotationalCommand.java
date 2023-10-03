@@ -35,7 +35,7 @@ public class AutoAlignRotationalCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		pid.reset();
-		pid.setSetpoint(target.setpoint);
+		pid.setSetpoint(0);
 		pid.setTolerance(rotationalThreshold);
 		timeCorrect = 0;
 		vision.setPipeline(target.limelightId, target.pipeline);
