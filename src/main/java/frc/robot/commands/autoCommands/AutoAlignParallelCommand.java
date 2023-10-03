@@ -3,7 +3,6 @@ package frc.robot.commands.autoCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.commands.baseCommands.RumbleCommand;
 import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -51,11 +50,12 @@ public class AutoAlignParallelCommand extends CommandBase {
 
 	@Override
 	public void execute() {
-		double rotation = pid.calculate(
-			vision.getRelativeTargetPose(0).getRotation().getDegrees(),
-			0
-		);
-		swerve.driveRobotCentric(0, 0, rotation / 10);
+		rotationOffset =
+			pid.calculate(
+				vision.getRelativeTargetPose(0).getRotation().getDegrees(),
+				0
+			);
+		swerve.driveRobotCentric(0, 0, rotationOffset / 10);
 		if (pid.atSetpoint()) {
 			timeCorrect++;
 		} else {
