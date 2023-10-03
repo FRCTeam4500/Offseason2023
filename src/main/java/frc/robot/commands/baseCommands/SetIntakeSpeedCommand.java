@@ -20,9 +20,12 @@ public class SetIntakeSpeedCommand extends CommandBase {
 		intake = Intake.getInstance();
 		gamePiece = Intake.getGamePiece();
 		if (intakeMode == IntakeMode.Place) {
-			intake.setOutput(gamePiece.getIntakeOutput());
+			intake.setOutput(gamePiece.intakeOutput);
 		} else {
-			intake.setOutput(intakeMode.getIntakeOutput());
+			intake.setOutput(intakeMode.intakeOutput);
+		}
+		if (intakeMode.newGamePiece != null) {
+			Intake.setGamePiece(intakeMode.newGamePiece);
 		}
 	}
 

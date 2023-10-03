@@ -137,15 +137,9 @@ public class Constants {
 			Cube(IntakeConstants.PLACE_CUBE_OUTPUT),
 			Cone(IntakeConstants.PLACE_CONE_OUTPUT),
 			Nothing(0.0);
-
-			private double intakeOutput;
-
+			public double intakeOutput;
 			private GamePiece(double intakeOutput) {
 				this.intakeOutput = intakeOutput;
-			}
-
-			public double getIntakeOutput() {
-				return intakeOutput;
 			}
 		}
 
@@ -181,22 +175,9 @@ public class Constants {
 				IntakeConstants.SUBSTATION_ANGLE
 			);
 
-			private double armExtension;
-			private double armAngle;
-			private double intakeAngle;
-
-			public double getArmExtension() {
-				return armExtension;
-			}
-
-			public double getArmAngle() {
-				return armAngle;
-			}
-
-			public double getIntakeAngle() {
-				return intakeAngle;
-			}
-
+			public double armExtension;
+			public double armAngle;
+			public double intakeAngle;
 			private ArmPosition(
 				double armExtension,
 				double armAngle,
@@ -209,19 +190,15 @@ public class Constants {
 		}
 
 		public static enum IntakeMode {
-			PickupCube(IntakeConstants.PICKUP_CUBE_OUTPUT),
-			PickupCone(IntakeConstants.PICKUP_CONE_OUTPUT),
-			Place(0.0), // The value for place doesn't matter, since that is decided by which game piece we have
-			Off(0.0);
-
-			private double intakeOutput;
-
-			private IntakeMode(double intakeOutput) {
+			PickupCube(IntakeConstants.PICKUP_CUBE_OUTPUT, GamePiece.Cube),
+			PickupCone(IntakeConstants.PICKUP_CONE_OUTPUT, GamePiece.Cone),
+			Place(0.0, GamePiece.Nothing), // The value for place doesn't matter, since that is decided by which game piece we have
+			Off(0.0, null);
+			public double intakeOutput;
+			public GamePiece newGamePiece;
+			private IntakeMode(double intakeOutput, GamePiece newGamePiece) {
 				this.intakeOutput = intakeOutput;
-			}
-
-			public double getIntakeOutput() {
-				return intakeOutput;
+				this.newGamePiece = newGamePiece;
 			}
 		}
 
