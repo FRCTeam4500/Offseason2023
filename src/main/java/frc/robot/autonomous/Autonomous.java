@@ -11,6 +11,7 @@ import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.autonomous.routines.TestAuto;
 import frc.robot.autonomous.routines.TestAuto2;
+import frc.robot.autonomous.routines.TestGroundPickup;
 import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
@@ -112,6 +113,8 @@ public class Autonomous {
 		);
 
 		autonChooser.addOption("Auto PLace TESIUFBOEI", new TestAuto());
+
+		autonChooser.addOption("Auto Pickup Test", new TestGroundPickup());
 
 		autonChooser.addOption(
 			"Align Rotational",
