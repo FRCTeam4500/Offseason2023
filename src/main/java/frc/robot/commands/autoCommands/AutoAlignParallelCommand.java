@@ -1,7 +1,6 @@
 package frc.robot.commands.autoCommands;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.EnumConstants.VisionTarget;
@@ -10,7 +9,10 @@ import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.vision.Vision;
 
-public class AutoAlignRotationalCommand extends CommandBase {
+/**
+ * Align Parallel to April Tag
+ */
+public class AutoAlignParallelCommand extends CommandBase {
 
 	private SwerveDrive swerve;
 	private Vision vision;
@@ -18,15 +20,12 @@ public class AutoAlignRotationalCommand extends CommandBase {
 	private double timeThreshold;
 	private double rotationalThreshold;
 	private int timeCorrect;
-	private double horizontalAngleOffset;
-	private VisionTarget target;
+	private double rotationOffset;
 
-	/** Rotates to line up with a vision target */
-	public AutoAlignRotationalCommand(VisionTarget targetType) {
+	public AutoAlignParallelCommand() {
 		this.swerve = SwerveDrive.getInstance();
 		this.vision = Vision.getInstance();
 		this.pid = new PIDController(1, 0, 0);
-		this.target = targetType;
 		timeThreshold = 0.5;
 		rotationalThreshold = 1;
 		addRequirements(swerve, vision);
@@ -35,38 +34,28 @@ public class AutoAlignRotationalCommand extends CommandBase {
 	@Override
 	public void initialize() {
 		pid.reset();
-		pid.setSetpoint(target.setpoint);
+		pid.setSetpoint(0);
 		pid.setTolerance(rotationalThreshold);
 		timeCorrect = 0;
-		vision.setPipeline(target.limelightId, target.pipeline);
-		if (!vision.hasValidTargets(target.limelightId)) {
+		vision.setPipeline(0, 0);
+		if (!vision.hasValidTargets(0)) {
 			MessagingSystem
 				.getInstance()
-				.addMessage(
-					"A " +
-					getName() +
-					" was scheduled, but there were no valid targets!"
-				);
+				.addMessage("No valid targets for " + getName());
 			CommandScheduler.getInstance().schedule(new RumbleCommand(0.5));
 			CommandScheduler.getInstance().cancel(this);
 		}
-		horizontalAngleOffset =
-			Units.radiansToDegrees(
-				vision.getHorizontalAngleOffset(target.limelightId)
-			);
+		rotationOffset =
+			vision.getRelativeTargetPose(0).getRotation().getDegrees();
 	}
 
 	@Override
 	public void execute() {
-		horizontalAngleOffset =
-			Units.radiansToDegrees(
-				vision.getHorizontalAngleOffset(target.limelightId)
-			);
-		swerve.driveRobotCentric(
-			0,
-			0,
-			pid.calculate(horizontalAngleOffset) / 10
+		double rotation = pid.calculate(
+			vision.getRelativeTargetPose(0).getRotation().getDegrees(),
+			0
 		);
+		swerve.driveRobotCentric(0, 0, rotation / 10);
 		if (pid.atSetpoint()) {
 			timeCorrect++;
 		} else {
