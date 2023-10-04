@@ -166,7 +166,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void driveModules(ChassisSpeeds targetChassisSpeeds) {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-			discretize(targetChassisSpeeds)
+			// discretize(targetChassisSpeeds)
+			targetChassisSpeeds
 		);
 		driveModules(states);
 	}
@@ -405,5 +406,6 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			() -> getRobotPose().getRotation().getRadians(),
 			null
 		);
+		builder.addDoubleProperty("Gyro Pitch: ", () -> gyro.getPitch(), null);
 	}
 }

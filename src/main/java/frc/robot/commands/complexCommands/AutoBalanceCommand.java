@@ -6,7 +6,6 @@ import frc.robot.hardware.Gyro;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class AutoBalanceCommand extends CommandBase {
-
 	private Gyro navx;
 	private SwerveDrive swerve;
 	private PIDController pid;
@@ -19,7 +18,7 @@ public class AutoBalanceCommand extends CommandBase {
 		this.navx = swerve.getGyro();
 		this.pid = new PIDController(1, 0, 0);
 		this.timeThreshold = 1;
-		this.pitchThreshold = 2.5;
+		this.pitchThreshold = 1;
 		this.timesCorrect = 0;
 		addRequirements(swerve);
 		pid.reset();
@@ -27,9 +26,15 @@ public class AutoBalanceCommand extends CommandBase {
 	}
 
 	@Override
+	public void initialize() {
+		timesCorrect = 0;
+		pid.reset();
+	}
+
+	@Override
 	public void execute() {
 		double pitch = Math.toDegrees(navx.getPitch());
-		swerve.driveRobotCentric(-pid.calculate(pitch) / 30, 0, 0);
+		swerve.driveRobotCentric(-pid.calculate(pitch) / 10, 0, 0);
 		if (Math.abs(pitch) < pitchThreshold) {
 			timesCorrect++;
 		} else {

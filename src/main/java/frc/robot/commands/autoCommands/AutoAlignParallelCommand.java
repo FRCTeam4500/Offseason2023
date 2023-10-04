@@ -52,10 +52,9 @@ public class AutoAlignParallelCommand extends CommandBase {
 	public void execute() {
 		rotationOffset =
 			pid.calculate(
-				vision.getRelativeTargetPose(0).getRotation().getDegrees(),
-				0
+				vision.getRelativeTargetPose(0).getRotation().getDegrees()
 			);
-		swerve.driveRobotCentric(0, 0, rotationOffset / 10);
+		swerve.driveRobotCentric(0, 0, -rotationOffset / 10);
 		if (pid.atSetpoint()) {
 			timeCorrect++;
 		} else {

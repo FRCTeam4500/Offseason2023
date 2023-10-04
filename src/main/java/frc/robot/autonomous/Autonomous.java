@@ -5,7 +5,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.autos.BalanceAuto;
 import frc.robot.autonomous.autos.OnePieceAuto;
-import frc.robot.autonomous.autos.TwoPieceAuto;
+import frc.robot.commands.autoCommands.AutoAlignParallelCommand;
+import frc.robot.commands.autoCommands.AutoTurnCommand;
+import frc.robot.commands.complexCommands.AutoBalanceCommand;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -29,7 +31,8 @@ public class Autonomous {
 		autonChooser.setDefaultOption("No auto", null);
 		autonChooser.addOption("One Piece", new OnePieceAuto());
 		autonChooser.addOption("Balance", new BalanceAuto());
-		autonChooser.addOption("Two Piece", new TwoPieceAuto());
+		autonChooser.addOption("Balance Test", new AutoBalanceCommand());
+		autonChooser.addOption("April Tag Align", new AutoAlignParallelCommand());
 		Shuffleboard.getTab("Auto").add("Auto Routes", autonChooser);
 	}
 

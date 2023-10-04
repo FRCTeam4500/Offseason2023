@@ -19,12 +19,12 @@ public class OnePieceAuto extends SequentialCommandGroup {
 			new ZeroCommand(),
 			new WaitCommand(0.5),
 			new SetArmAndIntakeCommand(ArmPosition.Top),
-			new WaitCommand(0.75),
+			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
 			new ZeroCommand(),
 			new WaitCommand(0.5),
-			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2)
+			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2.25)
 		);
 	}
 }

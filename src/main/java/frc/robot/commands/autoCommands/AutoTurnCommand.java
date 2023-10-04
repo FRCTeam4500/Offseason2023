@@ -11,10 +11,9 @@ public class AutoTurnCommand extends CommandBase{
     private int timeCorrect;
     public AutoTurnCommand(double targetAngle) {
         swerve = SwerveDrive.getInstance();
-        pid = new PIDController(targetAngle, targetAngle, targetAngle);
+        pid = new PIDController(1, 0, 0);
         pid.setSetpoint(Units.degreesToRadians(targetAngle));
         pid.setTolerance(1);
-        pid.enableContinuousInput(-Math.PI, Math.PI);
         addRequirements(swerve);
     }
 
@@ -26,7 +25,7 @@ public class AutoTurnCommand extends CommandBase{
 
     @Override
     public void execute() {
-        double turnSpeed = 1.5 * pid.calculate(swerve.getRobotAngle());
+        double turnSpeed = 4 * pid.calculate(swerve.getRobotAngle());
         swerve.driveRobotCentric(0, 0, turnSpeed);
         if (pid.atSetpoint()) {
             timeCorrect++;

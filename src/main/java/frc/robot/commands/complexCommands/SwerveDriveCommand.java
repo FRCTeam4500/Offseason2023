@@ -30,8 +30,8 @@ public class SwerveDriveCommand extends CommandBase {
 	public ControlMode controlMode;
 	private ControlMode previousControlMode;
 
-	public SlewRateLimiter xLimiter = new SlewRateLimiter(1);
-	public SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+	public SlewRateLimiter xLimiter = new SlewRateLimiter(1.75);
+	public SlewRateLimiter yLimiter = new SlewRateLimiter(1.75);
 	public SlewRateLimiter zLimiter = new SlewRateLimiter(1.4);
 
 	private PIDController angleController;
@@ -74,7 +74,8 @@ public class SwerveDriveCommand extends CommandBase {
 		if(doSlew) {
 			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
 			ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-			zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+			// zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+			zSpeed = -controller.getRightX() * zSens;
 		} else {
 			xSpeed = -controller.getLeftX() * xSens;
 			ySpeed = -controller.getLeftY() * ySens;

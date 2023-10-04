@@ -110,7 +110,7 @@ public class Constants {
 		/** The percent output of the intake while picking up cubes */
 		public static final double PICKUP_CUBE_OUTPUT = -.6;
 		/** The percent output of the intake while placing cones */
-		public static final double PLACE_CONE_OUTPUT = -1;
+		public static final double PLACE_CONE_OUTPUT = -.9;
 		/** The percent output of the intake while placing cubes */
 		public static final double PLACE_CUBE_OUTPUT = .8;
 
