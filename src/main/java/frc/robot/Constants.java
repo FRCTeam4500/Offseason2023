@@ -48,9 +48,7 @@ public class Constants {
 
 		public static final double WHEEL_DIAMETER = 0.0762; // in meters
 
-		// These are the translations of the swerve modules from the center of the robot.
-		// Specifically, these measurments should land on the line that the swerve module wheel rotates around
-		// Units are meters
+		// Translations from center of robot to axis which drive wheel rotates about
 		public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(
 			0.3175,
 			0.2413
