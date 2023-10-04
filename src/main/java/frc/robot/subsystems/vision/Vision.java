@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
 import frc.robot.hardware.Limelight.CameraMode;
 
-public class Vision extends SubsystemBase implements VisionInterface{
+public class Vision extends SubsystemBase implements VisionInterface {
 
 	private static Vision instanceVision;
 	private Limelight[] limelights = new Limelight[2];
@@ -59,7 +59,10 @@ public class Vision extends SubsystemBase implements VisionInterface{
 	}
 
 	public Pose2d getRobotPose(int limelightId) {
-		return limelights[limelightId].getRobotPoseToAlliance(DriverStation.getAlliance()).toPose2d();
+		return limelights[limelightId].getRobotPoseToAlliance(
+				DriverStation.getAlliance()
+			)
+			.toPose2d();
 	}
 
 	public Pose2d getRelativeTargetPose(int limelightId) {
@@ -78,20 +81,42 @@ public class Vision extends SubsystemBase implements VisionInterface{
 		limelights[limelightId].setCameraMode(mode);
 	}
 
-
 	public Limelight getLimelight(int limelightId) {
 		return limelights[limelightId];
 	}
 
 	@Override
 	public void initSendable(SendableBuilder builder) {
-		builder.addBooleanProperty("Hehehe: Valid Targets", () -> hasValidTargets(0), null);
-		builder.addDoubleProperty("Hehehe: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(0)), null);
-		builder.addDoubleProperty("Hehehe: Target Area (%)", () -> getTakenArea(0), null);
-		
-		builder.addBooleanProperty("Haha: Valid Targets", () -> hasValidTargets(1), null);
-		builder.addDoubleProperty("Haha: Horizontal Offset (Degrees)", () -> Units.radiansToDegrees(getHorizontalAngleOffset(1)), null);
-		builder.addDoubleProperty("Haha: Target Area (%)", () -> getTakenArea(1), null);
+		builder.addBooleanProperty(
+			"Hehehe: Valid Targets",
+			() -> hasValidTargets(0),
+			null
+		);
+		builder.addDoubleProperty(
+			"Hehehe: Horizontal Offset (Degrees)",
+			() -> Units.radiansToDegrees(getHorizontalAngleOffset(0)),
+			null
+		);
+		builder.addDoubleProperty(
+			"Hehehe: Target Area (%)",
+			() -> getTakenArea(0),
+			null
+		);
 
+		builder.addBooleanProperty(
+			"Haha: Valid Targets",
+			() -> hasValidTargets(1),
+			null
+		);
+		builder.addDoubleProperty(
+			"Haha: Horizontal Offset (Degrees)",
+			() -> Units.radiansToDegrees(getHorizontalAngleOffset(1)),
+			null
+		);
+		builder.addDoubleProperty(
+			"Haha: Target Area (%)",
+			() -> getTakenArea(1),
+			null
+		);
 	}
 }
