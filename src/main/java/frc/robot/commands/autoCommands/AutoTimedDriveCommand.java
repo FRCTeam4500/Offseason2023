@@ -7,9 +7,9 @@ import frc.robot.subsystems.swerve.SwerveDrive;
 public class AutoTimedDriveCommand extends CommandBase{
     private SwerveDrive swerve;
     private ChassisSpeeds targetVelocities;
-    private double forwardSpeed;
-    private double sidewaysSpeed;
-    private double turningSpeed;
+    // private double forwardSpeed;
+    // private double sidewaysSpeed;
+    // private double turningSpeed;
     private double seconds;
     private double endTime;
     public AutoTimedDriveCommand(ChassisSpeeds targetVelocities, double timeSeconds) {

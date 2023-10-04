@@ -11,15 +11,15 @@ public class AutoBalanceCommand extends CommandBase {
 	private SwerveDrive swerve;
 	private PIDController pid;
 	private int timeThreshold;
-	private int pitchThreshold;
+	private double pitchThreshold;
 	private int timesCorrect;
 
-	public AutoBalanceCommand(int timeThreshold, int pitchThreshold) {
+	public AutoBalanceCommand() {
 		this.swerve = SwerveDrive.getInstance();
 		this.navx = swerve.getGyro();
 		this.pid = new PIDController(1, 0, 0);
-		this.timeThreshold = timeThreshold;
-		this.pitchThreshold = pitchThreshold;
+		this.timeThreshold = 1;
+		this.pitchThreshold = 2.5;
 		this.timesCorrect = 0;
 		addRequirements(swerve);
 		pid.reset();
@@ -45,5 +45,6 @@ public class AutoBalanceCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		swerve.driveRobotCentric(0, 0, 0);
+		swerve.lockMovement();
 	}
 }

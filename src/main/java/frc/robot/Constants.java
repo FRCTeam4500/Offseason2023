@@ -1,10 +1,6 @@
 package frc.robot;
-
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.List;
 
 public class Constants {
 
@@ -245,82 +241,7 @@ public class Constants {
 		}
 	}
 
-	public static class AutoConstants {
-
-		/** The maximum velocity the robot will travel at during auto <p> Units are meters per second*/
-		public static final double AUTO_MAX_SPEED = 2;
-		/** The maximum acceleration the robot will travel at during auto <p> Units are meters per second*/
-		public static final double AUTO_MAX_ACCEL = 2.0;
-
-		public static final List<PathPlannerTrajectory> TestPath = PathPlanner.loadPathGroup(
-			"TestPath",
-			2,
-			1
-		);
-
-		public static final List<PathPlannerTrajectory> BlueBotRedTop2PieceTopAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTop2PieceTop",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueBotRedTop2PieceMidAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTop2PieceMid",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueBotRedTopPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTopPlaceAndDock",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueTopPlaceAndRunAuto = PathPlanner.loadPathGroup(
-			"BlueTopPlaceAndRun",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueTopRedBot2PieceTopAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBot2PieceTop",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-		public static final List<PathPlannerTrajectory> BlueTopRedBot2PieceMidAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBot2PieceMid",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueTopRedBotPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBotPlaceAndDock",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> MidPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"MidPlaceAndDock",
-			1,
-			1
-		);
-
-		public static final List<PathPlannerTrajectory> PlaceAndMoveAuto = PathPlanner.loadPathGroup(
-			"PlaceAndMove",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> RedTopPlaceAndRunAuto = PathPlanner.loadPathGroup(
-			"RedTopPlaceAndRun",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-		// Add Auto Paths here, like the above
-	}
-
 	public static class TelemetryConstants {
-
 		public static Mode getMode() {
 			return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
 		}

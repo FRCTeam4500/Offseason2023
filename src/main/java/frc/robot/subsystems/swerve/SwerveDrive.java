@@ -313,6 +313,14 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		return currentGyroZero;
 	}
 
+	public void lockMovement() {
+		modules[1].setModuleAngle(-Math.PI/8);
+		modules[2].setModuleAngle(Math.PI/8);
+		modules[3].setModuleAngle(Math.PI/8);
+		modules[4].setModuleAngle(-Math.PI/8);
+	}
+
+
 	/**
 	 * Update with real values
 	 * <p>Order:

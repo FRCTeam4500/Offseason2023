@@ -11,7 +11,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.hardware.SparkMaxMotorController;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
-
 	private SparkMaxMotorController outputMotor;
 	private SparkMaxMotorController angleMotor;
 	private SparkMaxPIDController anglePIDController;
