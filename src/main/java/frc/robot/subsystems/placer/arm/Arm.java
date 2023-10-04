@@ -41,7 +41,7 @@ public class Arm extends SubsystemBase implements ArmInterface {
 		anglePIDController.setP(0.04);
 		anglePIDController.setI(0);
 		anglePIDController.setD(0);
-		anglePIDController.setOutputRange(-.5, .5);
+		anglePIDController.setOutputRange(-.5, .75);
 
 		extensionMotor.config_kP(0, .4);
 		extensionMotor.config_kI(0, 0);

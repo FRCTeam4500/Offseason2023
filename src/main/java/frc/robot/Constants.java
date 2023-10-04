@@ -1,4 +1,5 @@
 package frc.robot;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 
@@ -92,7 +93,7 @@ public class Constants {
 		/** The angle of the arm when it is placing game pieces */
 		public static final double PLACE_ANGLE = -10;
 		/** The angle of the arm when it is picking up from the substation */
-		public static final double SUBSTATION_ANGLE = -52.51;
+		public static final double SUBSTATION_ANGLE = -10;
 		/** The angle of the arm when it is picking up from the ground */
 		public static final double GROUND_ANGLE = -243;
 	}
@@ -122,7 +123,7 @@ public class Constants {
 		/** Intake angle for placing top level game pieces */
 		public static final double TOP_ANGLE = -70;
 		/** Intake angle for picking up game pieces from the substation */
-		public static final double SUBSTATION_ANGLE = -140;
+		public static final double SUBSTATION_ANGLE = -130;
 	}
 
 	public static class EnumConstants {
@@ -240,6 +241,7 @@ public class Constants {
 	}
 
 	public static class TelemetryConstants {
+
 		public static Mode getMode() {
 			return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
 		}

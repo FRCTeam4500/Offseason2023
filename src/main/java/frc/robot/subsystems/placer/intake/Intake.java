@@ -11,9 +11,11 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.hardware.SparkMaxMotorController;
 
 public class Intake extends SubsystemBase implements IntakeInterface {
+
 	private SparkMaxMotorController outputMotor;
 	private SparkMaxMotorController angleMotor;
 	private SparkMaxPIDController anglePIDController;
+	private boolean isSubstation = false;
 	private static GamePiece gamePiece = GamePiece.Cone;
 	private double targetAngle;
 	private double targetOutput;
@@ -72,6 +74,11 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	public void setAngle(double angle) {
 		targetAngle = angle;
+		if (angle == IntakeConstants.SUBSTATION_ANGLE) {
+			isSubstation = true;
+		} else {
+			isSubstation = false;
+		}
 		angleMotor.setAngle(angle);
 	}
 
@@ -93,6 +100,10 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 
 	public static GamePiece getGamePiece() {
 		return Intake.gamePiece;
+	}
+
+	public boolean getIsSubstation() {
+		return isSubstation;
 	}
 
 	@Override
