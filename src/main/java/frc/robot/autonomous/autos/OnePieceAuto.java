@@ -11,19 +11,20 @@ import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 
-public class OnePieceAuto extends SequentialCommandGroup{
-    public OnePieceAuto() {
-        addCommands(
-            new ResetGyroCommand(180),
-            new ZeroCommand(),
-            new WaitCommand(0.5),
-            new SetArmAndIntakeCommand(ArmPosition.Top),
-            new WaitCommand(0.75),
-            new SetIntakeSpeedCommand(IntakeMode.Place),
-            new WaitCommand(1),
-            new ZeroCommand(),
-            new WaitCommand(0.5),
-            new AutoTimedDriveCommand(new ChassisSpeeds(-1, 0, 0), 2)
-        );
-    }
+public class OnePieceAuto extends SequentialCommandGroup {
+
+	public OnePieceAuto() {
+		addCommands(
+			new ResetGyroCommand(180),
+			new ZeroCommand(),
+			new WaitCommand(0.5),
+			new SetArmAndIntakeCommand(ArmPosition.Top),
+			new WaitCommand(0.75),
+			new SetIntakeSpeedCommand(IntakeMode.Place),
+			new WaitCommand(1),
+			new ZeroCommand(),
+			new WaitCommand(0.5),
+			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2)
+		);
+	}
 }
