@@ -45,6 +45,5 @@ public class AutoBalanceCommand extends CommandBase {
 	@Override
 	public void end(boolean interrupted) {
 		swerve.driveRobotCentric(0, 0, 0);
-		swerve.lockMovement();
 	}
 }

@@ -21,7 +21,8 @@ import frc.robot.subsystems.messaging.MessagingSystem;
  * <p> Used to move the robot chassis
  */
 public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
-	private Gyro gyro;	
+
+	private Gyro gyro;
 	private SwerveModule[] modules;
 	private SwerveDriveKinematics kinematics;
 	private SwerveDriveOdometry odometry;
@@ -109,10 +110,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	@Override
 	public void periodic() {
-		odometry.update(
-			gyro.getRotation2d(),
-			getModulePositions()
-		);
+		odometry.update(gyro.getRotation2d(), getModulePositions());
 		// if (vision.hasValidTargets(0)) {
 		// 	poseEstimator.addVisionMeasurement(
 		// 		vision.getRobotPose(0),
@@ -183,11 +181,13 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		}
 	}
 
-	/** 
-	 * Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time 
+	/**
+	 * Fixes situation where robot drifts in the direction it's rotating in if turning and translating at the same time
 	 * @see https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964
-	*/
-	private static ChassisSpeeds discretize(ChassisSpeeds originalChassisSpeeds) {
+	 */
+	private static ChassisSpeeds discretize(
+		ChassisSpeeds originalChassisSpeeds
+	) {
 		double vx = originalChassisSpeeds.vxMetersPerSecond;
 		double vy = originalChassisSpeeds.vyMetersPerSecond;
 		double omega = originalChassisSpeeds.omegaRadiansPerSecond;
@@ -278,8 +278,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void resetPose(Pose2d newPose) {
 		odometry.resetPosition(
-		gyro.getRotation2d(),
-		getModulePositions(),
+			gyro.getRotation2d(),
+			getModulePositions(),
 			newPose
 		);
 	}
@@ -313,13 +313,12 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 		return currentGyroZero;
 	}
 
-	public void lockMovement() {
-		modules[1].setModuleAngle(-Math.PI/8);
-		modules[2].setModuleAngle(Math.PI/8);
-		modules[3].setModuleAngle(Math.PI/8);
-		modules[4].setModuleAngle(-Math.PI/8);
+	public void lockMovement(double turnAngle) {
+		modules[0].setModuleAngle(-turnAngle);
+		modules[1].setModuleAngle(turnAngle);
+		modules[2].setModuleAngle(turnAngle);
+		modules[3].setModuleAngle(-turnAngle);
 	}
-
 
 	/**
 	 * Update with real values

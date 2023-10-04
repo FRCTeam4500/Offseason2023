@@ -7,6 +7,7 @@ import frc.robot.subsystems.placer.Placer;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
+
 	private final Autonomous autonomous;
 	private final MessagingSystem messaging;
 
@@ -26,6 +27,10 @@ public class RobotContainer {
 		} else {
 			messaging.addMessage("No Auto Command Selected");
 		}
+	}
+
+	public void autonomousExit() {
+		SwerveDrive.getInstance().lockMovement(Math.PI / 4);
 	}
 
 	public void teleopInit() {

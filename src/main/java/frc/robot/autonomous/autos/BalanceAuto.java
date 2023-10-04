@@ -13,8 +13,8 @@ public class BalanceAuto extends SequentialCommandGroup {
 		addCommands(
 			new ResetGyroCommand(180),
 			// new ZeroCommand(),
-			new AutoTimedDriveCommand(new ChassisSpeeds(-1.5, 0, 0), 5),
-			new AutoTimedDriveCommand(new ChassisSpeeds(1, 0, 0), 4),
+			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2.25),
+			new AutoTimedDriveCommand(new ChassisSpeeds(2, 0, 0), 1.25),
 			new AutoBalanceCommand()
 		);
 	}
