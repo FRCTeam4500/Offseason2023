@@ -58,9 +58,11 @@ public class OperatorController extends CommandJoystick {
 		cubeButton.toggleOnTrue(
 			new SetIntakeSpeedCommand(IntakeMode.PickupCube)
 				.alongWith(
-					new InstantCommand(() ->
-						Intake.getInstance().changeAngle(-10)
-					)
+					new InstantCommand(() -> {
+						if (Intake.getInstance().getIsSubstation()) {
+							Intake.getInstance().changeAngle(-10);
+						}
+					})
 				)
 		);
 		cubeButton.toggleOnFalse(new ZeroCommand());
