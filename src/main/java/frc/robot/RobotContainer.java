@@ -3,7 +3,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.autonomous.Autonomous;
 import frc.robot.subsystems.messaging.MessagingSystem;
-import frc.robot.subsystems.placer.Placer;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
@@ -14,7 +13,6 @@ public class RobotContainer {
 	public RobotContainer() {
 		DriveController.getInstance();
 		OperatorController.getInstance();
-		Placer.getInstance();
 		autonomous = Autonomous.getInstance();
 		messaging = MessagingSystem.getInstance();
 	}

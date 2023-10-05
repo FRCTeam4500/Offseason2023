@@ -12,7 +12,7 @@ public class BalanceAuto extends SequentialCommandGroup {
 	public BalanceAuto() {
 		addCommands(
 			new ResetGyroCommand(180),
-			// new ZeroCommand(),
+			// new ZeroCommand(), FIXME: Why No Zero?
 			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2.25),
 			new AutoTimedDriveCommand(new ChassisSpeeds(2, 0, 0), 1.25),
 			new AutoBalanceCommand()

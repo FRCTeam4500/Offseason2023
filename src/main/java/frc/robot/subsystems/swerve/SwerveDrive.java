@@ -328,41 +328,25 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	@Override
 	public void updateInputs(DriveInputs inputs) {
-		// inputs.frontLeftModuleDriveMeters =
-		// 	modules[0].getModulePosition().distanceMeters;
 		inputs.frontLeftModuleDriveVelocity =
 			modules[0].getModuleState().speedMetersPerSecond;
 		inputs.frontLeftModuleAngleRad =
 			modules[0].getModuleState().angle.getRadians();
-		// inputs.frontLeftModuleAngleVelocity = modules[0].getAngularVelocity();
 
-		// inputs.frontRightModuleDriveMeters =
-		// 	modules[1].getModulePosition().distanceMeters;
 		inputs.frontRightModuleDriveVelocity =
 			modules[1].getModuleState().speedMetersPerSecond;
 		inputs.frontRightModuleAngleRad =
 			modules[1].getModuleState().angle.getRadians();
-		// inputs.frontRightModuleAngleVelocity = modules[1].getAngularVelocity();
 
-		// inputs.backLeftModuleDriveMeters =
-		// 	modules[2].getModulePosition().distanceMeters;
 		inputs.backLeftModuleDriveVelocity =
 			modules[2].getModuleState().speedMetersPerSecond;
 		inputs.backLeftModuleAngleRad =
 			modules[2].getModuleState().angle.getRadians();
-		// inputs.backLeftModuleAngleVelocity = modules[2].getAngularVelocity();
 
-		// inputs.backRightModuleDriveMeters =
-		// 	modules[3].getModulePosition().distanceMeters;
 		inputs.backRightModuleDriveVelocity =
 			modules[3].getModuleState().speedMetersPerSecond;
 		inputs.backRightModuleAngleRad =
 			modules[3].getModuleState().angle.getRadians();
-		// inputs.backRightModuleAngleVelocity = modules[3].getAngularVelocity();
-
-		// inputs.gyroYawRad = gyro.getAngle();
-		// inputs.gyroPitchRad = gyro.getPitch();
-		// inputs.gyroRollRad = gyro.getRoll();
 	}
 
 	/**

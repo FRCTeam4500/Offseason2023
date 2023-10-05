@@ -59,20 +59,9 @@ public class Robot extends LoggedRobot {
 				logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
 				LoggedPowerDistribution.getInstance(1, ModuleType.kRev); // Enables power distribution logging
 				break;
-			case SIM:
-				// logger.addDataReceiver(new WPILOGWriter(""));
-				// logger.addDataReceiver(new NT4Publisher());
-				break;
-			case REPLAY:
-				setUseTiming(false); // Run as fast as possible
-				String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-				logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-				logger.addDataReceiver(
-					new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))
-				); // Save outputs to a new log
+			default:
 				break;
 		}
-
 		logger.start(); // Start logging
 		robotContainer = new RobotContainer();
 		timer.schedule(new LogSubsystemInputsTask(), 10, 20);
