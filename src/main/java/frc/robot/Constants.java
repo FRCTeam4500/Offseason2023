@@ -238,6 +238,19 @@ public class Constants {
 				this.model = model;
 			}
 		}
+
+		public static enum ControlMode {
+			/** Drives the robot relative to the field */
+			FieldCentric,
+			/** Drives the robot relative to itself */
+			RobotCentric,
+			/** Field centric but the robot maintains a specific angle */
+			HoldAngle,
+			/** Driver controls forward motion, robot aims to a vision target */
+			AimToTarget,
+			/** Driver controls forward motion, robot aligns to a vision target */
+			AlignToTarget
+		}
 	}
 
 	public static class TelemetryConstants {

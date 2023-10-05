@@ -5,8 +5,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
-import frc.robot.Constants.EnumConstants.VisionTarget;
-import frc.robot.commands.autoCommands.AutoAlignCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
@@ -25,9 +23,6 @@ public class DriveController extends CommandXboxController {
 	private final Trigger resetGyroButton = this.a();
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
-	private final Trigger gamePieceAlignButton = this.y();
-	private final Trigger substationAlignButton = this.povUp();
-	private final Trigger placeAlignButton = this.povDown();
 	private final Trigger cancelButton = this.start();
 
 	private DriveController() {
@@ -58,10 +53,6 @@ public class DriveController extends CommandXboxController {
 
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
-
-		gamePieceAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.GamePiece));
-		placeAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.ReflectiveTape));
-		substationAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.AprilTag));
 	}
 
 	public void addToShuffleBoard() {

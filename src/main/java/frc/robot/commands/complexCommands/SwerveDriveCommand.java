@@ -6,8 +6,11 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DriveController;
+import frc.robot.Constants.EnumConstants.ControlMode;
+import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
+import frc.robot.subsystems.vision.Vision;
 
 /**
  * A swerve command with support for two swerve control modes:
@@ -23,18 +26,19 @@ import frc.robot.subsystems.swerve.SwerveDrive;
  * For our purposes, the front of the robot is the intake side.
  */
 public class SwerveDriveCommand extends CommandBase {
-
 	private SwerveDrive swerve;
+	private Vision vision;
 	private CommandXboxController controller;
 
-	public ControlMode controlMode;
+	private ControlMode controlMode;
 	private ControlMode previousControlMode;
 
+	private VisionTarget visionTarget;
 	public SlewRateLimiter xLimiter = new SlewRateLimiter(1.75);
 	public SlewRateLimiter yLimiter = new SlewRateLimiter(1.75);
 	public SlewRateLimiter zLimiter = new SlewRateLimiter(1.4);
 
-	private PIDController angleController;
+	private PIDController pid;
 	private boolean doSlew;
 
 	private double xSens;
@@ -45,60 +49,84 @@ public class SwerveDriveCommand extends CommandBase {
 	private double ySpeed;
 	private double zSpeed;
 
-	public double targetAngle = 0;
+	public double targetAngle;
 
 	public SwerveDriveCommand(DriveController xbox) {
 		swerve = SwerveDrive.getInstance();
+		vision = Vision.getInstance();
 		controller = xbox;
-		controlMode = ControlMode.FieldCentric; //default control mode is field-centric
-		angleController = new PIDController(1, 0, 0);
-		angleController.enableContinuousInput(-Math.PI, Math.PI);
-		fastSpeed();
+		pid = new PIDController(1, 0, 0);
 		addRequirements(swerve);
 	}
 
 	@Override
+	public void initialize() {
+		setControlMode(ControlMode.FieldCentric);
+		targetAngle = 0;
+		pid.reset();
+		pid.setSetpoint(0);
+		visionTarget = VisionTarget.AprilTag;
+		fastSpeed();
+	}
+
+	@Override
 	public void execute() {
-		if (controller.getRightY() > 0.5) {
-			controlMode = ControlMode.AngleCentric;
-			targetAngle = 180;
-		}
-		if (controller.getRightY() < -0.5) {
-			controlMode = ControlMode.AngleCentric;
-			targetAngle = 0;
-		}
-		if (controlMode != ControlMode.AngleCentric) {
-			previousControlMode = controlMode;
-		}
-
-		if(doSlew) {
-			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
-			ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-			// zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
-			zSpeed = -controller.getRightX() * zSens;
-		} else {
-			xSpeed = -controller.getLeftX() * xSens;
-			ySpeed = -controller.getLeftY() * ySens;
-			zSpeed = -controller.getRightX() * zSens;
-		}
-
-		switch (controlMode) {
+		checkForHoldAngle();
+		convertControllerSpeeds();
+		double offsetDegrees = getTargetOffsetDegrees();
+		switch (getControlMode()) {
 			case FieldCentric:
 				moveFieldCentric(xSpeed, ySpeed, zSpeed);
 				break;
 			case RobotCentric:
 				moveRobotCentric(xSpeed, ySpeed, zSpeed);
 				break;
-			case AngleCentric:
+			case HoldAngle:
 				if (Math.abs(controller.getRightX()) > 0.1) {
-					controlMode = previousControlMode;
+					setControlMode(previousControlMode);
 				} else {
 					moveAngleCentric(xSpeed, ySpeed);
 				}
 				break;
+			case AimToTarget:
+				moveRobotCentric(xSpeed, 0, pid.calculate(offsetDegrees)/10);
+				break;
+			case AlignToTarget:
+				moveRobotCentric(xSpeed, pid.calculate(offsetDegrees)/10, 0);
+				break;
+		}
+	}
+	private double getTargetOffsetDegrees() {
+		vision.setPipeline(visionTarget.limelightId, visionTarget.pipeline);
+		double offsetDegrees = vision.getHorizontalAngleOffset(visionTarget.limelightId);
+		if (!vision.hasValidTargets(visionTarget.limelightId)) {
+			offsetDegrees = 0;
+		}
+		return offsetDegrees;
+	}
+
+	private void checkForHoldAngle() {
+		if (controller.getRightY() > 0.5) {
+			setControlMode(ControlMode.HoldAngle);
+			targetAngle = 180;
+		}
+		if (controller.getRightY() < -0.5) {
+			setControlMode(ControlMode.HoldAngle);
+			targetAngle = 0;
 		}
 	}
 
+	private void convertControllerSpeeds() {
+		if(doSlew) {
+			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
+			ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
+		} else {
+			xSpeed = -controller.getLeftX() * xSens;
+			ySpeed = -controller.getLeftY() * ySens;
+		}
+			zSpeed = -controller.getRightX() * zSens;
+	}
+	
 	private void moveFieldCentric(double x, double y, double w) {
 		swerve.driveFieldCentric(y, x, w);
 	}
@@ -110,17 +138,11 @@ public class SwerveDriveCommand extends CommandBase {
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
 			2 *
-			angleController.calculate(
+			pid.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)
 			);
 		moveFieldCentric(xSpeed, ySpeed, wSpeed);
-	}
-
-	public enum ControlMode {
-		FieldCentric,
-		RobotCentric,
-		AngleCentric,
 	}
 
 	public void fastSpeed() {
@@ -129,13 +151,6 @@ public class SwerveDriveCommand extends CommandBase {
 		zSens = 3.5;
 		doSlew = true;
 		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Fast");
-	}
-
-	public void midSpeed() {
-		xSens = 2;
-		ySens = 2;
-		zSens = 1.75;
-		doSlew = false;
 	}
 
 	public void slowSpeed() {
@@ -150,21 +165,39 @@ public class SwerveDriveCommand extends CommandBase {
 		targetAngle = angle;
 	}
 
-	/**
-	 * Switches between RobotCentric and FieldCentric
-	 */
+	public void setVisionTarget(VisionTarget newVisionTarget) {
+		visionTarget = newVisionTarget;
+	}
+
 	public void switchControlMode() {
 		if (controlMode == ControlMode.FieldCentric) {
-			controlMode = ControlMode.RobotCentric;
-			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Robot Centric");
+			setControlMode(ControlMode.RobotCentric);
 		} else {
-			controlMode = ControlMode.FieldCentric;
-			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Field Centric");
+			setControlMode(ControlMode.FieldCentric);
 		}
 	}
 
+	public void setControlMode(ControlMode newControlMode) {
+		if (controlMode == ControlMode.RobotCentric || 
+			controlMode == ControlMode.FieldCentric) {
+			previousControlMode = controlMode;
+		}
+		pid.reset();
+		controlMode = newControlMode;
+		MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> " + newControlMode.name());
+	}
+
+	public ControlMode getControlMode() {
+		return controlMode;
+	}
+
+	public double getTargetAngle() {
+		return targetAngle;
+	}
+
+
 	public void initSendable(SendableBuilder builder) {
-		builder.addStringProperty("Drive Mode", () -> controlMode.name(), null);
+		builder.addStringProperty("Drive Mode", () -> getControlMode().name(), null);
 		builder.addDoubleProperty("Target Angle: ", () -> targetAngle, null);
 	}
 }

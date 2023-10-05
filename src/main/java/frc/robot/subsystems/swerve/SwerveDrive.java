@@ -166,8 +166,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void driveModules(ChassisSpeeds targetChassisSpeeds) {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-			// discretize(targetChassisSpeeds)
-			targetChassisSpeeds
+			discretize(targetChassisSpeeds)
 		);
 		driveModules(states);
 	}
