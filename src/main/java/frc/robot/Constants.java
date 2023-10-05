@@ -249,7 +249,9 @@ public class Constants {
 			/** Driver controls forward motion, robot aims to a vision target */
 			AimToTarget,
 			/** Driver controls forward motion, robot aligns to a vision target */
-			AlignToTarget
+			AlignToTarget,
+			/** Robot auto balances charge station */
+			Balance
 		}
 	}
 

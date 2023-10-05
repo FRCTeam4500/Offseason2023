@@ -49,7 +49,8 @@ public class SwerveDriveCommand extends CommandBase {
 	private double ySpeed;
 	private double zSpeed;
 
-	public double targetAngle;
+	private double targetAngle;
+	private int timesBalanced;
 
 	public SwerveDriveCommand(DriveController xbox) {
 		swerve = SwerveDrive.getInstance();
@@ -63,9 +64,8 @@ public class SwerveDriveCommand extends CommandBase {
 	public void initialize() {
 		setControlMode(ControlMode.FieldCentric);
 		targetAngle = 0;
-		pid.reset();
-		pid.setSetpoint(0);
 		visionTarget = VisionTarget.AprilTag;
+		timesBalanced = 0;
 		fastSpeed();
 	}
 
@@ -94,8 +94,25 @@ public class SwerveDriveCommand extends CommandBase {
 			case AlignToTarget:
 				moveRobotCentric(xSpeed, pid.calculate(offsetDegrees)/10, 0);
 				break;
+			case Balance:
+				pid.setTolerance(3);
+				moveRobotCentric(pid.calculate(Math.toDegrees(swerve.getGyro().getPitch()))/20, 0, 0);
+				checkForBalance();
+				break;
 		}
 	}
+	
+	private void checkForBalance() {
+		if (pid.atSetpoint()) {
+			timesBalanced++;
+		} else {
+			timesBalanced = 0;
+		}
+		if (timesBalanced > 50) {
+			switchControlMode();
+		}
+	}
+
 	private double getTargetOffsetDegrees() {
 		vision.setPipeline(visionTarget.limelightId, visionTarget.pipeline);
 		double offsetDegrees = vision.getHorizontalAngleOffset(visionTarget.limelightId);
@@ -137,7 +154,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
-			2 *
+			4 *
 			pid.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)
@@ -195,9 +212,8 @@ public class SwerveDriveCommand extends CommandBase {
 		return targetAngle;
 	}
 
-
 	public void initSendable(SendableBuilder builder) {
-		builder.addStringProperty("Drive Mode", () -> getControlMode().name(), null);
+		builder.addStringProperty("Drive Mode: ", () -> getControlMode().name(), null);
 		builder.addDoubleProperty("Target Angle: ", () -> targetAngle, null);
 	}
 }
