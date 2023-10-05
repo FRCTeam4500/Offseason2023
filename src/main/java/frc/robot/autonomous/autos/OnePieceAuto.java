@@ -9,6 +9,7 @@ import frc.robot.commands.autoCommands.AutoTimedDriveCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
+import frc.robot.commands.complexCommands.TeleopZeroCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 
 public class OnePieceAuto extends SequentialCommandGroup {
@@ -24,7 +25,8 @@ public class OnePieceAuto extends SequentialCommandGroup {
 			new WaitCommand(1),
 			new ZeroCommand(),
 			new WaitCommand(0.5),
-			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2.25)
+			new AutoTimedDriveCommand(new ChassisSpeeds(-2, 0, 0), 2.25),
+			new TeleopZeroCommand()
 		);
 	}
 }

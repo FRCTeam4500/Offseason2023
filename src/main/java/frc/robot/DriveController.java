@@ -1,17 +1,23 @@
 package frc.robot;
 
+import com.ctre.phoenix.motorcontrol.RemoteLimitSwitchSource;
+
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
 import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.commands.autoCommands.AutoAlignCommand;
+import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
+import frc.robot.commands.autoCommands.AutoAlignParallelCommand;
+import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
-import frc.robot.commands.complexCommands.ZeroCommand;
+import frc.robot.commands.complexCommands.TeleopZeroCommand;
 import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
@@ -25,9 +31,11 @@ public class DriveController extends CommandXboxController {
 	private final Trigger resetGyroButton = this.a();
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
-	private final Trigger gamePieceAlignButton = this.y();
-	private final Trigger substationAlignButton = this.povUp();
-	private final Trigger placeAlignButton = this.povDown();
+	private final Trigger alignGamePieceButton = this.rightBumper();
+	private final Trigger alignTapeButton = this.povRight();
+	private final Trigger alignTapeButton2 = this.povLeft();
+	private final Trigger alignSubstationButton = this.povUp();
+	private final Trigger alignGridButton = this.povDown();
 	private final Trigger cancelButton = this.start();
 
 	private DriveController() {
@@ -56,12 +64,24 @@ public class DriveController extends CommandXboxController {
 
 		cancelButton.toggleOnTrue(new CancellationCommand());
 
-		driverPlaceButton.toggleOnTrue(new PlaceCommand());
-		driverPlaceButton.toggleOnFalse(new ZeroCommand());
+		driverPlaceButton.toggleOnTrue(
+			new PlaceCommand()
+			.andThen(new WaitCommand(0.5))
+			.andThen(new TeleopZeroCommand())
+		);
 
-		gamePieceAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.GamePiece));
-		placeAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.ReflectiveTape));
-		substationAlignButton.toggleOnTrue(new AutoAlignCommand(VisionTarget.AprilTag));
+
+		alignGamePieceButton.toggleOnTrue(new AutoAlignRotationalCommand(VisionTarget.GamePiece));
+		alignTapeButton.toggleOnTrue(new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape));
+		alignTapeButton2.toggleOnTrue(new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape));
+		// alignSubstationButton.toggleOnTrue(
+		// 	new AutoTurnCommand(0)
+		// 	.andThen(new AutoAlignParallelCommand())	
+		// );
+		// alignGridButton.toggleOnTrue(
+		// 	new AutoTurnCommand(180)
+		// 	.andThen(new AutoAlignParallelCommand())	
+		// );
 	}
 
 	public void addToShuffleBoard() {

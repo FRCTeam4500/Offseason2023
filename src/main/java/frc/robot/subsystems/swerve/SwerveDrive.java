@@ -54,7 +54,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 				false,
 				false,
 				0.1,
-				0.3,
+				0.2,
 				false,
 				false
 			),
@@ -166,8 +166,8 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 	 */
 	public void driveModules(ChassisSpeeds targetChassisSpeeds) {
 		SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-			// discretize(targetChassisSpeeds)
-			targetChassisSpeeds
+			discretize(targetChassisSpeeds)
+			// targetChassisSpeeds
 		);
 		driveModules(states);
 	}

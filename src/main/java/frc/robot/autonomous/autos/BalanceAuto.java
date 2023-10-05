@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autoCommands.AutoTimedDriveCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.AutoBalanceCommand;
+import frc.robot.commands.complexCommands.TeleopZeroCommand;
 import frc.robot.commands.complexCommands.ZeroCommand;
 
 public class BalanceAuto extends SequentialCommandGroup {

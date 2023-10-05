@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.EnumConstants.ArmPosition;
@@ -10,7 +11,7 @@ import frc.robot.Constants.JoystickConstants;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
-import frc.robot.commands.complexCommands.ZeroCommand;
+import frc.robot.commands.complexCommands.TeleopZeroCommand;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
@@ -65,12 +66,12 @@ public class OperatorController extends CommandJoystick {
 					})
 				)
 		);
-		cubeButton.toggleOnFalse(new ZeroCommand());
+		cubeButton.toggleOnFalse(new TeleopZeroCommand());
 
 		coneButton.toggleOnTrue(
 			new SetIntakeSpeedCommand(IntakeMode.PickupCone)
 		);
-		coneButton.toggleOnFalse(new ZeroCommand());
+		coneButton.toggleOnFalse(new TeleopZeroCommand());
 
 		readyBotButton.toggleOnTrue(
 			new SetArmAndIntakeCommand(ArmPosition.Bot)
@@ -85,8 +86,11 @@ public class OperatorController extends CommandJoystick {
 			new SetArmAndIntakeCommand(ArmPosition.Sub)
 		);
 
-		placeButton.toggleOnTrue(new PlaceCommand());
-		placeButton.toggleOnFalse(new ZeroCommand());
+		placeButton.toggleOnTrue(
+			new PlaceCommand()
+			.andThen(new WaitCommand(0.5))
+			.andThen(new TeleopZeroCommand()
+		));
 	}
 
 	public void addToShuffleBoard() {

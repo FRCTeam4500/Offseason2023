@@ -96,6 +96,8 @@ public class Constants {
 		public static final double SUBSTATION_ANGLE = -10;
 		/** The angle of the arm when it is picking up from the ground */
 		public static final double GROUND_ANGLE = -243;
+		/** Angle of arm when moving in teleop */
+		public static final double TELEOP_DRIVE_ANGLE = -110;
 	}
 
 	public static class IntakeConstants {
@@ -170,6 +172,11 @@ public class Constants {
 				ArmConstants.SUBSTATION_EXTENSION,
 				ArmConstants.SUBSTATION_ANGLE,
 				IntakeConstants.SUBSTATION_ANGLE
+			),
+			TELEOP_MOVING(
+				ArmConstants.ZERO_EXTENSION,
+				ArmConstants.TELEOP_DRIVE_ANGLE,
+				IntakeConstants.ZERO_ANGLE
 			);
 
 			public double armExtension;

@@ -31,8 +31,6 @@ public class Autonomous {
 		autonChooser.setDefaultOption("No auto", null);
 		autonChooser.addOption("One Piece", new OnePieceAuto());
 		autonChooser.addOption("Balance", new BalanceAuto());
-		autonChooser.addOption("Balance Test", new AutoBalanceCommand());
-		autonChooser.addOption("April Tag Align", new AutoAlignParallelCommand());
 		Shuffleboard.getTab("Auto").add("Auto Routes", autonChooser);
 	}
 

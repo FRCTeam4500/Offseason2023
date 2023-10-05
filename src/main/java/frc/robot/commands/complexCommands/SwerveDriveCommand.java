@@ -109,7 +109,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
-			2 *
+			4 *
 			angleController.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)

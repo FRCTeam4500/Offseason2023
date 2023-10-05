@@ -41,6 +41,18 @@ public class Limelight {
 		}
 	}
 
+	public String getSeenGamePiece() {
+		int pieceId = (int) getEntry("tclass");
+		switch (pieceId) {
+			case 0:
+				return "Cone";	
+			case 1:
+				return "Cube";
+			default:
+				return "None";
+		}
+	}
+
 	public double getHorizontalOffsetFromCrosshair() {
 		return Math.toRadians(getEntry("tx"));
 	}

@@ -18,7 +18,7 @@ public class Vision extends SubsystemBase implements VisionInterface {
 	private Vision() {
 		limelights[0] = new Limelight("limelight-hehehe"); // Limelight 3, used for april tags and reflective tape
 		limelights[1] = new Limelight("limelight-haha"); // Limelight 2, used for game pieces
-		setPipeline(0, 0);
+		setPipeline(0, 1);
 		setPipeline(1, 0);
 	}
 
@@ -73,6 +73,10 @@ public class Vision extends SubsystemBase implements VisionInterface {
 		return limelights[limelightId].hasValidTargets();
 	}
 
+	public String getSeenGamePiece(int limelightId) {
+		return limelights[limelightId].getSeenGamePiece();
+	}
+
 	public void setPipeline(int limelightId, int pipeline) {
 		limelights[limelightId].setPipeline(pipeline);
 	}
@@ -118,5 +122,7 @@ public class Vision extends SubsystemBase implements VisionInterface {
 			() -> getTakenArea(1),
 			null
 		);
+		builder.addStringProperty("Seen Game Piece", () -> getSeenGamePiece(1), null);
+		builder.addDoubleProperty("Hehehe Skew", () -> getSkew(0), null);
 	}
 }
