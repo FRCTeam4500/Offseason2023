@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.JoystickConstants;
+import frc.robot.Constants.EnumConstants.ControlMode;
+import frc.robot.Constants.EnumConstants.VisionTarget;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
@@ -24,6 +26,9 @@ public class DriveController extends CommandXboxController {
 	private final Trigger slowModeButton = this.leftBumper();
 	private final Trigger driverPlaceButton = this.b();
 	private final Trigger cancelButton = this.start();
+	private final Trigger aprilTagAlignButton = this.povLeft();
+	private final Trigger gamePieceAlignButton = this.povRight();
+	private final Trigger reflectiveTapeAlignButton = this.povDown();
 
 	private DriveController() {
 		super(JoystickConstants.DRIVER_PORT);
@@ -39,7 +44,7 @@ public class DriveController extends CommandXboxController {
 	}
 
 	public void setButtons() {
-		swerveCommand = new SwerveDriveCommand(this);
+		swerveCommand = SwerveDriveCommand.getInstance(this);
 		SwerveDrive.getInstance().setDefaultCommand(swerveCommand);
 
 		switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.switchControlMode()));
@@ -53,6 +58,27 @@ public class DriveController extends CommandXboxController {
 
 		driverPlaceButton.toggleOnTrue(new PlaceCommand());
 		driverPlaceButton.toggleOnFalse(new ZeroCommand());
+
+		aprilTagAlignButton.toggleOnTrue(
+			new InstantCommand(() -> {
+				swerveCommand.setVisionTarget(VisionTarget.AprilTag);
+				swerveCommand.setControlMode(ControlMode.AlignToTarget);
+			})
+		);
+
+		reflectiveTapeAlignButton.toggleOnTrue(
+			new InstantCommand(() -> {
+				swerveCommand.setVisionTarget(VisionTarget.ReflectiveTape);
+				swerveCommand.setControlMode(ControlMode.AlignToTarget);
+			})
+		);
+
+		gamePieceAlignButton.toggleOnTrue(
+			new InstantCommand(() -> {
+				swerveCommand.setVisionTarget(VisionTarget.GamePiece);
+				swerveCommand.setControlMode(ControlMode.AimToTarget);
+			})
+		);
 	}
 
 	public void addToShuffleBoard() {

@@ -52,7 +52,20 @@ public class SwerveDriveCommand extends CommandBase {
 	private double targetAngle;
 	private int timesBalanced;
 
-	public SwerveDriveCommand(DriveController xbox) {
+	private static SwerveDriveCommand instance = null;
+
+	public static synchronized SwerveDriveCommand getInstance(DriveController xbox) {
+		if (instance == null) {
+			instance = new SwerveDriveCommand(xbox);
+		}
+		return instance;
+	}
+
+	public static synchronized SwerveDriveCommand getInstance() {
+		return instance;
+	}
+
+	private SwerveDriveCommand(DriveController xbox) {
 		swerve = SwerveDrive.getInstance();
 		vision = Vision.getInstance();
 		controller = xbox;
