@@ -6,10 +6,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.EnumConstants.ArmPosition;
-import frc.robot.autonomous.autos.BalanceAuto;
-import frc.robot.autonomous.autos.OnePieceAuto;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -19,8 +15,7 @@ public class Autonomous {
 	SwerveDrive swerve;
 	Arm arm;
 	Intake intake;
-	private final SendableChooser<Command> autonChooser = new SendableChooser<Command>();
-	private final SendableChooser<ArmPosition> firstPieceHeightChooser = new SendableChooser<ArmPosition>();
+	private final SendableChooser<String> autonChooser = new SendableChooser<String>();
 	private final SendableChooser<Pose2d> startingPositionChooser = new SendableChooser<Pose2d>();
 
 	private Autonomous() {
@@ -32,13 +27,9 @@ public class Autonomous {
 
 	private void configureAuto() {
 		autonChooser.setDefaultOption("No auto", null);
-		autonChooser.addOption("One Piece", new OnePieceAuto());
-		autonChooser.addOption("Balance", new BalanceAuto());
+		autonChooser.addOption("One Piece", "One Piece");
+		autonChooser.addOption("Balance", "Balance");
 		Shuffleboard.getTab("Display").add("Auto Route", autonChooser);
-
-		firstPieceHeightChooser.setDefaultOption("Top", ArmPosition.Top);
-		firstPieceHeightChooser.addOption("Middle", ArmPosition.Mid);
-		Shuffleboard.getTab("Display").add("First Piece Height", firstPieceHeightChooser);
 
 		Pose2d midPose = new Pose2d(3.29, 1.9, new Rotation2d(Math.PI));
 		Pose2d bumpPose = new Pose2d(0.43, 1.9, new Rotation2d(Math.PI));
@@ -61,12 +52,8 @@ public class Autonomous {
 		return autonomous;
 	}
 
-	public Command getAutonCommand() {
+	public String getAutonCommand() {
 		return autonChooser.getSelected();
-	}
-
-	public ArmPosition getFirstPieceHeight() {
-		return firstPieceHeightChooser.getSelected();
 	}
 
 	public Pose2d getStartingPosition() {

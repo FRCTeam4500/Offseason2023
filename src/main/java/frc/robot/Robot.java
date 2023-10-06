@@ -61,7 +61,7 @@ public class Robot extends LoggedRobot {
 				break;
 		}
 		logger.start(); // Start logging
-		robotContainer = new RobotContainer();
+		robotContainer = RobotContainer.getInstance();
 		timer.schedule(new LogSubsystemInputsTask(), 10, 20);
 	}
 
