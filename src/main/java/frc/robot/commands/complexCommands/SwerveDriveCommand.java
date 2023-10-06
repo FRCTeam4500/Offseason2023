@@ -3,6 +3,7 @@ package frc.robot.commands.complexCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.DriveController;
@@ -55,6 +56,7 @@ public class SwerveDriveCommand extends CommandBase {
 		angleController.enableContinuousInput(-Math.PI, Math.PI);
 		fastSpeed();
 		addRequirements(swerve);
+		Shuffleboard.getTab("Display").addString("Drive Mode", () -> controlMode.name());
 	}
 
 	@Override

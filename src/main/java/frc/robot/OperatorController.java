@@ -1,6 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -15,7 +14,6 @@ import frc.robot.commands.complexCommands.TeleopZeroCommand;
 import frc.robot.commands.debugCommands.TiltIntakeCommand;
 import frc.robot.subsystems.placer.arm.Arm;
 import frc.robot.subsystems.placer.intake.Intake;
-import frc.robot.subsystems.vision.Vision;
 
 public class OperatorController extends CommandJoystick {
 
@@ -42,7 +40,8 @@ public class OperatorController extends CommandJoystick {
 	private OperatorController() {
 		super(JoystickConstants.OPERATOR_PORT);
 		setButtons();
-		addToShuffleBoard();
+		Intake.getInstance();
+		Arm.getInstance();
 	}
 
 	public static synchronized OperatorController getInstance() {
@@ -91,19 +90,5 @@ public class OperatorController extends CommandJoystick {
 			.andThen(new WaitCommand(0.5))
 			.andThen(new TeleopZeroCommand()
 		));
-	}
-
-	public void addToShuffleBoard() {
-		Shuffleboard
-			.getTab("Arm and Intake")
-			.add("Intake", Intake.getInstance());
-		Shuffleboard.getTab("Arm and Intake").add("Arm", Arm.getInstance());
-		Shuffleboard.getTab("Vision").add("Vision", Vision.getInstance());
-		Shuffleboard
-			.getTab("Arm and Intake")
-			.addString(
-				"Current Game Piece",
-				() -> Intake.getGamePiece().name()
-			);
 	}
 }

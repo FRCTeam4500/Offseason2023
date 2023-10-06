@@ -5,6 +5,7 @@ import com.revrobotics.CANSparkMax.SoftLimitDirection;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.Constants.IntakeConstants;
@@ -50,6 +51,8 @@ public class Intake extends SubsystemBase implements IntakeInterface {
 		anglePIDController.setI(0);
 		anglePIDController.setD(0);
 		anglePIDController.setOutputRange(-.3, .3);
+
+		Shuffleboard.getTab("Display").addString("Current Game Piece", () -> gamePiece.name());
 	}
 
 	public static synchronized Intake getInstance() {

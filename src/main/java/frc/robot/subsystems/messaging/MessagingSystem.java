@@ -1,6 +1,7 @@
 package frc.robot.subsystems.messaging;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class MessagingSystem extends SubsystemBase implements MessagingSystemInterface{
@@ -17,12 +18,13 @@ public class MessagingSystem extends SubsystemBase implements MessagingSystemInt
 
     private MessagingSystem() {
         message = "MESSAGES APPEAR BELOW";
+        Shuffleboard.getTab("Display").addString("Messages", () -> message);
     }
 
     public void addMessage(String message) {
         if(isEnabled) {
             newestMessage = message;
-            this.message = this.message + "\n" + newestMessage;
+            this.message.concat("\n".concat(newestMessage));
         }
     }
 

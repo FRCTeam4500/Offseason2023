@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.hardware.Limelight;
 import frc.robot.hardware.Limelight.CameraMode;
@@ -20,6 +21,8 @@ public class Vision extends SubsystemBase implements VisionInterface {
 		limelights[1] = new Limelight("limelight-haha"); // Limelight 2, used for game pieces
 		setPipeline(0, 1);
 		setPipeline(1, 0);
+		Shuffleboard.getTab("Display").addBoolean("Detecting Game Pieces", () -> limelights[1].hasValidTargets());
+		Shuffleboard.getTab("Display").addBoolean("Detecting Reflective Tape", () -> limelights[0].hasValidTargets());
 	}
 
 	public VisionInputsAutoLogged getInputs() {

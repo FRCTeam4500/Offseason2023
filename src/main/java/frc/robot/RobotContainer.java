@@ -1,8 +1,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.autonomous.Autonomous;
 import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
@@ -25,6 +27,8 @@ public class RobotContainer {
 		} else {
 			messaging.addMessage("No Auto Command Selected");
 		}
+		Intake.setGamePiece(GamePiece.Cone);
+		SwerveDrive.getInstance().resetPose(autonomous.getStartingPosition());
 	}
 
 	public void autonomousExit() {
