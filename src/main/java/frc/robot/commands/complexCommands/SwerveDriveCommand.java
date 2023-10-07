@@ -111,7 +111,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
-			4 *
+			3.75 *
 			angleController.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)
@@ -127,7 +127,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	public void fastSpeed() {
 		xSens = 4;
-		ySens = 4;
+		ySens = 2.5;
 		zSens = 3.5;
 		doSlew = true;
 		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Fast");

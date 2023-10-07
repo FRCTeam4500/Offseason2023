@@ -3,7 +3,7 @@ package frc.robot.autonomous.autos;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
+import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.autoCommands.AutoTimedDriveCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
@@ -16,9 +16,9 @@ public class OnePieceAuto extends SequentialCommandGroup {
 	public OnePieceAuto() {
 		addCommands(
 			new ResetGyroCommand(180),
-			new ZeroCommand(),
+			new SetArmAndIntakeCommand(ArmPosition.Start),
 			new WaitCommand(0.5),
-			new SetArmAndIntakeCommand(RobotContainer.getFirstPieceHeight()),
+			new SetArmAndIntakeCommand(ArmPosition.Top),
 			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),

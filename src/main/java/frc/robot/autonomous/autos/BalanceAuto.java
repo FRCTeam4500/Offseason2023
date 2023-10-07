@@ -3,7 +3,6 @@ package frc.robot.autonomous.autos;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.autoCommands.AutoTimedDriveCommand;
@@ -19,7 +18,7 @@ public class BalanceAuto extends SequentialCommandGroup {
 			new ResetGyroCommand(180),
 			new SetArmAndIntakeCommand(ArmPosition.Start), 
 			new WaitCommand(0.5),
-			new SetArmAndIntakeCommand(RobotContainer.getFirstPieceHeight()),
+			new SetArmAndIntakeCommand(ArmPosition.Top),
 			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
