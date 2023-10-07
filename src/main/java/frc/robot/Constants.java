@@ -80,7 +80,7 @@ public class Constants {
 		/** The extension of the arm when it is picking up from the ground */
 		public static final double GROUND_EXTENSION = 12.22;
 		/** The extension of the arm when it is placing middle level game pieces */
-		public static final double MIDDLE_EXTENSION = 4.78;
+		public static final double MIDDLE_EXTENSION = 6;
 		/** The extension of the arm when it is placing high level game pieces */
 		public static final double HIGH_EXTENSION = 17.00;
 		/** The extension of the arm when it is picking up from the substation */
@@ -94,7 +94,7 @@ public class Constants {
 		/** The angle of the arm when it is placing game pieces */
 		public static final double PLACE_ANGLE = -10;
 		/** The angle of the arm when it is picking up from the substation */
-		public static final double SUBSTATION_ANGLE = -10;
+		public static final double SUBSTATION_ANGLE = -13;
 		/** The angle of the arm when it is picking up from the ground */
 		public static final double GROUND_ANGLE = -243;
 		/** Angle of arm when moving in teleop */
