@@ -90,6 +90,7 @@ public class Constants {
 		public static final double START_ANGLE = 0.0;
 		/** The angle of the arm when it is traveling or zeroed*/
 		public static final double ZERO_ANGLE = -10;
+		public static final double MID_ANGLE = -8;
 		/** The angle of the arm when it is placing game pieces */
 		public static final double PLACE_ANGLE = -10;
 		/** The angle of the arm when it is picking up from the substation */
@@ -160,7 +161,7 @@ public class Constants {
 			),
 			Mid(
 				ArmConstants.MIDDLE_EXTENSION,
-				ArmConstants.PLACE_ANGLE,
+				ArmConstants.MID_ANGLE,
 				IntakeConstants.MIDDLE_ANGLE
 			),
 			Top(
