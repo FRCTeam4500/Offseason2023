@@ -18,7 +18,7 @@ public class OnePieceAuto extends SequentialCommandGroup {
 			new ResetGyroCommand(180),
 			new SetArmAndIntakeCommand(ArmPosition.Start),
 			new WaitCommand(0.5),
-			new SetArmAndIntakeCommand(ArmPosition.Top),
+			new SetArmAndIntakeCommand(ArmPosition.Mid),
 			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
