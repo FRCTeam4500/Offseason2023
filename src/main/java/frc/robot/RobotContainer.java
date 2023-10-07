@@ -6,8 +6,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.GamePiece;
 import frc.robot.autonomous.Autonomous;
-import frc.robot.autonomous.autos.BalanceAuto;
-import frc.robot.autonomous.autos.OnePieceAuto;
 import frc.robot.subsystems.messaging.MessagingSystem;
 import frc.robot.subsystems.placer.intake.Intake;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -37,26 +35,17 @@ public class RobotContainer {
 		return instance;
 	}
 
-	public static ArmPosition getFirstPieceHeight() {
-		return firstPieceHeightChooser.getSelected();
-	}
-
 	public void autonomousInit() {
 		messaging.enableMessaging();
 		messaging.addMessage("Auto Started");
-		switch (autonomous.getAutonCommand()) {
-			case "One Piece":
-				autoCommand = new OnePieceAuto();
-				break;
-			case "Balance": 
-				autoCommand = new BalanceAuto();
-				break;
-			default:
-				autoCommand = null;
-				messaging.addMessage("No Auto Command Selected");
+		autoCommand = autonomous.getAutonCommand();
+		Intake.setGamePiece(GamePiece.Cone);
+		if (autoCommand != null) {
+			autoCommand.schedule();
+		} else {
+			messaging.addMessage("No Auto Command Selected");
 		}
 		Intake.setGamePiece(GamePiece.Cone);
-		SwerveDrive.getInstance().resetPose(autonomous.getStartingPosition());
 	}
 
 	public void autonomousExit() {
