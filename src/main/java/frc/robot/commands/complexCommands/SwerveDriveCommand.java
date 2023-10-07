@@ -68,6 +68,9 @@ public class SwerveDriveCommand extends CommandBase {
 			controlMode = ControlMode.AngleCentric;
 			targetAngle = 0;
 		}
+		if (Math.abs(controller.getLeftX()) > 0.1) {
+			targetAngle += (-controller.getRightX() * zSens) / 10;			
+		}
 
 		if(doSlew) {
 			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
@@ -153,7 +156,7 @@ public class SwerveDriveCommand extends CommandBase {
 			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Robot Centric");
 		} else {
 			controlMode = ControlMode.AngleCentric;
-			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Field Centric");
+			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Angle Centric");
 		}
 	}
 
