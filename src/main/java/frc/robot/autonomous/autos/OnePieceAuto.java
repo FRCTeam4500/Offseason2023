@@ -22,7 +22,7 @@ public class OnePieceAuto extends SequentialCommandGroup {
 			new WaitCommand(1),
 			new ZeroCommand(),
 			new WaitCommand(0.5),
-			new AutoTimedDriveCommand(2, 0, 0, 2.25)
+			new AutoTimedDriveCommand(2, 0, 180, 2.25)
 		);
 	}
 }
