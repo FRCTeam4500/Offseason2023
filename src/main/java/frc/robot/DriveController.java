@@ -10,6 +10,7 @@ import frc.robot.commands.autoCommands.AutoAlignHorizontalCommand;
 import frc.robot.commands.autoCommands.AutoAlignRotationalCommand;
 import frc.robot.commands.baseCommands.CancellationCommand;
 import frc.robot.commands.baseCommands.ResetGyroCommand;
+import frc.robot.commands.complexCommands.AutoBalanceCommand;
 import frc.robot.commands.complexCommands.PlaceCommand;
 import frc.robot.commands.complexCommands.SwerveDriveCommand;
 import frc.robot.commands.complexCommands.TeleopZeroCommand;
@@ -28,6 +29,7 @@ public class DriveController extends CommandXboxController {
 	private final Trigger alignGamePieceButton = this.rightBumper();
 	private final Trigger alignTapeButton = this.povRight();
 	private final Trigger alignTapeButton2 = this.povLeft();
+	private final Trigger balanceButton = this.y();
 	private final Trigger cancelButton = this.start();
 
 	private DriveController() {
@@ -44,6 +46,7 @@ public class DriveController extends CommandXboxController {
 
 	public void setButtons() {
 		swerveCommand = new SwerveDriveCommand(this);
+		AutoBalanceCommand balanceCommand = new AutoBalanceCommand();
 		SwerveDrive.getInstance().setDefaultCommand(swerveCommand);
 
 		switchDriveModeButton.toggleOnTrue(new InstantCommand(() -> swerveCommand.switchControlMode()));
@@ -61,6 +64,8 @@ public class DriveController extends CommandXboxController {
 			.andThen(new TeleopZeroCommand())
 		);
 
+		balanceButton.toggleOnTrue(balanceCommand);
+		balanceButton.toggleOnFalse(new InstantCommand(() -> balanceCommand.cancel()));
 
 		alignGamePieceButton.toggleOnTrue(new AutoAlignRotationalCommand(VisionTarget.GamePiece));
 		alignTapeButton.toggleOnTrue(new AutoAlignHorizontalCommand(VisionTarget.ReflectiveTape));
