@@ -9,7 +9,7 @@ import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.AutoBalanceCommand;
-import frc.robot.commands.complexCommands.TeleopZeroCommand;
+import frc.robot.commands.complexCommands.ZeroCommand;
 
 public class BalanceAuto extends SequentialCommandGroup {
 	public BalanceAuto() {
@@ -21,10 +21,10 @@ public class BalanceAuto extends SequentialCommandGroup {
 			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
-			new TeleopZeroCommand(),
+			new ZeroCommand(),
 			new WaitCommand(0.5),
-			new AutoTimedDriveCommand(-2, 0, 0, 2.25),
-			new AutoTimedDriveCommand(2, 0, 0, 1.25),
+			new AutoTimedDriveCommand(2, 0, 0, 2.25),
+			new AutoTimedDriveCommand(-2, 0, 0, 1.25),
 			new AutoBalanceCommand()
 		);
 	}
