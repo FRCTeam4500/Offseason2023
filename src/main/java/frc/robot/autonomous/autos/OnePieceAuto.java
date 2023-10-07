@@ -9,22 +9,20 @@ import frc.robot.commands.baseCommands.ResetGyroCommand;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 import frc.robot.commands.complexCommands.TeleopZeroCommand;
-import frc.robot.commands.complexCommands.ZeroCommand;
 
 public class OnePieceAuto extends SequentialCommandGroup {
 	public OnePieceAuto() {
 		addCommands(
 			new ResetGyroCommand(180),
-			new ZeroCommand(),
+			new SetArmAndIntakeCommand(ArmPosition.Start),
 			new WaitCommand(0.5),
 			new SetArmAndIntakeCommand(ArmPosition.Top),
 			new WaitCommand(1.25),
 			new SetIntakeSpeedCommand(IntakeMode.Place),
 			new WaitCommand(1),
-			new ZeroCommand(),
+			new TeleopZeroCommand(),
 			new WaitCommand(0.5),
-			new AutoTimedDriveCommand(-2, 0, 0, 2.25),
-			new TeleopZeroCommand()
+			new AutoTimedDriveCommand(-2, 0, 0, 2.25)
 		);
 	}
 }
