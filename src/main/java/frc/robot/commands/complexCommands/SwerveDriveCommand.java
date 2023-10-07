@@ -29,7 +29,6 @@ public class SwerveDriveCommand extends CommandBase {
 	private CommandXboxController controller;
 
 	public ControlMode controlMode;
-	private ControlMode previousControlMode;
 
 	public SlewRateLimiter xLimiter = new SlewRateLimiter(1.75);
 	public SlewRateLimiter yLimiter = new SlewRateLimiter(1.75);
@@ -51,7 +50,7 @@ public class SwerveDriveCommand extends CommandBase {
 	public SwerveDriveCommand(DriveController xbox) {
 		swerve = SwerveDrive.getInstance();
 		controller = xbox;
-		controlMode = ControlMode.FieldCentric; //default control mode is field-centric
+		controlMode = ControlMode.AngleCentric; //default control mode is field-centric
 		angleController = new PIDController(1, 0, 0);
 		angleController.enableContinuousInput(-Math.PI, Math.PI);
 		fastSpeed();
@@ -68,9 +67,6 @@ public class SwerveDriveCommand extends CommandBase {
 		if (controller.getRightY() < -0.5) {
 			controlMode = ControlMode.AngleCentric;
 			targetAngle = 0;
-		}
-		if (controlMode != ControlMode.AngleCentric) {
-			previousControlMode = controlMode;
 		}
 
 		if(doSlew) {
@@ -92,11 +88,7 @@ public class SwerveDriveCommand extends CommandBase {
 				moveRobotCentric(xSpeed, ySpeed, zSpeed);
 				break;
 			case AngleCentric:
-				if (Math.abs(controller.getRightX()) > 0.1) {
-					controlMode = previousControlMode;
-				} else {
-					moveAngleCentric(xSpeed, ySpeed);
-				}
+				moveAngleCentric(xSpeed, ySpeed);			
 				break;
 		}
 	}
@@ -111,7 +103,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
-			4 *
+			3.5 *
 			angleController.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)
@@ -127,7 +119,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	public void fastSpeed() {
 		xSens = 4;
-		ySens = 4;
+		ySens = 2.5;
 		zSens = 3.5;
 		doSlew = true;
 		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Fast");
@@ -153,14 +145,14 @@ public class SwerveDriveCommand extends CommandBase {
 	}
 
 	/**
-	 * Switches between RobotCentric and FieldCentric
+	 * Switches between RobotCentric and AngleCentric
 	 */
 	public void switchControlMode() {
-		if (controlMode == ControlMode.FieldCentric) {
+		if (controlMode == ControlMode.AngleCentric) {
 			controlMode = ControlMode.RobotCentric;
 			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Robot Centric");
 		} else {
-			controlMode = ControlMode.FieldCentric;
+			controlMode = ControlMode.AngleCentric;
 			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Field Centric");
 		}
 	}

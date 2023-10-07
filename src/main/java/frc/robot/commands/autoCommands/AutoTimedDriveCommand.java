@@ -17,7 +17,7 @@ public class AutoTimedDriveCommand extends CommandBase{
         sidewaysSpeed = sidewaysVelocity;
         turningPID = new PIDController(1, 0, 0);
 		turningPID.enableContinuousInput(-Math.PI, Math.PI);
-        turningPID.setSetpoint(targetAngle);
+        turningPID.setSetpoint(Math.toRadians(targetAngle));
         seconds = timeSeconds;
         addRequirements(swerve);
     }
@@ -30,7 +30,7 @@ public class AutoTimedDriveCommand extends CommandBase{
 
     @Override
     public void execute() {
-        swerve.driveFieldCentric(forwardSpeed, sidewaysSpeed, turningPID.calculate(swerve.getGyro().getRotation2d().getDegrees()));
+        swerve.driveFieldCentric(forwardSpeed, sidewaysSpeed, 3.5 * turningPID.calculate(swerve.getGyro().getRotation2d().getRadians()));
     }
 
     @Override
