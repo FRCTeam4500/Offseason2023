@@ -62,6 +62,8 @@ public class DriveController extends CommandXboxController {
 	public void setButtons() {
 		// swerveCommand = new SwerveDriveCommand(this);
 		Command balanceCommand = new AutoBalanceCommand();
+
+		/* Reg field centric drive, open loop */
 		SwerveDrive
 			.getInstance()
 			.setDefaultCommand(
@@ -85,10 +87,11 @@ public class DriveController extends CommandXboxController {
 							),
 						true,
 						true,
-						false
+						true
 					)
 			);
 
+		/* While right trigger, heading align */
 		this.rightTrigger()
 			.whileTrue(
 				SwerveDrive
@@ -146,6 +149,33 @@ public class DriveController extends CommandXboxController {
 							return lastHeadingSnapAngle;
 						},
 						true,
+						true
+					)
+			);
+
+		/* While left trigger, drive closed loop */
+		this.leftTrigger()
+			.whileTrue(
+				SwerveDrive
+					.getInstance()
+					.driveCommand(
+						() ->
+							modifyJoystickAxis(
+								this.getLeftY(),
+								this.getLeftTriggerAxis()
+							),
+						() ->
+							modifyJoystickAxis(
+								this.getLeftX(),
+								this.getLeftTriggerAxis()
+							),
+						() ->
+							modifyJoystickAxis(
+								this.getRightX(),
+								this.getLeftTriggerAxis()
+							),
+						true,
+						false,
 						true
 					)
 			);
