@@ -295,7 +295,7 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 					useAlliance &&
 						DriverStation.getAlliance() ==
 						DriverStation.Alliance.Red
-						? new Rotation2d(getRobotAngle()) // TODO: CHECK: CCW+, CW-
+						? new Rotation2d(getRobotAngle())
 						: new Rotation2d(getRobotAngle())
 				)
 				: new ChassisSpeeds(

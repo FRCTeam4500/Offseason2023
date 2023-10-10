@@ -87,7 +87,7 @@ public class DriveController extends CommandXboxController {
 							),
 						true,
 						true,
-						true
+						false
 					)
 			);
 
@@ -176,7 +176,7 @@ public class DriveController extends CommandXboxController {
 							),
 						true,
 						false,
-						true
+						false
 					)
 			);
 
