@@ -1,5 +1,7 @@
 package frc.robot.subsystems.swerve;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -9,12 +11,21 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.Gyro;
 import frc.robot.subsystems.messaging.MessagingSystem;
+import java.util.function.DoubleSupplier;
 
 /**
  * Subsystem class which represents the drivetrain of our robot
@@ -205,6 +216,208 @@ public class SwerveDrive extends SubsystemBase implements SwerveDriveInterface {
 			twist.dtheta / dt
 		);
 	}
+
+	/*
+	 * EXPERIMENTAL START
+	 */
+
+	private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+
+	public ProfiledPIDController headingController = new ProfiledPIDController(
+		1.2,
+		0,
+		0.1,
+		new Constraints(Math.PI * 4, Math.PI * 6)
+	);
+
+	public static final Constraints constraints = new Constraints(
+		SwerveConstants.MAX_LINEAR_SPEED,
+		SwerveConstants.MAX_LINEAR_ACCELERATION
+	);
+
+	public static final double kPXController = 7.0;
+	public static final double kPYController = 7.0;
+	public static final double kPThetaController = 1.9;
+	public static final double kDThetaController = 0.0;
+
+	public static final ProfiledPIDController xController = new ProfiledPIDController(
+		kPXController,
+		0,
+		0,
+		constraints
+	);
+	public static final ProfiledPIDController yController = new ProfiledPIDController(
+		kPYController,
+		0,
+		0,
+		constraints
+	);
+
+	public static final SimpleMotorFeedforward thetaFeedForward = new SimpleMotorFeedforward(
+		0.24,
+		1.0e+3
+	);
+	/* Constraint for the motion profilied robot angle controller */
+	public static final TrapezoidProfile.Constraints thetaControllerConstraints = new TrapezoidProfile.Constraints(
+		SwerveConstants.MAX_ROTATIONAL_SPEED,
+		SwerveConstants.MAX_ROTATIONAL_ACCELERATION
+	);
+
+	public double deadband(double value, double minumum) {
+		if (Math.abs(value) < minumum) {
+			return 0;
+		}
+		return value;
+	}
+
+	/**
+	 * Set the modules to the correct state based on a desired translation and rotation, either field
+	 * or robot relative and either open or closed loop
+	 */
+	public void drive(
+		Translation2d translation,
+		double rotation,
+		boolean fieldRelative,
+		boolean isOpenLoop,
+		boolean useAlliance
+	) {
+		Pose2d velPose = new Pose2d(
+			translation.times(0.02),
+			new Rotation2d(rotation * 0.02)
+		);
+		Twist2d velTwist = new Pose2d().log(velPose);
+		SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(
+			fieldRelative
+				? ChassisSpeeds.fromFieldRelativeSpeeds(
+					velTwist.dx / 0.02,
+					velTwist.dy / 0.02,
+					velTwist.dtheta / 0.02,
+					useAlliance &&
+						DriverStation.getAlliance() ==
+						DriverStation.Alliance.Red
+						? new Rotation2d(getRobotAngle()) // TODO: CHECK: CCW+, CW-
+						: new Rotation2d(getRobotAngle())
+				)
+				: new ChassisSpeeds(
+					velTwist.dx / 0.02,
+					velTwist.dy / 0.02,
+					velTwist.dtheta / 0.02
+				)
+		);
+		SwerveDriveKinematics.desaturateWheelSpeeds(
+			swerveModuleStates,
+			SwerveConstants.MAX_LINEAR_SPEED
+		);
+
+		for (int i = 0; i < 4; i++) {
+			modules[i].setDesiredState(swerveModuleStates[i], isOpenLoop);
+		}
+
+		chassisSpeeds =
+			new ChassisSpeeds(velTwist.dx, velTwist.dy, velTwist.dtheta);
+	}
+
+	/** Generates a Command that consumes an X, Y, and Theta input supplier to drive the robot */
+	public CommandBase driveCommand(
+		DoubleSupplier x,
+		DoubleSupplier y,
+		DoubleSupplier omega,
+		boolean fieldRelative,
+		boolean isOpenLoop,
+		boolean useAlliance
+	) {
+		return new RunCommand(
+			() ->
+				drive(
+					new Translation2d(x.getAsDouble(), y.getAsDouble())
+						.times(SwerveConstants.MAX_LINEAR_SPEED),
+					omega.getAsDouble() * SwerveConstants.MAX_ROTATIONAL_SPEED,
+					fieldRelative,
+					isOpenLoop,
+					useAlliance
+				),
+			this
+		);
+	}
+
+	public Command headingLockDriveCommand(
+		DoubleSupplier x,
+		DoubleSupplier y,
+		DoubleSupplier theta,
+		boolean fieldRelative,
+		boolean isOpenLoop
+	) {
+		return driveCommand(
+			x,
+			y,
+			() ->
+				headingController.calculate(
+					getRobotAngle(),
+					theta.getAsDouble()
+				),
+			fieldRelative,
+			isOpenLoop,
+			false
+		);
+	}
+
+	public Command poseLockDriveCommand(
+		DoubleSupplier x,
+		DoubleSupplier y,
+		DoubleSupplier theta,
+		boolean fieldRelative,
+		boolean isOpenLoop
+	) {
+		return new InstantCommand(() -> {
+			xController.reset(getRobotPose().getX());
+			yController.reset(getRobotPose().getY());
+			headingController.reset(getRobotAngle() % (Math.PI * 2));
+			headingController.setGoal(theta.getAsDouble());
+		})
+			.andThen(
+				driveCommand(
+						() ->
+							deadband(
+								xController.calculate(
+									getRobotPose().getX(),
+									x.getAsDouble()
+								),
+								0.05
+							),
+						() ->
+							deadband(
+								yController.calculate(
+									getRobotPose().getY(),
+									y.getAsDouble()
+								),
+								0.05
+							),
+						() ->
+							deadband(
+								headingController.calculate(
+									getRobotPose().getRotation().getRadians() %
+									(2 * Math.PI)
+								),
+								0.05
+							),
+						fieldRelative,
+						isOpenLoop,
+						false
+					)
+					.alongWith(
+						new PrintCommand(getRobotPose().getX() + " x"),
+						new PrintCommand(getRobotPose().getY() + " y"),
+						new PrintCommand(
+							headingController.getPositionError() +
+							" heading error"
+						)
+					)
+			);
+	}
+
+	/*
+	 * EXPERIMENTAL END
+	 */
 
 	public Gyro getGyro() {
 		return gyro;

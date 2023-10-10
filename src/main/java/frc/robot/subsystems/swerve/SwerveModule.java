@@ -1,6 +1,9 @@
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -10,11 +13,12 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.hardware.SparkMaxMotorController;
 import frc.robot.hardware.TalonMotorController;
 import frc.robot.hardware.interfaces.SwerveMotorController;
+import frc.robot.utilities.Conversions;
 
 public class SwerveModule {
 
-	private SwerveMotorController driveMotor;
-	private SwerveMotorController angleMotor;
+	private TalonMotorController driveMotor;
+	private TalonMotorController angleMotor;
 	private Translation2d translationFromCenter;
 
 	/**
@@ -38,19 +42,9 @@ public class SwerveModule {
 		boolean neoDrive,
 		boolean neoAngle
 	) {
-		if (neoDrive) {
-			driveMotor =
-				new SparkMaxMotorController(driveId, MotorType.kBrushless);
-		} else {
-			driveMotor = new TalonMotorController(driveId, TalonType.TalonFX);
-		}
+		driveMotor = new TalonMotorController(driveId, TalonType.TalonFX);
 
-		if (neoAngle) {
-			angleMotor =
-				new SparkMaxMotorController(angleId, MotorType.kBrushless);
-		} else {
-			angleMotor = new TalonMotorController(angleId, TalonType.TalonFX);
-		}
+		angleMotor = new TalonMotorController(angleId, TalonType.TalonFX);
 
 		driveMotor.configureForSwerve(invertDrive, 35, drivekP, 0, true);
 		angleMotor.configureForSwerve(invertAngle, 25, anglekP, 0, false);
@@ -109,6 +103,75 @@ public class SwerveModule {
 			(SwerveConstants.DRIVE_RATIO * SwerveConstants.WHEEL_DIAMETER)
 		);
 	}
+
+	/*
+	 * EXPERIMENTAL START
+	 */
+
+	/** TODO: Find Feedforward Values */
+	public static final double driveKS = (0.32 / 12);
+	public static final double driveKV = (1.51 / 12);
+	public static final double driveKA = (0.27 / 12);
+
+	SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+		driveKS,
+		driveKV,
+		driveKA
+	);
+
+	public void setDesiredState(
+		SwerveModuleState desiredState,
+		boolean isOpenLoop
+	) {
+		/* This is a custom optimize function, since default WPILib optimize assumes continuous controller which CTRE and Rev onboard is not */
+		desiredState =
+			TalonOptimizer.optimize(desiredState, getModuleState().angle);
+		setAngle(desiredState);
+		setSpeed(desiredState, isOpenLoop);
+	}
+
+	private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
+		if (isOpenLoop) {
+			double percentOutput =
+				desiredState.speedMetersPerSecond /
+				SwerveConstants.MAX_LINEAR_SPEED;
+			driveMotor.set(ControlMode.PercentOutput, percentOutput);
+		} else {
+			double velocity = Conversions.MPSToFalcon(
+				desiredState.speedMetersPerSecond,
+				SwerveConstants.WHEEL_DIAMETER * Math.PI,
+				SwerveConstants.DRIVE_RATIO
+			);
+			driveMotor.set(
+				ControlMode.Velocity,
+				velocity,
+				DemandType.ArbitraryFeedForward,
+				feedforward.calculate(desiredState.speedMetersPerSecond)
+			);
+		}
+	}
+
+	private void setAngle(SwerveModuleState desiredState) {
+		// Prevent rotating module if speed is less then 1%. Prevents Jittering.
+		Rotation2d angle = (
+				Math.abs(desiredState.speedMetersPerSecond) <=
+				(SwerveConstants.MAX_LINEAR_SPEED * 0.01)
+			)
+			? new Rotation2d(angleMotor.getAngle())
+			: desiredState.angle;
+
+		angleMotor.set(
+			ControlMode.Position,
+			Conversions.degreesToFalcon(
+				angle.getDegrees(),
+				SwerveConstants.ANGLE_RATIO
+			)
+		);
+	}
+
+	/*
+	 * EXPERIMENTAL END
+	 */
 
 	static class TalonOptimizer {
 
@@ -173,5 +236,17 @@ public class SwerveModule {
 			}
 			return newAngle;
 		}
+	}
+
+	public SwerveMotorController getDriveMotor() {
+		return driveMotor;
+	}
+
+	public SwerveMotorController getAngleMotor() {
+		return angleMotor;
+	}
+
+	public void setTranslationFromCenter(Translation2d translationFromCenter) {
+		this.translationFromCenter = translationFromCenter;
 	}
 }

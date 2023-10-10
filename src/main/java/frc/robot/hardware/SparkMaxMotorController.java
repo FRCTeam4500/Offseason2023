@@ -1,5 +1,6 @@
 package frc.robot.hardware;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.util.Units;
 import frc.robot.hardware.interfaces.SwerveMotorController;
