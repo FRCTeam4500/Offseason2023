@@ -1,21 +1,17 @@
 package frc.robot.commands.complexCommands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.EnumConstants.ArmPosition;
 import frc.robot.Constants.EnumConstants.IntakeMode;
 import frc.robot.commands.baseCommands.SetArmAndIntakeCommand;
 import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 
-public class AutoPlaceCommand extends SequentialCommandGroup {
+public class TeleopZeroCommand extends SequentialCommandGroup {
 
-	public AutoPlaceCommand(ArmPosition position) {
+	public TeleopZeroCommand() {
 		addCommands(
-			new SetArmAndIntakeCommand(position),
-			new WaitCommand(1.5),
-			new SetIntakeSpeedCommand(IntakeMode.Place),
-			new WaitCommand(1),
-			new ZeroCommand()
+			new SetIntakeSpeedCommand(IntakeMode.Off),
+			new SetArmAndIntakeCommand(ArmPosition.TELEOP_MOVING)
 		);
 	}
 }

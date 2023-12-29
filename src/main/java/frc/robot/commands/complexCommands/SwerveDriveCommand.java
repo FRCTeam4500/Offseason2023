@@ -3,10 +3,12 @@ package frc.robot.commands.complexCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.DriveController;
+import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 /**
  * A swerve command with support for two swerve control modes:
@@ -29,8 +31,8 @@ public class SwerveDriveCommand extends CommandBase {
 	public ControlMode controlMode;
 	private ControlMode previousControlMode;
 
-	public SlewRateLimiter xLimiter = new SlewRateLimiter(1);
-	public SlewRateLimiter yLimiter = new SlewRateLimiter(1);
+	public SlewRateLimiter xLimiter = new SlewRateLimiter(1.75);
+	public SlewRateLimiter yLimiter = new SlewRateLimiter(1.75);
 	public SlewRateLimiter zLimiter = new SlewRateLimiter(1.4);
 
 	private PIDController angleController;
@@ -46,17 +48,15 @@ public class SwerveDriveCommand extends CommandBase {
 
 	public double targetAngle = 0;
 
-	public SwerveDriveCommand(
-		SwerveDrive swerve,
-		CommandXboxController controller
-	) {
-		this.swerve = swerve;
-		this.controller = controller;
+	public SwerveDriveCommand(DriveController xbox) {
+		swerve = SwerveDrive.getInstance();
+		controller = xbox;
 		controlMode = ControlMode.FieldCentric; //default control mode is field-centric
 		angleController = new PIDController(1, 0, 0);
 		angleController.enableContinuousInput(-Math.PI, Math.PI);
 		fastSpeed();
 		addRequirements(swerve);
+		Shuffleboard.getTab("Display").addString("Drive Mode", () -> controlMode.name());
 	}
 
 	@Override
@@ -76,7 +76,8 @@ public class SwerveDriveCommand extends CommandBase {
 		if(doSlew) {
 			xSpeed = -xLimiter.calculate(controller.getLeftX()) * xSens;
 			ySpeed = -yLimiter.calculate(controller.getLeftY()) * ySens;
-			zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+			// zSpeed = -zLimiter.calculate(controller.getRightX()) * zSens;
+			zSpeed = -controller.getRightX() * zSens;
 		} else {
 			xSpeed = -controller.getLeftX() * xSens;
 			ySpeed = -controller.getLeftY() * ySens;
@@ -110,7 +111,7 @@ public class SwerveDriveCommand extends CommandBase {
 
 	private void moveAngleCentric(double xSpeed, double ySpeed) {
 		double wSpeed =
-			2 *
+			3.75 *
 			angleController.calculate(
 				swerve.getRobotAngle(),
 				Math.toRadians(targetAngle)
@@ -126,9 +127,10 @@ public class SwerveDriveCommand extends CommandBase {
 
 	public void fastSpeed() {
 		xSens = 4;
-		ySens = 4;
+		ySens = 2.5;
 		zSens = 3.5;
 		doSlew = true;
+		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Fast");
 	}
 
 	public void midSpeed() {
@@ -143,6 +145,7 @@ public class SwerveDriveCommand extends CommandBase {
 		ySens = .8;
 		zSens = .5;
 		doSlew = false;
+		MessagingSystem.getInstance().addMessage("Swerve -> Robot Speed -> Slow");
 	}
 
 	public void setTargetAngle(double angle) {
@@ -155,10 +158,11 @@ public class SwerveDriveCommand extends CommandBase {
 	public void switchControlMode() {
 		if (controlMode == ControlMode.FieldCentric) {
 			controlMode = ControlMode.RobotCentric;
+			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Robot Centric");
 		} else {
 			controlMode = ControlMode.FieldCentric;
+			MessagingSystem.getInstance().addMessage("Swerve -> Control Mode -> Field Centric");
 		}
-		MessagingSystem.getInstance().addMessage("Control Mode Switched");
 	}
 
 	public void initSendable(SendableBuilder builder) {

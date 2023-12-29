@@ -1,11 +1,7 @@
 package frc.robot;
 
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
-import java.util.List;
 
 public class Constants {
 
@@ -25,6 +21,9 @@ public class Constants {
 		public static final int READY_MIDDLE = 7;
 		public static final int READY_TOP = 8;
 		public static final int SUBSTATION_PICKUP = 10;
+
+		public static final int TILT_INTAKE_UP = 4;
+		public static final int TILT_INTAKE_DOWN = 2;
 	}
 
 	public static class SwerveConstants {
@@ -50,9 +49,7 @@ public class Constants {
 
 		public static final double WHEEL_DIAMETER = 0.0762; // in meters
 
-		// These are the translations of the swerve modules from the center of the robot.
-		// Specifically, these measurments should land on the line that the swerve module wheel rotates around
-		// Units are meters
+		// Translations from center of robot to axis which drive wheel rotates about
 		public static final Translation2d FRONT_LEFT_MODULE_TRANSLATION = new Translation2d(
 			0.3175,
 			0.2413
@@ -73,194 +70,182 @@ public class Constants {
 
 	public static class ArmConstants {
 
-		/** The CAN ID of the arm tilt motor */
-		public static final int TILT_MOTOR_ID = 10;
-		/** The motor type of the tilt motor */
-		public static final MotorType TILT_MOTOR_TYPE = MotorType.kBrushless;
-		/** The CAN ID of the arm winch motor */
-		public static final int WINCH_MOTOR_ID = 15;
+		/** The CAN ID of the arm angle motor */
+		public static final int ANGLE_MOTOR_ID = 10;
+		/** The CAN ID of the arm extension motor */
+		public static final int EXTENSION_MOTOR_ID = 15;
 
-		/** The ratio between rotations of the arm and the rotations of the arm angle motor <p> Output shaft rotations / motor rotations */
-		public static final double ARM_ANGLE_RATIO = 5. / 5346;
-		/** The ratio between rotations of the arm extension shaft and the rotations of the arm extension motor <p> Output shaft rotations / motor rotations */
-		public static final double ARM_EXTENSION_RATIO = 1. / 35;
-		/** The ratio between radians turned by the arm sproket and meters extended by the arm <p> Sproket radians / meters extended */
-		public static final double ARM_RADIANS_TO_LINEAR_RATIO =
-			1 / (0.20955 / (Math.PI * 2));
+		/** The extension of the arm when it is fully retracted */
+		public static final double ZERO_EXTENSION = 0.0;
+		/** The extension of the arm when it is picking up from the ground */
+		public static final double GROUND_EXTENSION = 12.22;
+		/** The extension of the arm when it is placing middle level game pieces */
+		public static final double MIDDLE_EXTENSION = 6;
+		/** The extension of the arm when it is placing high level game pieces */
+		public static final double HIGH_EXTENSION = 17.00;
+		/** The extension of the arm when it is picking up from the substation */
+		public static final double SUBSTATION_EXTENSION = 8.62;
 
-		/** The angle the arm must be at to pickup game pieces from the high substation <p> Units are radians */
-		public static final double ARM_HIGH_SUBSTATION_ANGLE =
-			-3 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to place at the middle level <p> Units are radians */
-		public static final double ARM_PLACE_ANGLE =
-			-6 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to launch a cone onto the top node <p> Units are radians */
-		public static final double ARM_LAUNCH_ANGLE =
-			1 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to pickup game pieces from the ground <p> Units are radians */
-		public static final double ARM_GROUND_ANGLE =
-			-43 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm will go to while traveling <p> Units are radians */
-		public static final double ARM_ZERO_ANGLE =
-			-10 * ARM_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the arm must be at to launch a tilted cone onto the middle node <p> Units are radians*/
-		public static final double ARM_PLACE_TILTED_CONE_ANGLE = 0;
-
-		/** The extension the arm must have to place a game piece on the top node <p> Also used for intaking game pieces off the high substation <p> Units are meters */
-		public static final double ARM_PLACE_TOP = ticksToMeters(10900.0);
-		/** The extension the arm must have to place a game piece on the middle node <p> Also used to place game pieces on the ground <p> Units are meters */
-		public static final double ARM_PLACE_MID = ticksToMeters(3229);
-		/** The extension the arm must have to pickup a game piece from the ground <p> Units are meters */
-		public static final double ARM_PICKUP = ticksToMeters(4324);
-		/** The extension the arm must have to place a tilted cone on the middle node <p> Units are meters */
-		public static final double ARM_PLACE_TILTED_CONE_MID = ticksToMeters(
-			5000
-		);
-		/** The minimun distance the arm must be from its target value to stop trying to reach the value <p> Units are meters */
-		public static final double ARM_WINCH_THRESHOLD = ticksToMeters(250);
-		/** The extension the arm will have while traveling <p> Units are meters */
-		public static final double ARM_RETRACT = 0;
-
-		public static double ticksToMeters(double ticks) {
-			return ticks * (.009525 * 22) / (4096 * 35);
-		}
+		/** The angle of the arm to remove the latch holding it up when a match starts */
+		public static final double START_ANGLE = 0.0;
+		/** The angle of the arm when it is traveling or zeroed*/
+		public static final double ZERO_ANGLE = -10;
+		public static final double MID_ANGLE = -8;
+		/** The angle of the arm when it is placing game pieces */
+		public static final double PLACE_ANGLE = -10;
+		/** The angle of the arm when it is picking up from the substation */
+		public static final double SUBSTATION_ANGLE = -13;
+		/** The angle of the arm when it is picking up from the ground */
+		public static final double GROUND_ANGLE = -243;
+		/** Angle of arm when moving in teleop */
+		public static final double TELEOP_DRIVE_ANGLE = -110;
 	}
 
 	public static class IntakeConstants {
 
-		/** The speed of the intake while it is intaking cones and placing cubes <p> Units are percentage of full power */
-		public static final double INTAKE_CONE_SPEED = .8;
-		/** The speed of the intake while it is intaking cubes and placing cones <p> Units are percentage of full power */
-		public static final double INTAKE_CUBE_SPEED = -.9;
-
-		public static final double OUTTAKE_CONE_SPEED = -1;
-
-		public static final double OUTTAKE_CUBE_SPEED = .8;
-
-		public static final double INTAKE_SPEED_THRESHOLD = 0.05;
-
-		/** The CAN ID of the intake run motor */
-		public static final int INTAKE_MOTOR_ID = 13;
-		/** The motor type of the intake run motor */
-		public static final MotorType INTAKE_MOTOR_TYPE = MotorType.kBrushless;
+		/** The CAN ID of the intake output motor */
+		public static final int OUTPUT_MOTOR_ID = 13;
 		/** The CAN ID of the intake angle motor */
-		public static final int INTAKE_ANGLE_MOTOR_ID = 12;
-		/** The motor type of the intake angle motor */
-		public static final MotorType ANGLE_MOTOR_TYPE = MotorType.kBrushless;
+		public static final int ANGLE_MOTOR_ID = 12;
 
-		/** The angle the intake must be at to pickup game pieces from the ground <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_BOT_ANGLE =
-			-7 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to pickup games pieces from the high substation <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_HIGH_SUBSTATION_ANGLE =
-			-25 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to place a top cone (as in we picked up an upright cone) on a node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TOP_CONE_PLACE_ANGLE =
-			-18.4 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to place a bottom cone (as in we picked up a sideways cone) on a node <p><strong> This value needs to be updated</strong><p> Units are whatever shuffleboard says */
-		public static final double INTAKE_TILTED_CONE_ANGLE =
-			-23.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake will go to while traveling <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_ZERO_ANGLE =
-			-5.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The angle the intake must be at to launch a cone onto the top node <p> Units are whatever shuffleboard says */
-		public static final double INTAKE_LAUNCHING_ANGLE =
-			-15.5 * IntakeConstants.INTAKE_ANGLE_RATIO * 2 * Math.PI;
-		/** The ratio between rotations of the intake and the rotations of the intake angle motor <p> Output shaft rotations / motor rotations*/
-		public static final double INTAKE_ANGLE_RATIO = 144. / 15125;
+		/** The percent output of the intake while picking up cones */
+		public static final double PICKUP_CONE_OUTPUT = .8;
+		/** The percent output of the intake while picking up cubes */
+		public static final double PICKUP_CUBE_OUTPUT = -.6;
+		/** The percent output of the intake while placing cones */
+		public static final double PLACE_CONE_OUTPUT = -.9;
+		/** The percent output of the intake while placing cubes */
+		public static final double PLACE_CUBE_OUTPUT = .8;
+
+		/** Intake angle for traveling or zeroing*/
+		public static final double ZERO_ANGLE = -27;
+		/** Intake angle for picking up game pieces from the ground */
+		public static final double GROUND_ANGLE = -55.38;
+		/** Intake angle for placing middle level game pieces  */
+		public static final double MIDDLE_ANGLE = -140;
+		/** Intake angle for placing top level game pieces */
+		public static final double TOP_ANGLE = -70;
+		/** Intake angle for picking up game pieces from the substation */
+		public static final double SUBSTATION_ANGLE = -130;
 	}
 
 	public static class EnumConstants {
 
 		public static enum GamePiece {
-			Cube,
-			Cone,
-			Nothing,
+			Cube(IntakeConstants.PLACE_CUBE_OUTPUT),
+			Cone(IntakeConstants.PLACE_CONE_OUTPUT),
+			Nothing(0.0);
+
+			public double intakeOutput;
+
+			private GamePiece(double intakeOutput) {
+				this.intakeOutput = intakeOutput;
+			}
 		}
 
 		public static enum ArmPosition {
-			Start,
-			Zero,
-			Bot,
-			Mid,
-			Top,
-			Sub
+			Start(
+				ArmConstants.ZERO_EXTENSION,
+				ArmConstants.START_ANGLE,
+				IntakeConstants.ZERO_ANGLE
+			),
+			Zero(
+				ArmConstants.ZERO_EXTENSION,
+				ArmConstants.ZERO_ANGLE,
+				IntakeConstants.ZERO_ANGLE
+			),
+			Bot(
+				ArmConstants.GROUND_EXTENSION,
+				ArmConstants.GROUND_ANGLE,
+				IntakeConstants.GROUND_ANGLE
+			),
+			Mid(
+				ArmConstants.MIDDLE_EXTENSION,
+				ArmConstants.MID_ANGLE,
+				IntakeConstants.MIDDLE_ANGLE
+			),
+			Top(
+				ArmConstants.HIGH_EXTENSION,
+				ArmConstants.PLACE_ANGLE,
+				IntakeConstants.TOP_ANGLE
+			),
+			Sub(
+				ArmConstants.SUBSTATION_EXTENSION,
+				ArmConstants.SUBSTATION_ANGLE,
+				IntakeConstants.SUBSTATION_ANGLE
+			),
+			TELEOP_MOVING(
+				ArmConstants.ZERO_EXTENSION,
+				ArmConstants.TELEOP_DRIVE_ANGLE,
+				IntakeConstants.ZERO_ANGLE
+			);
+
+			public double armExtension;
+			public double armAngle;
+			public double intakeAngle;
+
+			private ArmPosition(
+				double armExtension,
+				double armAngle,
+				double intakeAngle
+			) {
+				this.armExtension = armExtension;
+				this.armAngle = armAngle;
+				this.intakeAngle = intakeAngle;
+			}
 		}
 
 		public static enum IntakeMode {
-			PickupCube,
-			PickupCone,
-			Place,
-			Off
+			PickupCube(IntakeConstants.PICKUP_CUBE_OUTPUT, GamePiece.Cube),
+			PickupCone(IntakeConstants.PICKUP_CONE_OUTPUT, GamePiece.Cone),
+			Place(0.0, GamePiece.Nothing), // The value for place doesn't matter, since that is decided by which game piece we have
+			Off(0.0, null);
+
+			public double intakeOutput;
+			public GamePiece newGamePiece;
+
+			private IntakeMode(double intakeOutput, GamePiece newGamePiece) {
+				this.intakeOutput = intakeOutput;
+				this.newGamePiece = newGamePiece;
+			}
 		}
-	}
 
-	public static class AutoConstants {
+		public static enum AutoDriveMode {
+			AprilTagAlign,
+			GamePieceAlign,
+			RelativePoseAlign,
+		}
 
-		/** The maximum velocity the robot will travel at during auto <p> Units are meters per second*/
-		public static final double AUTO_MAX_SPEED = 2;
-		/** The maximum acceleration the robot will travel at during auto <p> Units are meters per second*/
-		public static final double AUTO_MAX_ACCEL = 2.0;
+		public static enum VisionTarget {
+			AprilTag(0, 0, 0),
+			ReflectiveTape(0, 1, 0),
+			GamePiece(1, 0, 7);
 
-		public static final List<PathPlannerTrajectory> BlueBotRedTop2PieceTopAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTop2PieceTop",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
+			public int limelightId;
+			public int pipeline;
+			public double setpoint;
 
-		public static final List<PathPlannerTrajectory> BlueBotRedTop2PieceMidAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTop2PieceMid",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
+			private VisionTarget(
+				int limelightId,
+				int pipeline,
+				double setpoint
+			) {
+				this.limelightId = limelightId;
+				this.pipeline = pipeline;
+				this.setpoint = setpoint;
+			}
+		}
 
-		public static final List<PathPlannerTrajectory> BlueBotRedTopPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"BlueBotRedTopPlaceAndDock",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
+		public static enum TalonType {
+			TalonSRX("Talon SRX"),
+			TalonFX("Talon FX");
 
-		public static final List<PathPlannerTrajectory> BlueTopPlaceAndRunAuto = PathPlanner.loadPathGroup(
-			"BlueTopPlaceAndRun",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
+			public String model;
 
-		public static final List<PathPlannerTrajectory> BlueTopRedBot2PieceTopAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBot2PieceTop",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-		public static final List<PathPlannerTrajectory> BlueTopRedBot2PieceMidAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBot2PieceMid",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> BlueTopRedBotPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"BlueTopRedBotPlaceAndDock",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> MidPlaceAndDockAuto = PathPlanner.loadPathGroup(
-			"MidPlaceAndDock",
-			1,
-			1
-		);
-
-		public static final List<PathPlannerTrajectory> PlaceAndMoveAuto = PathPlanner.loadPathGroup(
-			"PlaceAndMove",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-
-		public static final List<PathPlannerTrajectory> RedTopPlaceAndRunAuto = PathPlanner.loadPathGroup(
-			"RedTopPlaceAndRun",
-			AUTO_MAX_SPEED,
-			AUTO_MAX_ACCEL
-		);
-		// Add Auto Paths here, like the above
+			private TalonType(String model) {
+				this.model = model;
+			}
+		}
 	}
 
 	public static class TelemetryConstants {

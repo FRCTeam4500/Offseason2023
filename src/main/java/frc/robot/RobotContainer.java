@@ -1,30 +1,54 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystem.messaging.MessagingSystem;
-import frc.robot.subsystem.placer.Placer;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.Constants.EnumConstants.GamePiece;
+import frc.robot.autonomous.Autonomous;
+import frc.robot.subsystems.messaging.MessagingSystem;
+import frc.robot.subsystems.placer.intake.Intake;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class RobotContainer {
-	private final DriveController driveStick = DriveController.getInstance();
 
-	private final OperatorController controlJoystick = OperatorController.getInstance();
+	private final Autonomous autonomous;
+	private final MessagingSystem messaging;
+	private static RobotContainer instance = null;
+	private Command autoCommand;
 
-	private final Autonomous autonomous = Autonomous.getInstance();
+	private RobotContainer() {
+		DriveController.getInstance();
+		OperatorController.getInstance();
+		autonomous = Autonomous.getInstance();
+		messaging = MessagingSystem.getInstance();
+	}
 
-	private final Placer placer = Placer.getInstance();
+	public static synchronized RobotContainer getInstance() {
+		if (instance == null) {
+			instance = new RobotContainer();
+		} 
+		return instance;
+	}
 
-	public RobotContainer() {}
+	public void autonomousInit() {
+		messaging.enableMessaging();
+		messaging.addMessage("Auto Started");
+		Intake.setGamePiece(GamePiece.Cone);
+		autoCommand = autonomous.getAutonCommand();
+		if (autoCommand != null) {
+			autoCommand.schedule();
+		} else {
+			messaging.addMessage("No Auto Command Selected");
+		}
+	}
 
-	public Command getAutonomousCommand() {
-		return autonomous.getAutonCommand();
+	public void autonomousExit() {
+		if (autoCommand != null) {
+			autoCommand.cancel();
+		}
 	}
 
 	public void teleopInit() {
-		Command auton = autonomous.getAutonCommand();
-		if (auton != null) {
-			auton.cancel();
-		}
+		messaging.enableMessaging();
+		messaging.addMessage("Teleop Started");
 	}
 
 	public void disabledInit() {

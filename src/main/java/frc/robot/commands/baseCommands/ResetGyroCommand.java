@@ -1,27 +1,24 @@
 package frc.robot.commands.baseCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystem.swerve.SwerveDrive;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class ResetGyroCommand extends CommandBase {
-
-	private SwerveDrive swerve;
 	private double offset;
-
-	public ResetGyroCommand(SwerveDrive swerve, double degreeOffset) {
-		this.swerve = swerve;
-		this.offset = degreeOffset;
+	public ResetGyroCommand(double degreeOffset) {
+		offset = degreeOffset;
 	}
 
-	public ResetGyroCommand(SwerveDrive swerve) {
-		this.swerve = swerve;
+	public ResetGyroCommand() {
 		offset = 0;
 	}
 
+	@Override
 	public void initialize() {
-		swerve.resetRobotAngle(offset);
+		SwerveDrive.getInstance().resetRobotAngle(offset);
 	}
 
+	@Override
 	public boolean isFinished() {
 		return true;
 	}
