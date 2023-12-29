@@ -8,10 +8,8 @@ import frc.robot.commands.baseCommands.SetIntakeSpeedCommand;
 
 public class TeleopZeroCommand extends SequentialCommandGroup {
 
-	public TeleopZeroCommand() {
-		addCommands(
-			new SetIntakeSpeedCommand(IntakeMode.Off),
-			new SetArmAndIntakeCommand(ArmPosition.TELEOP_MOVING)
-		);
-	}
+  public TeleopZeroCommand() {
+    addCommands(new SetIntakeSpeedCommand(IntakeMode.Off),
+                new SetArmAndIntakeCommand(ArmPosition.TELEOP_MOVING));
+  }
 }

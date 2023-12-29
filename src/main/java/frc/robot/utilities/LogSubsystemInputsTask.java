@@ -11,45 +11,37 @@ import org.littletonrobotics.junction.Logger;
 
 public class LogSubsystemInputsTask extends TimerTask {
 
-	Arm arm;
-	Intake intake;
-	SwerveDrive swerve;
-	MessagingSystem messagingSystem;
-	Vision vision;
+  Arm arm;
+  Intake intake;
+  SwerveDrive swerve;
+  MessagingSystem messagingSystem;
+  Vision vision;
 
-	public LogSubsystemInputsTask() {
-		this.swerve = SwerveDrive.getInstance();
-		this.arm = Arm.getInstance();
-		this.intake = Intake.getInstance();
-		this.messagingSystem = MessagingSystem.getInstance();
-		this.vision = Vision.getInstance();
-	}
+  public LogSubsystemInputsTask() {
+    this.swerve = SwerveDrive.getInstance();
+    this.arm = Arm.getInstance();
+    this.intake = Intake.getInstance();
+    this.messagingSystem = MessagingSystem.getInstance();
+    this.vision = Vision.getInstance();
+  }
 
-	@Override
-	public void run() {
-		arm.updateInputs(arm.getInputs());
-		intake.updateInputs(intake.getInputs());
-		// swerve.updateInputs(swerve.getInputs());
-		messagingSystem.updateInputs(messagingSystem.getInputs());
-		vision.updateInputs(vision.getInputs());
+  @Override
+  public void run() {
+    arm.updateInputs(arm.getInputs());
+    intake.updateInputs(intake.getInputs());
+    // swerve.updateInputs(swerve.getInputs());
+    messagingSystem.updateInputs(messagingSystem.getInputs());
+    vision.updateInputs(vision.getInputs());
 
-		Logger.getInstance().processInputs("Arm", arm.getInputs());
-		Logger.getInstance().processInputs("Intake", intake.getInputs());
-		// Logger.getInstance().processInputs("Swerve", swerve.getInputs());
-		Logger
-			.getInstance()
-			.processInputs("Messaging System", messagingSystem.getInputs());
-		Logger.getInstance().processInputs("Vision", vision.getInputs());
-		Logger.getInstance().recordOutput("Odometry", swerve.getRobotPose());
-		SwerveModuleState[] states = swerve.getModuleStates();
-		Logger
-			.getInstance()
-			.recordOutput(
-				"ModuleStates",
-				states[0],
-				states[1],
-				states[2],
-				states[3]
-			);
-	}
+    Logger.getInstance().processInputs("Arm", arm.getInputs());
+    Logger.getInstance().processInputs("Intake", intake.getInputs());
+    // Logger.getInstance().processInputs("Swerve", swerve.getInputs());
+    Logger.getInstance().processInputs("Messaging System",
+                                       messagingSystem.getInputs());
+    Logger.getInstance().processInputs("Vision", vision.getInputs());
+    Logger.getInstance().recordOutput("Odometry", swerve.getRobotPose());
+    SwerveModuleState[] states = swerve.getModuleStates();
+    Logger.getInstance().recordOutput("ModuleStates", states[0], states[1],
+                                      states[2], states[3]);
+  }
 }

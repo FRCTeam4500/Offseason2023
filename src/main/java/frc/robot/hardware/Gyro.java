@@ -12,38 +12,33 @@ import edu.wpi.first.wpilibj.SPI.Port;
 
 public class Gyro extends AHRS {
 
-	/**
-	 * @see AHRS#AHRS(Port)
-	 */
-	public Gyro(edu.wpi.first.wpilibj.I2C.Port kmxp) {
-		super(kmxp);
-	}
+  /**
+   * @see AHRS#AHRS(Port)
+   */
+  public Gyro(edu.wpi.first.wpilibj.I2C.Port kmxp) { super(kmxp); }
 
-	public Gyro(Port kmxp) {
-		super(kmxp);
-	}
+  public Gyro(Port kmxp) { super(kmxp); }
 
-	/**
-	 * Gets the absolute angle of the gyro from the angle where power was turned on
-	 * @return the absolute angle of the robot in radians. Counter-Clockwise is positive
-	 */
-	@Override
-	public double getAngle() {
-		return -Math.toRadians(super.getAngle());
-	}
+  /**
+   * Gets the absolute angle of the gyro from the angle where power was turned
+   * on
+   * @return the absolute angle of the robot in radians. Counter-Clockwise is
+   *     positive
+   */
+  @Override
+  public double getAngle() {
+    return -Math.toRadians(super.getAngle());
+  }
 
-	@Override
-	public float getPitch() {
-		return (float) Math.toRadians(super.getPitch());
-	}
+  @Override
+  public float getPitch() {
+    return (float)Math.toRadians(super.getPitch());
+  }
 
-	
-	@Override
-	public float getRoll() {
-		return (float) Math.toRadians(super.getRoll());
-	}
+  @Override
+  public float getRoll() {
+    return (float)Math.toRadians(super.getRoll());
+  }
 
-	public void reset() {
-		super.reset();
-	}
+  public void reset() { super.reset(); }
 }

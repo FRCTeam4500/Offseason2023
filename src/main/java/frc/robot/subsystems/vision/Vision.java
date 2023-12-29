@@ -11,121 +11,108 @@ import frc.robot.hardware.Limelight.CameraMode;
 
 public class Vision extends SubsystemBase implements VisionInterface {
 
-	private static Vision instanceVision;
-	private Limelight[] limelights = new Limelight[2];
+  private static Vision instanceVision;
+  private Limelight[] limelights = new Limelight[2];
 
-	private VisionInputsAutoLogged inputs = new VisionInputsAutoLogged();
+  private VisionInputsAutoLogged inputs = new VisionInputsAutoLogged();
 
-	private Vision() {
-		limelights[0] = new Limelight("limelight-hehehe"); // Limelight 3, used for april tags and reflective tape
-		limelights[1] = new Limelight("limelight-haha"); // Limelight 2, used for game pieces
-		setPipeline(0, 1);
-		setPipeline(1, 0);
-		Shuffleboard.getTab("Display").addBoolean("Detecting Game Pieces", () -> limelights[1].hasValidTargets());
-		Shuffleboard.getTab("Display").addBoolean("Detecting Reflective Tape", () -> limelights[0].hasValidTargets());
-	}
+  private Vision() {
+    limelights[0] =
+        new Limelight("limelight-hehehe"); // Limelight 3, used for april tags
+                                           // and reflective tape
+    limelights[1] =
+        new Limelight("limelight-haha"); // Limelight 2, used for game pieces
+    setPipeline(0, 1);
+    setPipeline(1, 0);
+    Shuffleboard.getTab("Display").addBoolean(
+        "Detecting Game Pieces", () -> limelights[1].hasValidTargets());
+    Shuffleboard.getTab("Display").addBoolean(
+        "Detecting Reflective Tape", () -> limelights[0].hasValidTargets());
+  }
 
-	public VisionInputsAutoLogged getInputs() {
-		return inputs;
-	}
+  public VisionInputsAutoLogged getInputs() { return inputs; }
 
-	public void updateInputs(VisionInputs inputs) {
-		inputs.horizontalAngleOffset = getHorizontalAngleOffset(0);
-		inputs.robotPose = getRobotPose(0);
-	}
+  public void updateInputs(VisionInputs inputs) {
+    inputs.horizontalAngleOffset = getHorizontalAngleOffset(0);
+    inputs.robotPose = getRobotPose(0);
+  }
 
-	public static synchronized Vision getInstance() {
-		if (instanceVision == null) {
-			instanceVision = new Vision();
-		}
-		return instanceVision;
-	}
+  public static synchronized Vision getInstance() {
+    if (instanceVision == null) {
+      instanceVision = new Vision();
+    }
+    return instanceVision;
+  }
 
-	public double getHorizontalAngleOffset(int limelightId) {
-		return limelights[limelightId].getHorizontalOffsetFromCrosshair();
-	}
+  public double getHorizontalAngleOffset(int limelightId) {
+    return limelights[limelightId].getHorizontalOffsetFromCrosshair();
+  }
 
-	public double getVerticalAngleOffset(int limelightId) {
-		return limelights[limelightId].getVerticalOffsetFromCrosshair();
-	}
+  public double getVerticalAngleOffset(int limelightId) {
+    return limelights[limelightId].getVerticalOffsetFromCrosshair();
+  }
 
-	public double getTakenArea(int limelightId) {
-		return limelights[limelightId].getTargetArea();
-	}
+  public double getTakenArea(int limelightId) {
+    return limelights[limelightId].getTargetArea();
+  }
 
-	public double getSkew(int limelightId) {
-		return limelights[limelightId].getSkew();
-	}
+  public double getSkew(int limelightId) {
+    return limelights[limelightId].getSkew();
+  }
 
-	public int getTagId(int limelightId) {
-		return limelights[limelightId].getTargetTagId();
-	}
+  public int getTagId(int limelightId) {
+    return limelights[limelightId].getTargetTagId();
+  }
 
-	public Pose2d getRobotPose(int limelightId) {
-		return limelights[limelightId].getRobotPoseToAlliance(
-				DriverStation.getAlliance()
-			)
-			.toPose2d();
-	}
+  public Pose2d getRobotPose(int limelightId) {
+    return limelights[limelightId]
+        .getRobotPoseToAlliance(DriverStation.getAlliance())
+        .toPose2d();
+  }
 
-	public Pose2d getRelativeTargetPose(int limelightId) {
-		return limelights[limelightId].getTargetPoseToRobot().toPose2d();
-	}
+  public Pose2d getRelativeTargetPose(int limelightId) {
+    return limelights[limelightId].getTargetPoseToRobot().toPose2d();
+  }
 
-	public boolean hasValidTargets(int limelightId) {
-		return limelights[limelightId].hasValidTargets();
-	}
+  public boolean hasValidTargets(int limelightId) {
+    return limelights[limelightId].hasValidTargets();
+  }
 
-	public String getSeenGamePiece(int limelightId) {
-		return limelights[limelightId].getSeenGamePiece();
-	}
+  public String getSeenGamePiece(int limelightId) {
+    return limelights[limelightId].getSeenGamePiece();
+  }
 
-	public void setPipeline(int limelightId, int pipeline) {
-		limelights[limelightId].setPipeline(pipeline);
-	}
+  public void setPipeline(int limelightId, int pipeline) {
+    limelights[limelightId].setPipeline(pipeline);
+  }
 
-	public void setCameraMode(int limelightId, CameraMode mode) {
-		limelights[limelightId].setCameraMode(mode);
-	}
+  public void setCameraMode(int limelightId, CameraMode mode) {
+    limelights[limelightId].setCameraMode(mode);
+  }
 
-	public Limelight getLimelight(int limelightId) {
-		return limelights[limelightId];
-	}
+  public Limelight getLimelight(int limelightId) {
+    return limelights[limelightId];
+  }
 
-	@Override
-	public void initSendable(SendableBuilder builder) {
-		builder.addBooleanProperty(
-			"Hehehe: Valid Targets",
-			() -> hasValidTargets(0),
-			null
-		);
-		builder.addDoubleProperty(
-			"Hehehe: Horizontal Offset (Degrees)",
-			() -> Units.radiansToDegrees(getHorizontalAngleOffset(0)),
-			null
-		);
-		builder.addDoubleProperty(
-			"Hehehe: Target Area (%)",
-			() -> getTakenArea(0),
-			null
-		);
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.addBooleanProperty("Hehehe: Valid Targets",
+                               () -> hasValidTargets(0), null);
+    builder.addDoubleProperty(
+        "Hehehe: Horizontal Offset (Degrees)",
+        () -> Units.radiansToDegrees(getHorizontalAngleOffset(0)), null);
+    builder.addDoubleProperty("Hehehe: Target Area (%)",
+                              () -> getTakenArea(0), null);
 
-		builder.addBooleanProperty(
-			"Haha: Valid Targets",
-			() -> hasValidTargets(1),
-			null
-		);
-		builder.addDoubleProperty(
-			"Haha: Horizontal Offset (Degrees)",
-			() -> Units.radiansToDegrees(getHorizontalAngleOffset(1)),
-			null
-		);
-		builder.addDoubleProperty(
-			"Haha: Target Area (%)",
-			() -> getTakenArea(1),
-			null
-		);
-		builder.addStringProperty("Seen Game Piece", () -> getSeenGamePiece(1), null);
-		builder.addDoubleProperty("Hehehe Skew", () -> getSkew(0), null);
-	}
+    builder.addBooleanProperty("Haha: Valid Targets",
+                               () -> hasValidTargets(1), null);
+    builder.addDoubleProperty(
+        "Haha: Horizontal Offset (Degrees)",
+        () -> Units.radiansToDegrees(getHorizontalAngleOffset(1)), null);
+    builder.addDoubleProperty("Haha: Target Area (%)",
+                              () -> getTakenArea(1), null);
+    builder.addStringProperty("Seen Game Piece",
+                              () -> getSeenGamePiece(1), null);
+    builder.addDoubleProperty("Hehehe Skew", () -> getSkew(0), null);
+  }
 }

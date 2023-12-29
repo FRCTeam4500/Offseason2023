@@ -5,15 +5,11 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 public class VictorSPXMotorController extends VictorSPX {
 
-	public VictorSPXMotorController(int port) {
-		super(port);
-	}
+  public VictorSPXMotorController(int port) { super(port); }
 
-	public void setOutput(double output) {
-		set(ControlMode.PercentOutput, output);
-	}
+  public void setOutput(double output) {
+    set(ControlMode.PercentOutput, output);
+  }
 
-	public double getOutput() {
-		return getMotorOutputPercent();
-	}
+  public double getOutput() { return getMotorOutputPercent(); }
 }

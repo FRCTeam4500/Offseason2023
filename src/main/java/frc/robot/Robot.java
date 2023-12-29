@@ -26,91 +26,95 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
 
-	private RobotContainer robotContainer;
-	private Timer timer;
+  private RobotContainer robotContainer;
+  private Timer timer;
 
-	@Override
-	public void robotInit() {
-		Logger logger = Logger.getInstance();
-		timer = new Timer();
+  @Override
+  public void robotInit() {
+    Logger logger = Logger.getInstance();
+    timer = new Timer();
 
-		// Record metadata
-		logger.recordMetadata("ProjectName", BuildInfo.MAVEN_NAME);
-		logger.recordMetadata("BuildDate", BuildInfo.BUILD_DATE);
-		logger.recordMetadata("GitSHA", BuildInfo.GIT_SHA);
-		logger.recordMetadata("GitDate", BuildInfo.GIT_DATE);
-		logger.recordMetadata("GitBranch", BuildInfo.GIT_BRANCH);
-		switch (BuildInfo.DIRTY) {
-			case 0:
-				logger.recordMetadata("GitDirty", "All changes committed");
-				break;
-			case 1:
-				logger.recordMetadata("GitDirty", "Uncomitted changes");
-				break;
-			default:
-				logger.recordMetadata("GitDirty", "Unknown");
-				break;
-		}
-		switch (TelemetryConstants.getMode()) {
-			case REAL:
-				logger.addDataReceiver(new WPILOGWriter("/media/sda1/")); // Log to a USB stick
-				logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-				LoggedPowerDistribution.getInstance(1, ModuleType.kRev); // Enables power distribution logging
-				break;
-			default:
-				break;
-		}
-		logger.start(); // Start logging
-		robotContainer = RobotContainer.getInstance();
-		timer.schedule(new LogSubsystemInputsTask(), 10, 20);
-	}
+    // Record metadata
+    logger.recordMetadata("ProjectName", BuildInfo.MAVEN_NAME);
+    logger.recordMetadata("BuildDate", BuildInfo.BUILD_DATE);
+    logger.recordMetadata("GitSHA", BuildInfo.GIT_SHA);
+    logger.recordMetadata("GitDate", BuildInfo.GIT_DATE);
+    logger.recordMetadata("GitBranch", BuildInfo.GIT_BRANCH);
+    switch (BuildInfo.DIRTY) {
+    case 0:
+      logger.recordMetadata("GitDirty", "All changes committed");
+      break;
+    case 1:
+      logger.recordMetadata("GitDirty", "Uncomitted changes");
+      break;
+    default:
+      logger.recordMetadata("GitDirty", "Unknown");
+      break;
+    }
+    switch (TelemetryConstants.getMode()) {
+    case REAL:
+      logger.addDataReceiver(
+          new WPILOGWriter("/media/sda1/")); // Log to a USB stick
+      logger.addDataReceiver(
+          new NT4Publisher()); // Publish data to NetworkTables
+      LoggedPowerDistribution.getInstance(
+          1, ModuleType.kRev); // Enables power distribution logging
+      break;
+    default:
+      break;
+    }
+    logger.start(); // Start logging
+    robotContainer = RobotContainer.getInstance();
+    timer.schedule(new LogSubsystemInputsTask(), 10, 20);
+  }
 
-	@Override
-	public void robotPeriodic() {
-		CommandScheduler.getInstance().run(); // Runs the scheduler, which is what runs all commands and subsystems
-	}
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run(); // Runs the scheduler, which is what
+                                          // runs all commands and subsystems
+  }
 
-	@Override
-	public void autonomousInit() {
-		robotContainer.autonomousInit();
-	}
+  @Override
+  public void autonomousInit() {
+    robotContainer.autonomousInit();
+  }
 
-	@Override
-	public void autonomousPeriodic() {}
+  @Override
+  public void autonomousPeriodic() {}
 
-	@Override
-	public void autonomousExit() {
-		robotContainer.autonomousExit();
-	}
+  @Override
+  public void autonomousExit() {
+    robotContainer.autonomousExit();
+  }
 
-	@Override
-	public void teleopInit() {
-		robotContainer.teleopInit();
-	}
+  @Override
+  public void teleopInit() {
+    robotContainer.teleopInit();
+  }
 
-	@Override
-	public void teleopPeriodic() {}
+  @Override
+  public void teleopPeriodic() {}
 
-	@Override
-	public void teleopExit() {}
+  @Override
+  public void teleopExit() {}
 
-	@Override
-	public void disabledInit() {
-		robotContainer.disabledInit();
-	}
+  @Override
+  public void disabledInit() {
+    robotContainer.disabledInit();
+  }
 
-	@Override
-	public void disabledPeriodic() {}
+  @Override
+  public void disabledPeriodic() {}
 
-	@Override
-	public void disabledExit() {}
+  @Override
+  public void disabledExit() {}
 
-	@Override
-	public void testInit() {}
+  @Override
+  public void testInit() {}
 
-	@Override
-	public void testPeriodic() {}
+  @Override
+  public void testPeriodic() {}
 
-	@Override
-	public void testExit() {}
+  @Override
+  public void testExit() {}
 }
